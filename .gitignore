@@ -1,0 +1,24 @@
+# Секреты и локальная конфигурация
+/config/config.php
+/config/config.php.tmp
+/info.txt
+
+# Загрузки и логи
+/uploads/*
+!/uploads/.gitkeep
+!/uploads/products/
+/uploads/products/*
+!/uploads/products/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Локальное окружение и служебные файлы
+/.tools/
+/.DS_Store
+*.log
+*.tmp
+/tests/tmp/
+/товар.xlsx
+
+# Локальные скриншоты и PDF
+/shots/
