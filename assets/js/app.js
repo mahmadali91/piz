@@ -424,7 +424,7 @@
     (function initPwa() {
         if ('serviceWorker' in navigator && location.protocol === 'https:') {
             window.addEventListener('load', function () {
-                navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {
+                navigator.serviceWorker.register('/sw.php', { scope: '/' }).catch(function () {
                     /* установка не критична для работы */
                 });
             });
