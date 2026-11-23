@@ -6,6 +6,7 @@
 # Загрузки и логи
 /uploads/*
 !/uploads/.gitkeep
+!/uploads/.htaccess
 !/uploads/products/
 /uploads/products/*
 !/uploads/products/.gitkeep
