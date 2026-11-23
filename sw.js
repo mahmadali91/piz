@@ -1,5 +1,5 @@
 /* PIZ service worker: оболочка приложения и офлайн-страница. */
-const CACHE_NAME = 'piz-shell-v1';
+const CACHE_NAME = 'piz-shell-v2';
 const OFFLINE_URL = '/offline.html';
 const PRECACHE = [
     '/assets/css/app.css',

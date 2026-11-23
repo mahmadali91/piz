@@ -12,7 +12,7 @@ $user = \PIZ\Auth::user();
     <link rel="apple-touch-icon" href="<?= e(asset('assets/icons/apple-touch-icon.png')) ?>">
     <link rel="manifest" href="<?= e(url('manifest.webmanifest')) ?>">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="PIZ">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
