@@ -1,8 +1,8 @@
 <div class="install-banner" id="install-banner" hidden>
     <span class="install-banner__mark">P</span>
     <div class="install-banner__copy">
-        <strong>Установить PIZ на телефон</strong>
-        <span data-install-hint>Быстрый доступ с экрана «Домой»</span>
+        <strong>Установить PIZ</strong>
+        <span data-install-hint>Ярлык на главном экране</span>
     </div>
     <button class="btn btn--primary btn--sm install-banner__btn" type="button" data-install-app>Установить</button>
     <button class="install-banner__close" type="button" data-install-dismiss aria-label="Скрыть предложение">

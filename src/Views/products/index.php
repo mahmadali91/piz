@@ -66,7 +66,7 @@ unset($query['page']);
                 <?php endif; ?>
             </div>
         <?php else: ?>
-            <div class="table-wrap">
+            <div class="table-wrap table-wrap--products">
                 <table class="table">
                     <thead>
                     <tr>
@@ -144,6 +144,64 @@ unset($query['page']);
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="product-mobile-list">
+                <?php foreach ($products as $product):
+                    $low = (int) $product['stock_qty'] <= (int) $product['low_stock'];
+                    $editData = [
+                        'id' => (int) $product['id'],
+                        'name' => $product['name'],
+                        'sku' => $product['sku'],
+                        'category' => $product['category'],
+                        'unit' => $product['unit'],
+                        'purchase_price' => $finance ? kop_to_input((int) $product['purchase_price_kop']) : '',
+                        'sale_price' => kop_to_input((int) $product['sale_price_kop']),
+                        'low_stock' => (int) $product['low_stock'],
+                        'stock_qty' => (int) $product['stock_qty'],
+                        'photo' => $product['photo'],
+                        'photo_url' => \PIZ\Services\ImageUploader::url($product['photo'] ?? null),
+                    ];
+                    ?>
+                    <article class="product-mobile-card">
+                        <?= product_photo($product, 'thumb thumb--lg') ?>
+                        <div class="product-mobile-card__body">
+                            <div class="product-mobile-card__top">
+                                <strong><?= e($product['name']) ?></strong>
+                                <span class="stock-pill <?= (int) $product['stock_qty'] <= 0 ? 'stock-pill--out' : ($low ? 'stock-pill--low' : '') ?>">
+                                    <?= (int) $product['stock_qty'] ?> <?= e($product['unit']) ?>
+                                </span>
+                            </div>
+                            <div class="product-mobile-card__meta">
+                                <?= e($product['sku'] ?: '—') ?> · <?= e($product['category']) ?>
+                                <?php if ((int) $product['active'] !== 1): ?>
+                                    <span class="badge badge--gray">архив</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="product-mobile-card__bottom">
+                                <strong><?= e(money((int) $product['sale_price_kop'])) ?></strong>
+                                <span>минимум <?= (int) $product['low_stock'] ?> <?= e($product['unit']) ?></span>
+                            </div>
+                        </div>
+                        <div class="product-mobile-card__actions">
+                            <?php if ($canManage): ?>
+                                <button class="icon-btn" type="button" title="Редактировать" data-product-edit="<?= e(json_encode($editData, JSON_UNESCAPED_UNICODE)) ?>"><?= icon('edit') ?></button>
+                            <?php endif; ?>
+                            <?php if ($canStock): ?>
+                                <button class="icon-btn" type="button" title="Приход / инвентаризация" data-stock-open='<?= e(json_encode(['id' => (int) $product['id'], 'mode' => 'in'], JSON_UNESCAPED_UNICODE)) ?>'><?= icon('truck') ?></button>
+                            <?php endif; ?>
+                            <?php if ($canManage): ?>
+                                <form method="post" action="<?= e(url('/products/toggle')) ?>" data-confirm="<?= (int) $product['active'] === 1 ? 'Убрать товар в архив? Он пропадёт из кассы, история продаж сохранится.' : 'Вернуть товар в продажу?' ?>">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="id" value="<?= (int) $product['id'] ?>">
+                                    <button class="icon-btn" type="submit" title="<?= (int) $product['active'] === 1 ? 'В архив' : 'Вернуть в продажу' ?>">
+                                        <?= (int) $product['active'] === 1 ? icon('trash') : icon('refresh') ?>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
             </div>
         <?php endif; ?>
     </section>

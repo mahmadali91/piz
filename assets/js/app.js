@@ -488,7 +488,7 @@
             const hint = banner.querySelector('[data-install-hint]');
             const bannerButton = banner.querySelector('[data-install-app]');
             if (isIOS) {
-                if (hint) hint.textContent = 'Safari: «Поделиться» → «На экран «Домой»»';
+                if (hint) hint.textContent = 'Safari → Поделиться → Домой';
                 if (bannerButton) bannerButton.textContent = 'Как установить';
             }
 

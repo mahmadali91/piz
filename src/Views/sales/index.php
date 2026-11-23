@@ -100,7 +100,7 @@ unset($query['page']);
                 <?php endif; ?>
             </div>
         <?php else: ?>
-            <div class="table-wrap">
+            <div class="table-wrap table-wrap--sales">
                 <table class="table">
                     <thead>
                     <tr>
@@ -137,6 +137,28 @@ unset($query['page']);
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+
+            <div class="sale-mobile-list">
+                <?php foreach ($sales as $sale): ?>
+                    <a class="sale-mobile-card" href="<?= e(url('/sales/' . $sale['id'])) ?>">
+                        <div class="sale-mobile-card__head">
+                            <strong>Чек <?= e($sale['number']) ?></strong>
+                            <span><?= e(dt_human($sale['created_at'])) ?></span>
+                        </div>
+                        <div class="sale-mobile-card__mid">
+                            <span><?= e($sale['cashier_name'] ?? '—') ?> · <?= (int) $sale['items_count'] ?> поз.</span>
+                            <?= payment_badge((string) $sale['payment_method']) ?>
+                        </div>
+                        <div class="sale-mobile-card__foot">
+                            <?= sale_status_badge((string) $sale['status']) ?>
+                            <?php if ($finance): ?>
+                                <span class="sale-mobile-card__profit">+<?= e(money((int) $sale['total_kop'] - (int) $sale['cost_kop'])) ?></span>
+                            <?php endif; ?>
+                            <strong><?= e(money((int) $sale['total_kop'])) ?></strong>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
             </div>
 
             <?php if ($pages > 1): ?>

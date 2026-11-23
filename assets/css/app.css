@@ -3775,6 +3775,200 @@ body.bare-body.has-install-banner {
     }
 }
 
+/* ---------------- Мобильные карточки списков ---------------- */
+
+.product-mobile-list,
+.sale-mobile-list {
+    display: none;
+}
+
+.product-mobile-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 10px;
+    padding: 11px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+}
+
+.product-mobile-card .thumb--lg {
+    width: 56px;
+    height: 56px;
+}
+
+.product-mobile-card__body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.product-mobile-card__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.product-mobile-card__top strong {
+    font-size: 13px;
+    line-height: 1.3;
+    font-weight: 650;
+}
+
+.product-mobile-card__meta {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-mobile-card__bottom {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 1px;
+}
+
+.product-mobile-card__bottom strong {
+    font-size: 13.5px;
+    font-variant-numeric: tabular-nums;
+}
+
+.product-mobile-card__bottom span {
+    font-size: 10.5px;
+    color: var(--muted);
+}
+
+.product-mobile-card__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+}
+
+.product-mobile-card__actions .icon-btn {
+    width: 32px;
+    height: 32px;
+}
+
+.sale-mobile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+}
+
+.sale-mobile-card:hover {
+    border-color: var(--line-strong);
+    background: var(--surface-2);
+}
+
+.sale-mobile-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.sale-mobile-card__head strong {
+    font-size: 13px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.sale-mobile-card__head span {
+    font-size: 10.5px;
+    color: var(--muted);
+    white-space: nowrap;
+}
+
+.sale-mobile-card__mid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--muted);
+}
+
+.sale-mobile-card__foot {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-top: 7px;
+    border-top: 1px dashed var(--line);
+}
+
+.sale-mobile-card__profit {
+    font-size: 11.5px;
+    font-weight: 650;
+    color: var(--green);
+}
+
+.sale-mobile-card__foot > strong {
+    margin-left: auto;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+    .table-wrap--products,
+    .table-wrap--sales {
+        display: none;
+    }
+
+    .product-mobile-list,
+    .sale-mobile-list {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+}
+
+@media (max-width: 640px) {
+    .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .toolbar__left,
+    .toolbar__right {
+        width: 100%;
+    }
+
+    .toolbar .search-box {
+        flex: 1 1 100%;
+        min-width: 0;
+    }
+
+    .toolbar .select {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .toolbar__right .btn {
+        flex: 1 1 calc(50% - 4px);
+    }
+
+    .toolbar .chips {
+        width: 100%;
+    }
+
+    .install-banner__copy span {
+        white-space: nowrap;
+    }
+}
+
 /* ---------------- Responsive ---------------- */
 
 @media (max-width: 1240px) {
