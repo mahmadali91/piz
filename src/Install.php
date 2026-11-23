@@ -63,6 +63,12 @@ final class Install
             'hint' => 'Без zip-расширения используйте импорт CSV.',
             'optional' => true,
         ];
+        $checks[] = [
+            'label' => 'Разбор Excel (SimpleXML)',
+            'ok' => function_exists('simplexml_load_string'),
+            'hint' => 'Без SimpleXML используйте импорт CSV.',
+            'optional' => true,
+        ];
         foreach ([
             'config' => 'config',
             'uploads' => 'uploads',

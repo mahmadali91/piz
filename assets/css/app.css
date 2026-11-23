@@ -3969,32 +3969,66 @@ code {
 
 /* ---------------- Print ---------------- */
 
-@media print {
-    @page {
-        margin: 3mm;
-        size: 80mm auto;
-    }
+.print-root {
+    display: none;
+}
 
+@media print {
+    html,
     body {
         background: #fff !important;
     }
 
-    body * {
-        visibility: hidden;
+    .sidebar,
+    .sidebar-backdrop,
+    .topbar,
+    .nav,
+    .toasts,
+    .toolbar,
+    .chips,
+    .pagination,
+    .modal__head,
+    .modal__backdrop,
+    .receipt-modal__actions,
+    .no-print {
+        display: none !important;
     }
 
-    .receipt-print,
-    .receipt-print * {
-        visibility: visible;
+    .main {
+        margin-left: 0 !important;
+    }
+
+    .content {
+        padding: 0 !important;
+        max-width: none;
+    }
+
+    .app {
+        min-height: 0;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .card {
+        box-shadow: none;
+        border-color: #ddd;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .dash-grid > * {
+        grid-column: span 12 !important;
     }
 
     .receipt-print {
-        position: absolute;
-        left: 0;
-        top: 0;
+        position: static;
         width: 74mm;
         max-width: none;
         padding: 0;
+        margin: 0;
     }
 
     .receipt-print .receipt__logo {
@@ -4002,53 +4036,14 @@ code {
         print-color-adjust: exact;
     }
 
-    .no-print {
-        display: none !important;
-    }
-}
-
-
-@media print {
-    body.printing-page {
-        background: #fff !important;
-    }
-
-    body.printing-page * {
-        visibility: visible !important;
-    }
-
-    body.printing-page .sidebar,
-    body.printing-page .sidebar-backdrop,
-    body.printing-page .topbar,
-    body.printing-page .toolbar,
-    body.printing-page .toasts,
-    body.printing-page .no-print,
-    body.printing-page .chips {
+    /* Режим печати только чека */
+    body.printing-receipt > *:not(.print-root) {
         display: none !important;
     }
 
-    body.printing-page .main {
-        margin-left: 0;
-    }
-
-    body.printing-page .content {
+    body.printing-receipt > .print-root {
+        display: block !important;
         padding: 0;
-    }
-
-    body.printing-page .card {
-        box-shadow: none;
-        border-color: #ddd;
-        break-inside: avoid;
-        page-break-inside: avoid;
-    }
-
-    body.printing-page .receipt-print {
-        position: static;
-        width: auto;
-        max-width: none;
-    }
-
-    body.printing-page .dash-grid > * {
-        grid-column: span 12 !important;
+        margin: 0;
     }
 }
