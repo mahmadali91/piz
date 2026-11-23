@@ -25,4 +25,5 @@
 /shots/
 
 # Сборки для загрузки на хостинг
-/dist/
+/dist/*
+!/dist/piz-kiosk-1.0.0.zip
