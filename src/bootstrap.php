@@ -45,7 +45,7 @@ session_set_cookie_params([
     'samesite' => 'Lax',
 ]);
 session_name('piz_session');
-if (session_status() !== PHP_SESSION_ACTIVE) {
+if (PHP_SAPI !== 'cli' && session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 

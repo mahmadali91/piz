@@ -13,7 +13,7 @@ DirectoryIndex index.php
 </IfModule>
 
 # Служебные файлы не отдаём наружу
-<FilesMatch "^(info\.txt|\.env|composer\.(json|lock)|package\.json|.*\.(md|sql|log|example\.php|xlsx|xls))$">
+<FilesMatch "^(info\.txt|piz_deploy_key(\.pub)?|\.env|composer\.(json|lock)|package\.json|.*\.(md|sql|log|example\.php|xlsx|xls|key|pem))$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>
