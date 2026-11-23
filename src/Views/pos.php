@@ -9,7 +9,7 @@
             <div class="pos__search-row">
                 <div class="search-box pos__search">
                     <?= icon('search') ?>
-                    <input class="input" id="pos-search" type="search" placeholder="Найти товар по названию или артикулу…" autocomplete="off" autofocus>
+                    <input class="input" id="pos-search" type="search" placeholder="Поиск товара или артикул…" autocomplete="off" autofocus>
                 </div>
                 <?php if (\PIZ\Auth::can('products.view')): ?>
                     <a class="btn btn--ghost" href="<?= e(url('/products')) ?>" title="Управление товарами"><?= icon('box') ?><span class="hide-sm">Товары</span></a>
