@@ -106,9 +106,10 @@ final class ImageUploader
         if (!$relativePath || str_contains($relativePath, '..')) {
             return null;
         }
-        if (!is_file(PIZ_ROOT . '/' . ltrim($relativePath, '/'))) {
+        $absolute = PIZ_ROOT . '/' . ltrim($relativePath, '/');
+        if (!is_file($absolute)) {
             return null;
         }
-        return url(ltrim($relativePath, '/'));
+        return url(ltrim($relativePath, '/')) . '?v=' . filemtime($absolute);
     }
 }

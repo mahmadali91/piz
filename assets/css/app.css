@@ -2192,7 +2192,7 @@ code {
 }
 
 .product-card__media {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1 / 1;
     background: var(--surface-2);
     display: grid;
     place-items: center;

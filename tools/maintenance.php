@@ -143,7 +143,7 @@ function stockAll(int $qty, int $adminId): void
 }
 
 /**
- * Рисует квадратные миниатюры с названием товара и сохраняет их в uploads/products.
+ * Рисует квадратные миниатюры с брендом, SKU и буквой товара.
  */
 function generatePhotos(bool $force): void
 {
@@ -205,42 +205,22 @@ function generatePhotos(bool $force): void
         // буква-водяной знак
         $letter = mb_strtoupper(mb_substr($name !== '' ? $name : '?', 0, 1));
         $letterColor = imagecolorallocatealpha($image, 255, 255, 255, 28);
-        $box = imagettfbbox(250, 0, $font, $letter);
+        $box = imagettfbbox(300, 0, $font, $letter);
         $letterWidth = abs($box[2] - $box[0]);
-        imagettftext($image, 250, 0, (int) (($width - $letterWidth) / 2), 420, $letterColor, $font, $letter);
-
-        // плашка для названия
-        $white = imagecolorallocatealpha($image, 255, 255, 255, 18);
-        imagefilledrectangle($image, 0, 420, $width, $height, $white);
+        imagettftext($image, 300, 0, (int) (($width - $letterWidth) / 2), 450, $letterColor, $font, $letter);
 
         // PIZ
         $ink = imagecolorallocate($image, 40, 45, 55);
         imagettftext($image, 22, 0, 32, 52, $ink, $font, 'PIZ');
         imagettftext($image, 15, 0, 32, 78, $ink, $font, 'киоск');
 
-        // категория
-        $category = trim((string) $product['category']);
-        if ($category !== '') {
-            $categoryBox = imagettfbbox(17, 0, $font, $category);
-            $categoryWidth = abs($categoryBox[2] - $categoryBox[0]);
-            imagettftext($image, 17, 0, $width - 32 - $categoryWidth, 52, $ink, $font, $category);
+        // SKU в правом верхнем углу
+        $sku = trim((string) ($product['sku'] ?? ''));
+        if ($sku !== '') {
+            $skuBox = imagettfbbox(17, 0, $font, $sku);
+            $skuWidth = abs($skuBox[2] - $skuBox[0]);
+            imagettftext($image, 17, 0, $width - 32 - $skuWidth, 52, $ink, $font, $sku);
         }
-
-        // название
-        $nameSize = mb_strlen($name) > 28 ? 27 : 32;
-        $lines = wrapText($name, $font, $nameSize, 536);
-        $lines = array_slice($lines, 0, 3);
-        $y = 470;
-        foreach ($lines as $line) {
-            imagettftext($image, $nameSize, 0, 32, $y, $ink, $font, $line);
-            $y += $nameSize + 12;
-        }
-
-        // цена
-        $price = kop_to_input((int) $product['sale_price_kop']) . ' руб.';
-        $priceBox = imagettfbbox(26, 0, $font, $price);
-        $priceWidth = abs($priceBox[2] - $priceBox[0]);
-        imagettftext($image, 26, 0, $width - 32 - $priceWidth, 570, $ink, $font, $price);
 
         $fileName = 'generated-' . $id . '.jpg';
         $relative = 'uploads/products/' . $fileName;

@@ -30,3 +30,10 @@
 
 # Ключ прямого доступа к хостингу (не коммитить)
 /piz_deploy_key*
+
+# Локальные сборочные зависимости скриншотов
+/node_modules/
+/package-lock.json
+/package.json
+/.npm-cache/
+/screenshot.js
