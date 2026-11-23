@@ -35,6 +35,14 @@ $https = (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !=
     || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https')
     || (($_SERVER['SERVER_PORT'] ?? '') === '443');
 
+// Принудительный HTTPS для боевого домена (локально и в CLI не вмешиваемся).
+$host = preg_replace('/[^A-Za-z0-9.\-:\[\]]/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+if (!$https && PHP_SAPI !== 'cli' && in_array($host, ['piz.itop7.ru', 'www.piz.itop7.ru'], true)) {
+    $uri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
+    header('Location: https://' . $host . $uri, true, 301);
+    exit;
+}
+
 $cookiePath = base_url() !== '' ? base_url() . '/' : '/';
 session_set_cookie_params([
     'lifetime' => 0,
