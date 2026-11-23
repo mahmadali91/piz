@@ -1,6 +1,17 @@
 Options -Indexes
 DirectoryIndex index.php
 
+AddType application/manifest+json .webmanifest
+
+<IfModule mod_headers.c>
+    <Files "sw.js">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </Files>
+    <Files "manifest.webmanifest">
+        Header set Cache-Control "no-cache"
+    </Files>
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     # Если проект лежит в подпапке, раскомментируйте строку ниже и укажите путь:

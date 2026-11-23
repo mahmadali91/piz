@@ -8,7 +8,13 @@ $user = \PIZ\Auth::user();
     <meta name="theme-color" content="#141821">
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'PIZ') ?> — <?= e(\PIZ\Settings::get('store_name', 'Киоск PIZ')) ?></title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23f26b21'/%3E%3Ctext x='32' y='45' font-family='Arial,sans-serif' font-size='38' font-weight='bold' fill='white' text-anchor='middle'%3EP%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= e(asset('assets/icons/favicon-32.png')) ?>">
+    <link rel="apple-touch-icon" href="<?= e(asset('assets/icons/apple-touch-icon.png')) ?>">
+    <link rel="manifest" href="<?= e(url('manifest.webmanifest')) ?>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PIZ">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
 </head>
 <body class="<?= e($bodyClass ?? '') ?>">
@@ -123,6 +129,7 @@ $user = \PIZ\Auth::user();
     <?= $content ?>
 <?php endif; ?>
 <script src="<?= e(asset('assets/js/app.js')) ?>" defer></script>
+<?php require PIZ_ROOT . '/src/Views/partials/install.php'; ?>
 <?php if (!empty($pageScript)): ?>
     <script src="<?= e(asset($pageScript)) ?>" defer></script>
 <?php endif; ?>

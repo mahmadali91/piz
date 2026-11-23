@@ -99,6 +99,20 @@ $tablesTotal = count($health['tables']);
                     </div>
                 </form>
             </section>
+
+            <section class="card">
+                <header class="card__head">
+                    <div>
+                        <h3>Приложение на телефон</h3>
+                        <p>Ярлык на главном экране и полноэкранный режим</p>
+                    </div>
+                    <span class="badge badge--gray" data-install-state>не установлено</span>
+                </header>
+                <div class="install-settings">
+                    <p class="muted">Установите PIZ как приложение: на Android — через меню Chrome, на iPhone — через «Поделиться» → «На экран «Домой»».</p>
+                    <button class="btn btn--primary btn--sm" type="button" data-install-app><?= icon('download') ?> Установить приложение</button>
+                </div>
+            </section>
         </div>
 
         <div class="settings-stack">

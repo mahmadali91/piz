@@ -420,6 +420,121 @@
             });
         });
     }
+    /* ---------- PWA: установка на телефон ---------- */
+    (function initPwa() {
+        if ('serviceWorker' in navigator && location.protocol === 'https:') {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {
+                    /* установка не критична для работы */
+                });
+            });
+        }
+
+        const banner = document.getElementById('install-banner');
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+            || window.navigator.standalone === true;
+        const ua = navigator.userAgent || '';
+        const isIOS = /iphone|ipad|ipod/i.test(ua)
+            || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isMobile = window.matchMedia('(max-width: 900px)').matches
+            || /android|iphone|ipad|ipod|mobile/i.test(ua);
+
+        function safeGet(storage, key) {
+            try { return storage.getItem(key); } catch (error) { return null; }
+        }
+        function safeSet(storage, key, value) {
+            try { storage.setItem(key, value); } catch (error) { /* ignore */ }
+        }
+
+        const stateEls = document.querySelectorAll('[data-install-state]');
+        function setInstalledState() {
+            stateEls.forEach(function (el) {
+                el.textContent = isStandalone ? 'установлено' : 'не установлено';
+                el.className = 'badge ' + (isStandalone ? 'badge--green' : 'badge--gray');
+            });
+        }
+        setInstalledState();
+
+        let deferredPrompt = null;
+        const dismissedUntil = parseInt(safeGet(localStorage, 'piz_install_dismissed') || '0', 10);
+        let dismissed = dismissedUntil > Date.now();
+        const shownThisSession = safeGet(sessionStorage, 'piz_install_shown') === '1';
+
+        function showBanner() {
+            if (!banner || isStandalone || dismissed) return;
+            banner.hidden = false;
+            document.body.classList.add('has-install-banner');
+            safeSet(sessionStorage, 'piz_install_shown', '1');
+        }
+
+        function hideBanner(remember) {
+            if (banner) banner.hidden = true;
+            document.body.classList.remove('has-install-banner');
+            if (remember) {
+                dismissed = true;
+                safeSet(localStorage, 'piz_install_dismissed', String(Date.now() + 30 * 24 * 60 * 60 * 1000));
+            }
+        }
+
+        function openInstallHelp() {
+            if (window.PIZ_openModal) {
+                window.PIZ_openModal('install-help-modal');
+            } else {
+                openModal('install-help-modal');
+            }
+        }
+
+        if (banner) {
+            const hint = banner.querySelector('[data-install-hint]');
+            const bannerButton = banner.querySelector('[data-install-app]');
+            if (isIOS) {
+                if (hint) hint.textContent = 'Safari: «Поделиться» → «На экран «Домой»»';
+                if (bannerButton) bannerButton.textContent = 'Как установить';
+            }
+
+            banner.querySelectorAll('[data-install-dismiss]').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    hideBanner(true);
+                });
+            });
+
+            window.addEventListener('beforeinstallprompt', function (event) {
+                event.preventDefault();
+                deferredPrompt = event;
+                if (!shownThisSession && !isStandalone) {
+                    showBanner();
+                }
+            });
+
+            window.addEventListener('appinstalled', function () {
+                hideBanner(true);
+                stateEls.forEach(function (el) {
+                    el.textContent = 'установлено';
+                    el.className = 'badge badge--green';
+                });
+            });
+
+            if (isMobile && !isStandalone && !dismissed && !shownThisSession) {
+                window.setTimeout(showBanner, 1200);
+            }
+        }
+
+        document.querySelectorAll('[data-install-app]').forEach(function (button) {
+            button.addEventListener('click', async function () {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    try {
+                        await deferredPrompt.userChoice;
+                    } catch (error) { /* ignore */ }
+                    deferredPrompt = null;
+                    hideBanner(true);
+                    return;
+                }
+                openInstallHelp();
+            });
+        });
+    })();
+
     /* ---------- Expose for page scripts ---------- */
     window.PIZ_openModal = openModal;
     window.PIZ_closeModal = closeModal;
