@@ -98,10 +98,20 @@ cd public_html
 
 ```bash
 cd ~/piz.itop7.ru/public_html
-chmod -R u+rwX,go+rX .
 mkdir -p uploads/products storage/logs
-chmod -R 775 uploads storage config
+
+# файлы и каталоги — стандартные права, без лишнего executable-бита
+find . -path ./.git -prune -o -type f -exec chmod 644 {} \;
+find . -path ./.git -prune -o -type d -exec chmod 755 {} \;
+
+# только эти каталоги должны быть доступны на запись
+find uploads storage config -type d -exec chmod 775 {} \;
+find uploads storage config -type f -exec chmod 664 {} \;
+chmod 640 config/config.php 2>/dev/null || true
 ```
+
+> Не используйте `chmod -R 775` на всём проекте: Git начнёт видеть изменения прав у файлов,
+> и `git pull` будет ругаться. Права `755/644` достаточно, запись нужна только `uploads`, `storage`, `config`.
 
 Если после установки `config/config.php` создался с правами `640` — это нормально.
 
