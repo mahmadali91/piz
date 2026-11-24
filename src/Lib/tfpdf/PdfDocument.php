@@ -9,6 +9,7 @@ namespace tFPDF;
 class PdfDocument extends PDF
 {
     public string $footerLeft = '';
+    public string $footerNote = '';
 
     public function Footer(): void
     {
@@ -19,6 +20,6 @@ class PdfDocument extends PDF
         $this->SetY(-10);
         $this->SetFont('DejaVu', '', 7.5);
         $this->SetTextColor(132, 140, 152);
-        $this->Cell(0, 5, $this->footerLeft . '  ·  стр. ' . $this->PageNo(), 0, 0, 'C');
+        $this->Cell(0, 5, $this->footerLeft . ($this->footerNote !== '' ? '  ·  ' . $this->footerNote : '') . '  ·  стр. ' . $this->PageNo(), 0, 0, 'C');
     }
 }

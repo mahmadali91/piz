@@ -25,6 +25,7 @@ final class PdfService
         $pdf->SetMargins(12, 12, 12);
         $pdf->SetAutoPageBreak(true, 18);
         $pdf->footerLeft = (string) Settings::get('store_name', 'КИОСК ДОНЕР');
+        $pdf->footerNote = 'сформирован ' . date('d.m.Y H:i') . ' · v' . PIZ_VERSION;
         return $pdf;
     }
 
@@ -338,7 +339,7 @@ final class PdfService
         self::sectionTitle($pdf, 'Остаток на конец смены', 'Товары и их стоимость');
         self::stockTable($pdf, $stock);
 
-        self::download($pdf, 'shift-' . (int) $shift['id'] . '.pdf');
+        self::download($pdf, 'shift-' . (int) $shift['id'] . '-' . date('d.m.Y-H-i') . '.pdf');
     }
 
     private static function shiftHeader(\tFPDF\PDF $pdf, array $shift): void
