@@ -502,8 +502,8 @@ final class PdfService
         $pdf->SetFillColor(28, 35, 48);
         $pdf->SetTextColor(255, 255, 255);
         $pdf->SetFont('DejaVu', 'B', 7.5);
-        $pdf->Cell(76, 7, 'Товар', 0, 0, 'L', true);
-        $pdf->Cell(18, 7, 'Кол-во', 0, 0, 'R', true);
+        $pdf->Cell(72, 7, 'Товар', 0, 0, 'L', true);
+        $pdf->Cell(22, 7, 'Кол-во', 0, 0, 'R', true);
         $pdf->Cell(48, 7, 'Сотрудник', 0, 0, 'L', true);
         $pdf->Cell(44, 7, 'Сумма', 0, 0, 'R', true);
         $pdf->Ln();
@@ -515,8 +515,8 @@ final class PdfService
                 $pdf->SetFillColor(28, 35, 48);
                 $pdf->SetTextColor(255, 255, 255);
                 $pdf->SetFont('DejaVu', 'B', 7.5);
-                $pdf->Cell(76, 7, 'Товар', 0, 0, 'L', true);
-                $pdf->Cell(18, 7, 'Кол-во', 0, 0, 'R', true);
+                $pdf->Cell(72, 7, 'Товар', 0, 0, 'L', true);
+                $pdf->Cell(22, 7, 'Кол-во', 0, 0, 'R', true);
                 $pdf->Cell(48, 7, 'Сотрудник', 0, 0, 'L', true);
                 $pdf->Cell(44, 7, 'Сумма', 0, 0, 'R', true);
                 $pdf->Ln();
@@ -524,8 +524,8 @@ final class PdfService
             $pdf->SetFillColor($i % 2 === 0 ? 248 : 255, $i % 2 === 0 ? 249 : 255, $i % 2 === 0 ? 252 : 255);
             $pdf->SetTextColor(35, 43, 57);
             $pdf->SetFont('DejaVu', '', 7.8);
-            $pdf->Cell(76, 6.5, self::fit((string) ($row['product_name'] ?? '—'), 76, 7.8), 0, 0, 'L', true);
-            $pdf->Cell(18, 6.5, (string) (int) $row['qty'], 0, 0, 'R');
+            $pdf->Cell(72, 6.5, self::fit((string) ($row['product_name'] ?? '—'), 72, 7.8), 0, 0, 'L', true);
+            $pdf->Cell(22, 6.5, (string) (int) $row['qty'], 0, 0, 'R');
             $pdf->Cell(48, 6.5, self::fit((string) ($row['employee_name'] ?? '—'), 48, 7.8), 0, 0, 'L');
             $pdf->Cell(44, 6.5, self::amount((int) $row['total_kop']), 0, 1, 'R');
             $total += (int) $row['total_kop'];
