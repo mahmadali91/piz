@@ -308,7 +308,7 @@ final class PdfService
 
         self::shiftMeta($pdf, $shift, $opened, $closed, $duration);
 
-        $y = 42;
+        $y = 33;
         $kpiWidth = 44.25;
         $kpiGap = 3;
         $revenue = (int) $totals['revenue'];
@@ -319,14 +319,14 @@ final class PdfService
         self::kpiCard($pdf, 12 + 3 * ($kpiWidth + $kpiGap), $y, $kpiWidth, 'СРЕДНИЙ ЧЕК', self::amount($count > 0 ? (int) round($revenue / $count) : 0), 'на чек', [139, 92, 246]);
 
         $pdf->SetFillColor(247, 248, 251);
-        $pdf->Rect(12, 68, 186, 9, 'F');
+        $pdf->Rect(12, 56, 186, 8, 'F');
         $pdf->SetFont('DejaVu', '', 7.5);
         $pdf->SetTextColor(96, 106, 122);
-        $pdf->SetXY(16, 70);
+        $pdf->SetXY(16, 57.5);
         $pdf->Cell(58, 4.5, 'Себестоимость: ' . self::amount((int) $totals['cost']), 0, 0);
         $pdf->Cell(58, 4.5, 'Расходы: ' . self::amount((int) $totals['expense']), 0, 0);
         $pdf->Cell(54, 4.5, 'Остаток: ' . (int) $shift['stock_units'] . ' ед.', 0, 1);
-        $pdf->SetY(81);
+        $pdf->SetY(66);
 
         self::sectionTitle($pdf, 'Оплата', 'По способам оплаты');
         self::paymentTable($pdf, $payments, $revenue);
@@ -346,41 +346,42 @@ final class PdfService
     {
         $pdf->AddPage();
         $store = (string) Settings::get('store_name', 'КИОСК ДОНЕР');
-        $pdf->SetFillColor(19, 25, 37);
-        $pdf->Rect(0, 0, 210, 27, 'F');
         $pdf->SetFillColor(242, 107, 33);
-        $pdf->Rect(12, 7.5, 12, 12, 'F');
+        $pdf->Rect(0, 0, 210, 20, 'F');
+        $pdf->SetFillColor(255, 255, 255);
+        $pdf->Rect(11, 4.5, 10, 10, 'F');
+        $pdf->SetTextColor(242, 107, 33);
+        $pdf->SetFont('DejaVu', 'B', 8);
+        $pdf->SetXY(11, 6.2);
+        $pdf->Cell(10, 5, 'Д', 0, 0, 'C');
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->SetFont('DejaVu', 'B', 9);
-        $pdf->SetXY(12, 10);
-        $pdf->Cell(12, 6, 'Д', 0, 0, 'C');
-        $pdf->SetFont('DejaVu', 'B', 13);
-        $pdf->SetXY(28, 5.5);
-        $pdf->Cell(112, 6, self::fit($store, 112, 13), 0, 1);
-        $pdf->SetFont('DejaVu', '', 7.5);
-        $pdf->SetTextColor(178, 187, 201);
-        $pdf->SetXY(28, 12.5);
-        $pdf->Cell(112, 4, 'Отчёт по смене № ' . (int) $shift['id'], 0, 1);
+        $pdf->SetFont('DejaVu', 'B', 11);
+        $pdf->SetXY(25, 3.2);
+        $pdf->Cell(115, 5, self::fit($store, 115, 11), 0, 1);
+        $pdf->SetFont('DejaVu', '', 6.8);
+        $pdf->SetTextColor(255, 238, 226);
+        $pdf->SetXY(25, 9.2);
+        $pdf->Cell(115, 4, 'Отчёт по смене № ' . (int) $shift['id'], 0, 1);
 
         $opened = strtotime((string) $shift['opened_at']);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->SetFont('DejaVu', 'B', 9.5);
-        $pdf->SetXY(148, 5.5);
-        $pdf->Cell(46, 5, date('d.m.Y', $opened), 0, 0, 'R');
-        $pdf->SetFont('DejaVu', '', 6.5);
-        $pdf->SetTextColor(178, 187, 201);
-        $pdf->SetXY(148, 12);
-        $pdf->Cell(46, 4, $shift['status'] === 'closed' ? 'СМЕНА ЗАКРЫТА' : 'СМЕНА ОТКРЫТА', 0, 0, 'R');
-        $pdf->SetY(30);
+        $pdf->SetFont('DejaVu', 'B', 8.5);
+        $pdf->SetXY(145, 3.2);
+        $pdf->Cell(49, 5, date('d.m.Y', $opened), 0, 0, 'R');
+        $pdf->SetFont('DejaVu', '', 6.2);
+        $pdf->SetTextColor(255, 238, 226);
+        $pdf->SetXY(145, 9);
+        $pdf->Cell(49, 4, $shift['status'] === 'closed' ? 'СМЕНА ЗАКРЫТА' : 'СМЕНА ОТКРЫТА', 0, 0, 'R');
+        $pdf->SetY(22);
     }
 
     private static function shiftMeta(\tFPDF\PDF $pdf, array $shift, int $opened, ?int $closed, string $duration): void
     {
         $pdf->SetFillColor(247, 248, 251);
-        $pdf->Rect(12, 30, 186, 9, 'F');
+        $pdf->Rect(12, 22, 186, 8, 'F');
         $pdf->SetTextColor(105, 114, 129);
         $pdf->SetFont('DejaVu', '', 7.5);
-        $pdf->SetXY(16, 32.5);
+        $pdf->SetXY(16, 24.2);
         $pdf->Cell(22, 4, 'Открыта', 0, 0);
         $pdf->SetTextColor(35, 43, 57);
         $pdf->SetFont('DejaVu', 'B', 7.5);
@@ -397,7 +398,7 @@ final class PdfService
         $pdf->SetTextColor(35, 43, 57);
         $pdf->SetFont('DejaVu', 'B', 7.5);
         $pdf->Cell(0, 4, $duration, 0, 1);
-        $pdf->SetY(40);
+        $pdf->SetY(32);
     }
 
     private static function infoCard(\tFPDF\PDF $pdf, float $x, float $y, float $w, string $label, string $value, string $sub, array $color): void
@@ -423,7 +424,7 @@ final class PdfService
     private static function kpiCard(\tFPDF\PDF $pdf, float $x, float $y, float $w, string $label, string $value, string $sub, array $color): void
     {
         $pdf->SetFillColor(247, 248, 251);
-        $pdf->Rect($x, $y, $w, 22, 'F');
+        $pdf->Rect($x, $y, $w, 21, 'F');
         $pdf->SetFillColor($color[0], $color[1], $color[2]);
         $pdf->Rect($x, $y, $w, 2.5, 'F');
         $pdf->SetTextColor(112, 121, 135);
@@ -436,7 +437,7 @@ final class PdfService
         $pdf->Cell($w - 8, 7, self::fit($value, $w - 8, 10.5), 0, 1);
         $pdf->SetTextColor(112, 121, 135);
         $pdf->SetFont('DejaVu', '', 6.8);
-        $pdf->SetXY($x + 4, $y + 16);
+        $pdf->SetXY($x + 4, $y + 15.5);
         $pdf->Cell($w - 8, 4, $sub, 0, 1);
     }
 
