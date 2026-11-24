@@ -5140,3 +5140,39 @@ html.sidebar-collapsed .sidebar-user__gear {
         gap: 12px;
     }
 }
+
+/* Линейный вариант динамики */
+.line-chart {
+    position: relative;
+}
+
+.line-chart__line {
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.line-chart__line--revenue { stroke: var(--brand); }
+.line-chart__line--profit { stroke: #24b364; }
+.line-chart__line--expense { stroke: #e05b5b; }
+
+.line-chart__legend {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: 4px 4px 0;
+    font-size: 10.5px;
+    color: var(--muted);
+}
+
+.line-chart__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend__dot--red {
+    background: #e05b5b;
+}

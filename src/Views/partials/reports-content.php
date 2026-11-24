@@ -79,6 +79,7 @@ $periodChips = [
             <div class="report-view-tools">
                 <div class="report-view-switch" role="tablist" aria-label="Вид динамики">
                     <button type="button" class="is-active" data-report-view="chart" role="tab" aria-selected="true">График</button>
+                    <button type="button" data-report-view="lines" role="tab" aria-selected="false">Линии</button>
                     <button type="button" data-report-view="table" role="tab" aria-selected="false">Таблица</button>
                     <button type="button" data-report-view="list" role="tab" aria-selected="false">Список</button>
                 </div>
@@ -90,6 +91,9 @@ $periodChips = [
         </header>
         <div data-report-panel="chart">
             <?php \PIZ\View::partial('partials/bar-chart', ['series' => $series, 'height' => 150, 'showProfit' => true]); ?>
+        </div>
+        <div data-report-panel="lines" hidden>
+            <?php \PIZ\View::partial('partials/line-chart', ['series' => $series, 'height' => 150]); ?>
         </div>
         <div data-report-panel="table" hidden>
             <div class="table-wrap">
