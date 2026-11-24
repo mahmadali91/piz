@@ -1,6 +1,6 @@
 <?php
 /** @var array $user */
-$shot = static fn (string $name): string => asset('assets/knowledge/' . $name);
+$shot = static fn (string $name): string => url('/knowledge/image/' . $name);
 $sections = [
     ['dashboard', 'Дашборд и отчёты', 'Сводка дня, период, график и таблица'],
     ['pos', 'Касса', 'Продажа, оплата и чек'],
@@ -32,10 +32,10 @@ $sections = [
     </header>
 
     <nav class="knowledge-toc" aria-label="Разделы базы знаний">
-        <?php foreach ($sections as $index => [$id, $title, $description]): ?>
-            <a class="knowledge-toc__item" href="#<?= e($id) ?>">
+        <?php foreach ($sections as $index => [$sectionId, $sectionTitle, $sectionDescription]): ?>
+            <a class="knowledge-toc__item" href="#<?= e($sectionId) ?>">
                 <span class="knowledge-toc__num"><?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?></span>
-                <span><strong><?= e($title) ?></strong><small><?= e($description) ?></small></span>
+                <span><strong><?= e($sectionTitle) ?></strong><small><?= e($sectionDescription) ?></small></span>
             </a>
         <?php endforeach; ?>
     </nav>
@@ -189,10 +189,16 @@ $sections = [
                 <li>PDF накладной доступен из документа.</li>
             </ul>
         </div>
-        <figure class="knowledge-figure">
-            <a href="<?= e($shot('suppliers.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('suppliers.jpg')) ?>" alt="Поставщики и накладные" loading="lazy"></a>
-            <figcaption>Поставщики: накладные, оплаты и долги.</figcaption>
-        </figure>
+        <div class="knowledge-figures">
+            <figure class="knowledge-figure">
+                <a href="<?= e($shot('suppliers.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('suppliers.jpg')) ?>" alt="Поставщики" loading="lazy"></a>
+                <figcaption>Справочник поставщиков и долги.</figcaption>
+            </figure>
+            <figure class="knowledge-figure">
+                <a href="<?= e($shot('invoices.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('invoices.jpg')) ?>" alt="Накладные поставщиков" loading="lazy"></a>
+                <figcaption>Накладные, закупочные цены и оплаты.</figcaption>
+            </figure>
+        </div>
     </section>
 
     <section class="knowledge-section" id="inventory">
@@ -292,10 +298,16 @@ $sections = [
             </ul>
             <p class="knowledge-tip">В Safari: «Поделиться» → «На экран “Домой”». В Chrome: меню → «Установить приложение».</p>
         </div>
-        <figure class="knowledge-figure">
-            <a href="<?= e($shot('pos-mobile.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('pos-mobile.jpg')) ?>" alt="Касса на телефоне" loading="lazy"></a>
-            <figcaption>Касса на телефоне: 2 товара в ряд и вкладка «Чек».</figcaption>
-        </figure>
+        <div class="knowledge-figures">
+            <figure class="knowledge-figure">
+                <a href="<?= e($shot('pos-mobile.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('pos-mobile.jpg')) ?>" alt="Касса на телефоне" loading="lazy"></a>
+                <figcaption>Касса: 2 товара в ряд и вкладка «Чек».</figcaption>
+            </figure>
+            <figure class="knowledge-figure">
+                <a href="<?= e($shot('dashboard-mobile.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('dashboard-mobile.jpg')) ?>" alt="Дашборд на телефоне" loading="lazy"></a>
+                <figcaption>Дашборд: компактные действия и фильтры.</figcaption>
+            </figure>
+        </div>
     </section>
 
     <section class="knowledge-help">

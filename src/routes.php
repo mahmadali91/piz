@@ -120,6 +120,7 @@ Router::get('/activity', [ActivityController::class, 'index']);
 
 // База знаний
 Router::get('/knowledge', [KnowledgeController::class, 'index']);
+Router::get('/knowledge/image/{name}', [KnowledgeController::class, 'image']);
 
 // Служебная проверка доступности
 Router::get('/healthz', static function (): void {

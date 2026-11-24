@@ -5788,3 +5788,15 @@ html.sidebar-collapsed .sidebar-user__gear {
     .knowledge-section h3 { font-size: 18px; }
     .knowledge-figure img { max-height: 260px; object-fit: cover; object-position: top; }
 }
+
+.knowledge-figures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+@media (max-width: 560px) {
+    .knowledge-figures {
+        grid-template-columns: 1fr;
+    }
+}
