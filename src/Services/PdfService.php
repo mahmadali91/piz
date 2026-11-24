@@ -114,7 +114,13 @@ final class PdfService
 
     private static function download(\tFPDF\PDF $pdf, string $filename): void
     {
-        $pdf->Output('D', $filename);
+        $data = $pdf->output();
+        if (PHP_SAPI !== 'cli') {
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Length: ' . strlen($data));
+        }
+        echo $data;
         exit;
     }
 
