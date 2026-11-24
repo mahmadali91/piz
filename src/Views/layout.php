@@ -83,23 +83,23 @@ $groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'repo
                 <?php endif; ?>
                 <?php if (\PIZ\Auth::can('writeoff.manage')): ?>
                     <a class="nav__item <?= active_class($active ?? '', 'stock_out') ?>" href="<?= e(url('/stock/out')) ?>">
-                        <?= icon('logout') ?><span>Расход</span>
+                        <?= icon('box-minus') ?><span>Расход</span>
                     </a>
                 <?php endif; ?>
 
                 <button type="button" class="nav__item nav__group-toggle <?= $groupActive ? 'is-active' : '' ?>" data-nav-group-toggle
                         aria-expanded="<?= $groupActive ? 'true' : 'false' ?>" aria-controls="nav-more">
-                    <?= icon('grid') ?><span>Ещё</span><?= icon('chevron-right', 'icon icon--xs nav__chevron') ?>
+                    <?= icon('layers') ?><span>Ещё</span><?= icon('chevron-right', 'icon icon--xs nav__chevron') ?>
                 </button>
                 <div class="nav__group" id="nav-more" data-nav-group-panel <?= $groupActive ? '' : 'hidden' ?>>
                     <?php if (\PIZ\Auth::can('suppliers.manage')): ?>
                         <a class="nav__item <?= active_class($active ?? '', 'suppliers') ?>" href="<?= e(url('/suppliers')) ?>">
-                            <?= icon('truck') ?><span>Поставщики</span>
+                            <?= icon('building') ?><span>Поставщики</span>
                         </a>
                     <?php endif; ?>
                     <?php if (\PIZ\Auth::can('inventory.manage')): ?>
                         <a class="nav__item <?= active_class($active ?? '', 'inventory') ?>" href="<?= e(url('/inventory')) ?>">
-                            <?= icon('list') ?><span>Инвентаризация</span>
+                            <?= icon('clipboard') ?><span>Инвентаризация</span>
                         </a>
                     <?php endif; ?>
                     <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">
