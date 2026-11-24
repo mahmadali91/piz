@@ -5568,3 +5568,33 @@ html.sidebar-collapsed .sidebar-user__gear {
         gap: 5px;
     }
 }
+
+@media (max-width: 640px) {
+    .report-toolbar {
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .report-chips {
+        flex: 1 1 auto;
+        max-width: none;
+        gap: 4px;
+    }
+
+    .report-chips .chip,
+    .report-date-trigger {
+        padding: 6px 8px;
+        font-size: 11px;
+        white-space: nowrap;
+    }
+
+    .report-exports {
+        flex: none;
+        margin-left: 0;
+    }
+
+    .report-export-more {
+        margin-left: 0;
+    }
+}
