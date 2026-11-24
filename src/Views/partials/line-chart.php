@@ -21,6 +21,15 @@ $max = max(1, $max);
 $step = $count > 1 ? $plotW / ($count - 1) : 0;
 $labelStep = max(1, (int) ceil($count / 9));
 $allZero = $max <= 1;
+$tooltipPoints = [];
+foreach ($series as $tipDate => $tipRow) {
+    $tooltipPoints[] = [
+        'date' => date('d.m.Y', strtotime((string) $tipDate)),
+        'revenue' => money((int) $tipRow['revenue']),
+        'profit' => money((int) $tipRow['profit']),
+        'expense' => money((int) ($tipRow['expense'] ?? 0)),
+    ];
+}
 $points = static function (string $field) use ($series, $padL, $padT, $plotH, $max, $step): string {
     $out = [];
     $i = 0;
@@ -34,7 +43,7 @@ $points = static function (string $field) use ($series, $padL, $padT, $plotH, $m
     return implode(' ', $out);
 };
 ?>
-<div class="line-chart">
+<div class="line-chart" data-line-chart data-line-points='<?= e(json_encode($tooltipPoints, JSON_UNESCAPED_UNICODE)) ?>'>
     <svg class="chart__svg" viewBox="0 0 <?= $width ?> <?= $height ?>" role="img" aria-label="Линейный график выручки, прибыли и расходов">
         <?php for ($i = 0; $i <= 4; $i++):
             $y = $padT + $plotH - ($plotH / 4) * $i;
@@ -60,6 +69,14 @@ $points = static function (string $field) use ($series, $padL, $padT, $plotH, $m
             ?>
         <?php endforeach; ?>
 
+        <?php $hitIndex = 0; foreach ($series as $hitDate => $hitPoint): ?>
+            <?php
+            $hitWidth = $count > 1 ? max(8, $step) : $plotW;
+            $hitX = $count > 1 ? $padL + ($hitIndex * $step) - ($hitWidth / 2) : $padL;
+            ?>
+            <rect class="line-chart__hit" x="<?= round($hitX, 2) ?>" y="<?= $padT ?>" width="<?= round($hitWidth, 2) ?>" height="<?= $plotH ?>" fill="transparent" pointer-events="all" data-line-hit="<?= (int) $hitIndex ?>"></rect>
+            <?php $hitIndex++; endforeach; ?>
+
         <?php $i = 0; foreach ($series as $date => $point): ?>
             <?php
             $x = $padL + ($i * $step);
@@ -74,6 +91,7 @@ $points = static function (string $field) use ($series, $padL, $padT, $plotH, $m
             <?php endif; ?>
             <?php $i++; endforeach; ?>
     </svg>
+    <div class="line-chart__tooltip" data-line-tooltip hidden></div>
     <div class="line-chart__legend">
         <span><i class="legend__dot legend__dot--orange"></i>Выручка</span>
         <span><i class="legend__dot legend__dot--green"></i>Прибыль</span>

@@ -5185,3 +5185,59 @@ html.sidebar-collapsed .sidebar-user__gear {
 .legend__dot--red {
     background: #e05b5b;
 }
+
+/* Подсказка на линейном графике */
+.line-chart__tooltip {
+    position: absolute;
+    z-index: 5;
+    min-width: 150px;
+    padding: 9px 11px;
+    border-radius: 9px;
+    background: #171d28;
+    color: #fff;
+    box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .55);
+    pointer-events: none;
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+.line-chart__tooltip[hidden] {
+    display: none;
+}
+
+.line-chart__tooltip strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 11.5px;
+}
+
+.line-chart__tooltip span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    color: #cfd6e2;
+}
+
+.line-chart__tooltip span b {
+    color: #fff;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.line-chart__tooltip i {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 5px;
+    border-radius: 50%;
+    vertical-align: 1px;
+}
+
+.line-chart__hit {
+    cursor: crosshair;
+}
+
+.line-chart {
+    touch-action: pan-y;
+}

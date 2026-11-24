@@ -677,3 +677,48 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+/* ---------- Подсказка на линейном графике ---------- */
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-line-chart]').forEach(function (chart) {
+        const tooltip = chart.querySelector('[data-line-tooltip]');
+        if (!tooltip) return;
+        let points = [];
+        try { points = JSON.parse(chart.getAttribute('data-line-points') || '[]'); } catch (e) { points = []; }
+        if (!points.length) return;
+
+        function show(event, hit) {
+            const index = Number(hit.getAttribute('data-line-hit'));
+            const point = points[index];
+            if (!point) return;
+            tooltip.innerHTML = '<strong>' + point.date + '</strong>'
+                + '<span><i style="background:#f26b21"></i>Выручка <b>' + point.revenue + '</b></span>'
+                + '<span><i style="background:#24b364"></i>Прибыль <b>' + point.profit + '</b></span>'
+                + '<span><i style="background:#e05b5b"></i>Расходы <b>' + point.expense + '</b></span>';
+            tooltip.hidden = false;
+            const rect = chart.getBoundingClientRect();
+            const width = tooltip.offsetWidth || 160;
+            let left = event.clientX - rect.left + 14;
+            let top = event.clientY - rect.top - 12;
+            left = Math.max(4, Math.min(left, rect.width - width - 4));
+            top = Math.max(4, top);
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+        }
+
+        function hide() {
+            tooltip.hidden = true;
+        }
+
+        chart.addEventListener('pointermove', function (event) {
+            const hit = event.target.closest('[data-line-hit]');
+            if (hit) show(event, hit); else hide();
+        });
+        chart.addEventListener('pointerdown', function (event) {
+            const hit = event.target.closest('[data-line-hit]');
+            if (hit) show(event, hit);
+        });
+        chart.addEventListener('pointerleave', hide);
+        chart.addEventListener('pointercancel', hide);
+    });
+});
