@@ -1,4 +1,13 @@
 
+<?php
+$periodChips = [
+    'today' => 'Сегодня',
+    '7d' => '7 дней',
+    'month' => 'Месяц',
+    '3m' => '3 месяца',
+    '6m' => '6 месяцев',
+];
+?>
     <div class="toolbar">
         <div class="chips">
             <?php foreach ($periodChips as $key => $label): ?>

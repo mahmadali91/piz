@@ -433,6 +433,12 @@ if (!function_exists('period_range')) {
             case 'month':
                 $from = date('Y-m-01');
                 break;
+            case '3m':
+                $from = date('Y-m-d', strtotime($today . ' -3 months'));
+                break;
+            case '6m':
+                $from = date('Y-m-d', strtotime($today . ' -6 months'));
+                break;
             case 'custom':
                 $from = \PIZ\Models\Sale::validDate((string) ($_GET['from'] ?? '')) ?? $today;
                 $to = \PIZ\Models\Sale::validDate((string) ($_GET['to'] ?? '')) ?? $today;

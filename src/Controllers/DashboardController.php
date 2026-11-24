@@ -49,6 +49,9 @@ final class DashboardController
         $canReports = Auth::can('reports.view');
         $reportData = [];
         if ($canReports) {
+            if (!isset($_GET['period']) || $_GET['period'] === '') {
+                $_GET['period'] = 'today';
+            }
             $reportPeriod = period_range();
             $reportSummary = Sale::rangeTotals($reportPeriod['start'], $reportPeriod['end']);
             $reportSeries = Sale::dailySeries($reportPeriod['start'], $reportPeriod['end']);
