@@ -19,6 +19,7 @@
     let submitting = false;
     let activeCategory = 'all';
     let search = '';
+    let addToastTimer = null;
 
     const el = {
         search: document.getElementById('pos-search'),
@@ -44,7 +45,12 @@
         clear: document.getElementById('cart-clear'),
         receiptContent: document.getElementById('receipt-content'),
         receiptPdf: document.getElementById('receipt-pdf'),
-        receiptTotal: document.getElementById('receipt-total')
+        receiptTotal: document.getElementById('receipt-total'),
+        addToast: document.getElementById('pos-add-toast'),
+        addToastName: document.getElementById('pos-add-toast-name'),
+        addToastCount: document.getElementById('pos-add-toast-count'),
+        addToastOpen: document.getElementById('pos-add-toast-open'),
+        cartTab: document.querySelector('[data-pos-view="cart"]')
     };
 
     const numberFormat = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
@@ -181,8 +187,8 @@
                 return '<div class="cart-item" data-cart-item="' + p.id + '">'
                     + '<div class="cart-item__main">'
                     + '<div class="cart-item__row"><span class="cart-item__name">' + esc(p.name) + '</span>'
-                    + '<button type="button" class="cart-item__remove" data-remove="' + p.id + '" aria-label="Убрать">'
-                    + '<svg class="icon"><use href="#i-close"></use></svg></button></div>'
+                    + '<button type="button" class="cart-item__remove" data-remove="' + p.id + '" aria-label="Удалить товар" title="Удалить товар">'
+                    + '<svg class="icon"><use href="#i-trash"></use></svg></button></div>'
                     + '<div class="cart-item__row"><span class="qty">'
                     + '<button type="button" data-decrease="' + p.id + '" aria-label="Меньше">−</button>'
                     + '<span>' + item.qty + '</span>'
@@ -195,6 +201,7 @@
 
         if (el.cartCount) el.cartCount.textContent = String(state.count);
         if (el.cartTotalCount) el.cartTotalCount.textContent = String(state.count);
+        if (el.cartTab) el.cartTab.classList.toggle('has-items', state.count > 0);
         if (el.subtotal) el.subtotal.textContent = money(state.subtotal);
         if (el.discount) el.discount.textContent = '−' + money(state.discount);
         const discountLine = document.getElementById('cart-discount-line');
@@ -230,6 +237,23 @@
         if (el.error) el.error.hidden = true;
     }
 
+    function showAddedToast(product) {
+        if (!el.addToast || root.getAttribute('data-view') === 'cart') return;
+        if (el.addToastName) el.addToastName.textContent = '«' + product.name + '» добавлен';
+        let count = 0;
+        cart.forEach(function (qty) { count += qty; });
+        if (el.addToastCount) el.addToastCount.textContent = 'В чеке: ' + count + ' ' + plural(count, 'товар', 'товара', 'товаров');
+        el.addToast.hidden = false;
+        if (el.cartTab) {
+            el.cartTab.classList.add('is-bumped');
+            window.setTimeout(function () { el.cartTab.classList.remove('is-bumped'); }, 380);
+        }
+        window.clearTimeout(addToastTimer);
+        addToastTimer = window.setTimeout(function () {
+            if (el.addToast) el.addToast.hidden = true;
+        }, 3200);
+    }
+
     function addProduct(id) {
         const product = findProduct(id);
         if (!product) return;
@@ -242,6 +266,7 @@
         clearError();
         renderGrid();
         renderCart();
+        showAddedToast(product);
     }
 
     function changeQty(id, delta) {
@@ -479,5 +504,12 @@
     // Инициализация
     renderCategories();
     renderGrid();
+    if (el.addToastOpen) {
+        el.addToastOpen.addEventListener('click', function () {
+            if (el.cartTab) el.cartTab.click();
+            if (el.addToast) el.addToast.hidden = true;
+        });
+    }
+
     renderCart();
 })();

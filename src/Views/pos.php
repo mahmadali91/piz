@@ -93,6 +93,12 @@
     </div>
 </div>
 
+<div class="pos-add-toast" id="pos-add-toast" role="status" aria-live="polite" hidden>
+    <span class="pos-add-toast__icon"><?= icon('check') ?></span>
+    <span class="pos-add-toast__text"><strong id="pos-add-toast-name">Товар добавлен</strong><small id="pos-add-toast-count">В чеке</small></span>
+    <button type="button" class="pos-add-toast__open" id="pos-add-toast-open">Открыть чек</button>
+</div>
+
 <div class="modal" id="receipt-modal" aria-hidden="true">
     <div class="modal__backdrop" data-modal-close></div>
     <div class="modal__panel modal__panel--receipt" role="dialog" aria-modal="true" aria-labelledby="receipt-title">
