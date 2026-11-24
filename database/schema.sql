@@ -178,6 +178,108 @@ CREATE TABLE IF NOT EXISTS shift_stock (
   KEY idx_shift_stock_product (product_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+CREATE TABLE IF NOT EXISTS suppliers (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(160) NOT NULL,
+  contact VARCHAR(120) NULL,
+  phone VARCHAR(40) NULL,
+  email VARCHAR(120) NULL,
+  address VARCHAR(255) NULL,
+  inn VARCHAR(20) NULL,
+  note VARCHAR(500) NULL,
+  active TINYINT(1) NOT NULL DEFAULT 1,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_suppliers_name (name),
+  KEY idx_suppliers_active (active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS supplier_invoices (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  supplier_id INT UNSIGNED NOT NULL,
+  number VARCHAR(64) NOT NULL,
+  invoice_date DATE NOT NULL,
+  due_date DATE NULL,
+  total_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  paid_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  status VARCHAR(16) NOT NULL DEFAULT 'open',
+  comment VARCHAR(255) NULL,
+  user_id INT UNSIGNED NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_supplier_invoice (supplier_id, number),
+  KEY idx_invoices_supplier (supplier_id, invoice_date),
+  KEY idx_invoices_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS supplier_invoice_items (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  invoice_id INT UNSIGNED NOT NULL,
+  product_id INT UNSIGNED NOT NULL,
+  name VARCHAR(160) NOT NULL,
+  qty INT NOT NULL,
+  unit_cost_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  total_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_invoice_items_invoice (invoice_id),
+  KEY idx_invoice_items_product (product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS supplier_payments (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  supplier_id INT UNSIGNED NOT NULL,
+  invoice_id INT UNSIGNED NOT NULL,
+  amount_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  method VARCHAR(16) NOT NULL DEFAULT 'cash',
+  comment VARCHAR(255) NULL,
+  user_id INT UNSIGNED NULL,
+  paid_at DATETIME NOT NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_supplier_payments_invoice (invoice_id, paid_at),
+  KEY idx_supplier_payments_supplier (supplier_id, paid_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS inventory_sessions (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  number VARCHAR(32) NOT NULL,
+  warehouse VARCHAR(120) NOT NULL DEFAULT 'Основной склад',
+  status VARCHAR(16) NOT NULL DEFAULT 'draft',
+  started_by INT UNSIGNED NOT NULL,
+  started_at DATETIME NOT NULL,
+  completed_by INT UNSIGNED NULL,
+  completed_at DATETIME NULL,
+  note VARCHAR(255) NULL,
+  total_products INT NOT NULL DEFAULT 0,
+  total_calculated INT NOT NULL DEFAULT 0,
+  total_actual INT NOT NULL DEFAULT 0,
+  total_diff INT NOT NULL DEFAULT 0,
+  total_value_kop INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_inventory_number (number),
+  KEY idx_inventory_status (status, started_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS inventory_lines (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  session_id INT UNSIGNED NOT NULL,
+  product_id INT UNSIGNED NOT NULL,
+  name VARCHAR(160) NOT NULL,
+  sku VARCHAR(32) NULL,
+  unit VARCHAR(16) NOT NULL DEFAULT 'шт',
+  calculated_qty INT NOT NULL DEFAULT 0,
+  actual_qty INT NULL,
+  diff_qty INT NOT NULL DEFAULT 0,
+  cost_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  diff_value_kop INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_inventory_lines_session (session_id),
+  KEY idx_inventory_lines_product (product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS settings (
   skey VARCHAR(64) NOT NULL,
   svalue TEXT NULL,

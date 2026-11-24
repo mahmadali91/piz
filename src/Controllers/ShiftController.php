@@ -7,6 +7,7 @@ use PIZ\Audit;
 use PIZ\Auth;
 use PIZ\Models\Product;
 use PIZ\Models\Shift;
+use PIZ\Services\PdfService;
 use PIZ\View;
 
 final class ShiftController
@@ -130,6 +131,34 @@ final class ShiftController
             ],
             'finance' => Auth::can('finance.view'),
         ]);
+    }
+
+    public function pdf(string $id): void
+    {
+        Auth::requirePermission('shift.manage');
+        $shift = Shift::find((int) $id);
+        if (!$shift) {
+            http_response_code(404);
+            return;
+        }
+        if (!Auth::can('sales.view_all') && (int) $shift['opened_by'] !== Auth::id()) {
+            http_response_code(403);
+            return;
+        }
+        $totals = [
+            'count' => (int) $shift['sales_count'],
+            'revenue' => (int) $shift['revenue_kop'],
+            'cost' => (int) $shift['cost_kop'],
+            'expense' => (int) $shift['expense_kop'],
+            'profit' => (int) $shift['profit_kop'],
+        ];
+        PdfService::shift(
+            $shift,
+            $totals,
+            Shift::stock((int) $shift['id']),
+            Shift::payments((int) $shift['id']),
+            Shift::writeoffs((int) $shift['id'])
+        );
     }
 
     public function export(string $id): void

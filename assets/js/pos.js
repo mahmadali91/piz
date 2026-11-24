@@ -44,6 +44,7 @@
         clear: document.getElementById('cart-clear'),
         receiptContent: document.getElementById('receipt-content'),
         receiptOpen: document.getElementById('receipt-open'),
+        receiptPdf: document.getElementById('receipt-pdf'),
         receiptTotal: document.getElementById('receipt-total')
     };
 
@@ -460,6 +461,9 @@
             }
             if (el.receiptOpen && data.sale_url) {
                 el.receiptOpen.href = data.sale_url;
+            }
+            if (el.receiptPdf && data.sale_url) {
+                el.receiptPdf.href = data.sale_url.replace(/\/$/, '') + '/pdf';
             }
             if (window.PIZ_openModal) {
                 window.PIZ_openModal('receipt-modal');

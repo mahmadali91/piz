@@ -22,6 +22,7 @@ $isCanceled = ($sale['status'] ?? '') === 'canceled';
             </div>
         </div>
         <div class="toolbar__right">
+            <a class="btn btn--ghost btn--sm" href="<?= e(url('/sales/' . $sale['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a>
             <button class="btn btn--ghost btn--sm" type="button" data-print-receipt><?= icon('print') ?> Печать</button>
             <?php if ($canCancel && !$isCanceled): ?>
                 <form method="post" action="<?= e(url('/sales/' . $sale['id'] . '/cancel')) ?>" data-confirm="Отменить продажу и вернуть товары на склад? Действие отразится в отчётах.">
@@ -139,7 +140,7 @@ $isCanceled = ($sale['status'] ?? '') === 'canceled';
                         <h3>Чек для печати</h3>
                         <p>Формат 80 мм</p>
                     </div>
-                    <button class="btn btn--soft btn--sm" type="button" data-print-receipt><?= icon('print') ?> Печать</button>
+                    <div class="row-actions"><a class="btn btn--soft btn--sm" href="<?= e(url('/sales/' . $sale['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a><button class="btn btn--soft btn--sm" type="button" data-print-receipt><?= icon('print') ?> Печать</button></div>
                 </header>
                 <?php \PIZ\View::partial('partials/receipt', ['sale' => $sale]); ?>
             </section>

@@ -7,6 +7,7 @@ use PIZ\Audit;
 use PIZ\Auth;
 use PIZ\Models\Sale;
 use PIZ\Models\Writeoff;
+use PIZ\Services\PdfService;
 use PIZ\View;
 
 final class SaleController
@@ -80,6 +81,21 @@ final class SaleController
             'finance' => Auth::can('finance.view'),
             'canCancel' => Auth::can('sales.cancel'),
         ]);
+    }
+
+    public function pdf(string $id): void
+    {
+        Auth::requireLogin();
+        $sale = Sale::find((int) $id);
+        if (!$sale) {
+            http_response_code(404);
+            return;
+        }
+        if (!Auth::can('sales.view_all') && (int) $sale['user_id'] !== Auth::id()) {
+            http_response_code(403);
+            return;
+        }
+        PdfService::receipt($sale, $sale['items']);
     }
 
     public function cancel(string $id): void

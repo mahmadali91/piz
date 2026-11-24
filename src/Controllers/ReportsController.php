@@ -6,6 +6,7 @@ namespace PIZ\Controllers;
 use PIZ\Auth;
 use PIZ\Models\Product;
 use PIZ\Models\Sale;
+use PIZ\Services\PdfService;
 use PIZ\View;
 
 final class ReportsController
@@ -51,6 +52,23 @@ final class ReportsController
             'margin' => $margin,
             'days' => $days,
         ]);
+    }
+
+    public function pdf(): void
+    {
+        Auth::requirePermission('reports.view');
+        $period = period_range();
+        $summary = Sale::rangeTotals($period['start'], $period['end']);
+        $payments = Sale::paymentBreakdown($period['start'], $period['end']);
+        $topProducts = Sale::topProducts($period['start'], $period['end'], 20);
+        $stock = Product::stats();
+        PdfService::report(
+            'Период: ' . date('d.m.Y', strtotime($period['from'])) . ' — ' . date('d.m.Y', strtotime($period['to'])),
+            $summary,
+            $payments,
+            $topProducts,
+            $stock
+        );
     }
 
     public function export(): void

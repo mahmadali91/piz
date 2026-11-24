@@ -4532,3 +4532,18 @@ body.bare-body.has-install-banner {
         gap: 2px;
     }
 }
+
+/* ---------------- Поставщики и инвентаризация ---------------- */
+
+.input--qty { width: 82px; text-align: right; }
+.input--money { width: 110px; text-align: right; }
+.input--inv { width: 92px; text-align: right; }
+
+.invoice-row td { vertical-align: middle; }
+
+#invoice-items .select { min-width: 260px; }
+
+@media (max-width: 640px) {
+    #invoice-items .select { min-width: 170px; }
+    .input--qty, .input--money, .input--inv { width: 76px; }
+}

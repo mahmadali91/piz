@@ -559,6 +559,7 @@ if (!function_exists('movement_label')) {
             'adjust' => 'Инвентаризация',
             'initial' => 'Начальный остаток',
             'writeoff' => 'Списание',
+            'inventory' => 'Инвентаризация',
         ][$type] ?? $type;
     }
 }
@@ -573,6 +574,7 @@ if (!function_exists('movement_tone')) {
             'adjust' => 'gray',
             'initial' => 'gray',
             'writeoff' => 'red',
+            'inventory' => 'amber',
         ][$type] ?? 'gray';
     }
 }
@@ -588,5 +590,17 @@ if (!function_exists('price_source_label')) {
             'import' => 'Импорт',
             'baseline' => 'Начальная',
         ][$source] ?? $source;
+    }
+}
+
+if (!function_exists('invoice_status_badge')) {
+    function invoice_status_badge(string $status): string
+    {
+        return match ($status) {
+            'paid' => '<span class="badge badge--green">Оплачена</span>',
+            'partial' => '<span class="badge badge--amber">Частично</span>',
+            'canceled' => '<span class="badge badge--red">Отменена</span>',
+            default => '<span class="badge badge--gray">Не оплачена</span>',
+        };
     }
 }

@@ -16,6 +16,8 @@ final class Permissions
             'prices.manage' => 'Изменение цен (включая массовое)',
             'stock.manage' => 'Приход, инвентаризация и остатки',
             'writeoff.manage' => 'Списание товара (расход)',
+            'suppliers.manage' => 'Поставщики, накладные и долги',
+            'inventory.manage' => 'Инвентаризация и акты',
             'finance.view' => 'Закупочные цены и прибыль',
         ],
         'Продажи' => [
@@ -40,13 +42,14 @@ final class Permissions
     public const ROLES = [
         'admin' => [
             'dashboard.view', 'pos.use', 'products.view', 'products.manage', 'prices.manage',
-            'stock.manage', 'writeoff.manage', 'finance.view', 'sales.view_all', 'sales.cancel',
-            'reports.view', 'shift.manage', 'users.manage', 'settings.manage', 'activity.view',
+            'stock.manage', 'writeoff.manage', 'suppliers.manage', 'inventory.manage',
+            'finance.view', 'sales.view_all', 'sales.cancel', 'reports.view', 'shift.manage',
+            'users.manage', 'settings.manage', 'activity.view',
         ],
         'manager' => [
             'dashboard.view', 'pos.use', 'products.view', 'products.manage', 'prices.manage',
-            'stock.manage', 'writeoff.manage', 'finance.view', 'sales.view_all', 'sales.cancel',
-            'reports.view', 'shift.manage',
+            'stock.manage', 'writeoff.manage', 'suppliers.manage', 'inventory.manage',
+            'finance.view', 'sales.view_all', 'sales.cancel', 'reports.view', 'shift.manage',
         ],
         'cashier' => [
             'pos.use', 'products.view', 'writeoff.manage', 'shift.manage',

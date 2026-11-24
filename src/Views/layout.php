@@ -74,6 +74,16 @@ $user = \PIZ\Auth::user();
                         <?= icon('logout') ?><span>Расход</span>
                     </a>
                 <?php endif; ?>
+                <?php if (\PIZ\Auth::can('suppliers.manage')): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'suppliers') ?>" href="<?= e(url('/suppliers')) ?>">
+                        <?= icon('truck') ?><span>Поставщики</span>
+                    </a>
+                <?php endif; ?>
+                <?php if (\PIZ\Auth::can('inventory.manage')): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'inventory') ?>" href="<?= e(url('/inventory')) ?>">
+                        <?= icon('list') ?><span>Инвентаризация</span>
+                    </a>
+                <?php endif; ?>
                 <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">
                     <?= icon('receipt') ?><span>Продажи</span>
                 </a>
