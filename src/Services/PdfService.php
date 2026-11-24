@@ -352,7 +352,7 @@ final class PdfService
         $pdf->SetTextColor(255, 255, 255);
         $pdf->SetFont('DejaVu', 'B', 12);
         $pdf->SetXY(12, 13.5);
-        $pdf->Cell(16, 7, self::fit(mb_substr($store, 0, 1), 16, 12), 0, 0, 'C');
+        $pdf->Cell(16, 7, 'Д', 0, 0, 'C');
         $pdf->SetFont('DejaVu', 'B', 15);
         $pdf->SetXY(33, 9.5);
         $pdf->Cell(110, 7, self::fit($store, 110, 15), 0, 1);
