@@ -5,6 +5,7 @@ use PIZ\Controllers\ActivityController;
 use PIZ\Controllers\AuthController;
 use PIZ\Controllers\DashboardController;
 use PIZ\Controllers\InventoryController;
+use PIZ\Controllers\KnowledgeController;
 use PIZ\Controllers\EmployeesController;
 use PIZ\Controllers\PasswordResetController;
 use PIZ\Controllers\PosController;
@@ -116,6 +117,9 @@ Router::post('/settings/password', [SettingsController::class, 'password']);
 
 // Журнал
 Router::get('/activity', [ActivityController::class, 'index']);
+
+// База знаний
+Router::get('/knowledge', [KnowledgeController::class, 'index']);
 
 // Служебная проверка доступности
 Router::get('/healthz', static function (): void {
