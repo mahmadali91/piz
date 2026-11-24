@@ -1,26 +1,11 @@
 <?php
 /** @var array $user */
 $report = $reportData ?? [];
-$summary = $report['summary'] ?? $today;
-$periodLabel = !empty($report['period'])
-    ? period_label($report['period']['from'], $report['period']['to'])
-    : 'сегодня';
 ?>
 <div class="page">
-    <section class="welcome">
-        <div class="welcome__text">
-            <span class="eyebrow"><?= e(date('d.m.Y')) ?> · <?= e(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР')) ?></span>
-            <h2><?= e(greeting()) ?>, <?= e(explode(' ', (string) $user['name'])[0]) ?>!</h2>
-            <p>
-                За период <strong><?= e($periodLabel) ?></strong>:
-                <?= (int) $summary['count'] ?> <?= plural((int) $summary['count'], 'продажа', 'продажи', 'продаж') ?>
-                на <?= e(money((int) $summary['revenue'])) ?>.
-                <?php if (($report['canceled'] ?? 0) > 0): ?>
-                    <span class="welcome__note"><?= icon('alert', 'icon icon--xs') ?> Отменено: <?= (int) $report['canceled'] ?>.</span>
-                <?php endif; ?>
-            </p>
-        </div>
-        <div class="welcome__actions">
+    <header class="dashboard-head">
+        <h2><?= e(greeting()) ?>, <?= e(explode(' ', (string) $user['name'])[0]) ?>!</h2>
+        <div class="dashboard-head__actions">
             <?php if (\PIZ\Auth::can('pos.use')): ?>
                 <a class="btn btn--primary" href="<?= e(url('/pos')) ?>"><?= icon('cart') ?> Открыть кассу</a>
             <?php endif; ?>
@@ -31,17 +16,10 @@ $periodLabel = !empty($report['period'])
                 <a class="btn btn--soft" href="<?= e(url('/shift')) ?>"><?= icon('clock') ?> <?= !empty($currentShift) ? 'Смена открыта' : 'Открыть смену' ?></a>
             <?php endif; ?>
         </div>
-    </section>
+    </header>
 
     <?php if ($canReports && $report !== []): ?>
         <section class="report-merged">
-            <div class="report-merged__head">
-                <div>
-                    <span class="eyebrow">аналитика</span>
-                    <h2>Показатели за период</h2>
-                    <p>Один фильтр для всех отчётов и графиков</p>
-                </div>
-            </div>
             <?php (static function (array $data): void {
                 extract($data, EXTR_SKIP);
                 require PIZ_ROOT . '/src/Views/partials/reports-content.php';

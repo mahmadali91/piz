@@ -5000,3 +5000,39 @@ html.sidebar-collapsed .sidebar-user__gear {
         align-items: flex-start;
     }
 }
+
+/* Компактная строка приветствия на дашборде */
+.dashboard-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.dashboard-head h2 {
+    font-size: 25px;
+    letter-spacing: -.03em;
+}
+
+.dashboard-head__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+    .dashboard-head h2 {
+        font-size: 21px;
+    }
+
+    .dashboard-head__actions {
+        width: 100%;
+    }
+
+    .dashboard-head__actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
