@@ -25,6 +25,7 @@ final class AuthController
             'title' => 'Вход',
             'logout' => isset($_GET['logout']),
             'expired' => isset($_GET['expired']),
+            'reset' => isset($_GET['reset']),
         ], 'layout-bare');
     }
 

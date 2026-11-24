@@ -43,6 +43,8 @@
                 <div class="alert alert--success"><?= icon('check') ?><span>Вы вышли из системы. До встречи!</span></div>
             <?php elseif (!empty($expired)): ?>
                 <div class="alert alert--warn"><?= icon('clock') ?><span>Сессия истекла. Войдите снова.</span></div>
+            <?php elseif (!empty($reset)): ?>
+                <div class="alert alert--success"><?= icon('check') ?><span>Пароль изменён. Войдите с новым паролем.</span></div>
             <?php endif; ?>
 
             <form method="post" action="<?= e(url('/login')) ?>" class="auth-form" autocomplete="on">
@@ -62,10 +64,16 @@
                         <button type="button" class="input-group__action" data-password-toggle aria-label="Показать пароль"><?= icon('eye') ?></button>
                     </span>
                 </label>
+                <div class="auth-forgot-row"><a class="auth-forgot" href="<?= e(url('/forgot-password')) ?>">Забыли пароль?</a></div>
                 <button class="btn btn--primary btn--lg btn--block" type="submit">Войти <?= icon('arrow-right') ?></button>
             </form>
 
             <p class="auth-help">Нет доступа? Обратитесь к администратору киоска — он создаст аккаунт и выдаст права.</p>
+        </div>
+        <div class="auth-developer">
+            <span class="auth-developer__avatar">A</span>
+            <span class="auth-developer__meta"><small>Разработчик</small><strong>Ali</strong></span>
+            <a class="auth-developer__tg" href="https://t.me/kobilov_ali" target="_blank" rel="noopener"><?= icon('telegram') ?> @kobilov_ali</a>
         </div>
         <p class="auth-legal">ДОНЕР v<?= e(PIZ_VERSION) ?> · <?= e(date('Y')) ?></p>
     </section>

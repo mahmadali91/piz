@@ -16,6 +16,7 @@ $roleChips = ['admin' => 'badge--red', 'manager' => 'badge--blue', 'cashier' => 
                 'id' => (int) $item['id'],
                 'name' => $item['name'],
                 'login' => $item['login'],
+                'email' => $item['email'] ?? '',
                 'role' => $item['role'],
                 'active' => (int) $item['active'] === 1,
                 'permissions' => $item['permissions'],
@@ -27,7 +28,7 @@ $roleChips = ['admin' => 'badge--red', 'manager' => 'badge--blue', 'cashier' => 
                     <span class="avatar avatar--lg"><?= e(initials((string) $item['name'])) ?></span>
                     <div class="user-card__meta">
                         <strong><?= e($item['name']) ?></strong>
-                        <span>@<?= e($item['login']) ?></span>
+                        <span>@<?= e($item['login']) ?><?= !empty($item['email']) ? ' · ' . e($item['email']) : '' ?></span>
                     </div>
                     <?php if ($isSelf): ?>
                         <span class="badge badge--gray">это вы</span>
@@ -101,6 +102,11 @@ $roleChips = ['admin' => 'badge--red', 'manager' => 'badge--blue', 'cashier' => 
                         <label class="field">
                             <span class="label">Логин *</span>
                             <input class="input" type="text" name="login" maxlength="32" pattern="[a-z0-9._\-]{3,32}" required placeholder="ali">
+                        </label>
+                        <label class="field">
+                            <span class="label">Email для восстановления</span>
+                            <input class="input" type="email" name="email" maxlength="160" placeholder="mail@example.com">
+                            <span class="hint">На этот адрес придёт ссылка для сброса пароля.</span>
                         </label>
                         <label class="field">
                             <span class="label">Роль</span>

@@ -615,3 +615,22 @@ if (!function_exists('invoice_status_badge')) {
         };
     }
 }
+
+if (!function_exists('absolute_url')) {
+    /**
+     * Абсолютный URL для писем и внешних ссылок.
+     */
+    function absolute_url(string $path = ''): string
+    {
+        $configured = \PIZ\Settings::get('site_url');
+        if ($configured !== null && $configured !== '') {
+            return rtrim($configured, '/') . url($path);
+        }
+        $host = (string) ($_SERVER['HTTP_HOST'] ?? 'piz.itop7.ru');
+        if (!preg_match('/^[a-z0-9.-]+(?::\d+)?$/i', $host)) {
+            $host = 'piz.itop7.ru';
+        }
+        $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        return ($https ? 'https' : 'http') . '://' . $host . url($path);
+    }
+}

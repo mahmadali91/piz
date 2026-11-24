@@ -41,6 +41,7 @@ final class EmployeesController
 
         $name = trim((string) ($_POST['name'] ?? ''));
         $login = Auth::normalizeLogin((string) ($_POST['login'] ?? ''));
+        $email = mb_strtolower(trim((string) ($_POST['email'] ?? '')));
         $role = (string) ($_POST['role'] ?? 'cashier');
         if (!in_array($role, self::ROLES, true)) {
             $role = 'cashier';
@@ -64,6 +65,12 @@ final class EmployeesController
         }
         if (User::loginExists($login, $existing ? (int) $existing['id'] : null)) {
             $errors[] = 'Такой логин уже занят.';
+        }
+        if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Укажите корректный email.';
+        }
+        if ($email !== '' && User::emailExists($email, $existing ? (int) $existing['id'] : null)) {
+            $errors[] = 'Этот email уже привязан к другому сотруднику.';
         }
         if (!$existing && $password === '') {
             $errors[] = 'Задайте пароль для нового сотрудника.';
@@ -102,6 +109,7 @@ final class EmployeesController
                 User::update((int) $existing['id'], [
                     'login' => $login,
                     'name' => $name,
+                    'email' => $email,
                     'role' => $role,
                     'permissions' => $permissions,
                     'active' => $active,
@@ -113,6 +121,7 @@ final class EmployeesController
                 $newId = User::create([
                     'login' => $login,
                     'name' => $name,
+                    'email' => $email,
                     'password' => $password,
                     'role' => $role,
                     'permissions' => $permissions,

@@ -41,11 +41,18 @@
                     <input class="input" type="text" name="store_name" value="<?= e($old['store_name'] ?? 'КИОСК ДОНЕР') ?>" maxlength="80">
                 </label>
             </div>
-            <label class="field">
-                <span class="label">Логин для входа</span>
-                <input class="input" type="text" name="login" value="<?= e($old['login'] ?? 'admin') ?>" pattern="[a-z0-9._\-]{3,32}" required>
-                <span class="hint">Латиница, цифры, точка, дефис или подчёркивание. Минимум 3 символа.</span>
-            </label>
+            <div class="form-grid form-grid--2">
+                <label class="field">
+                    <span class="label">Логин для входа</span>
+                    <input class="input" type="text" name="login" value="<?= e($old['login'] ?? 'admin') ?>" pattern="[a-z0-9._\-]{3,32}" required>
+                    <span class="hint">Латиница, цифры, точка, дефис или подчёркивание. Минимум 3 символа.</span>
+                </label>
+                <label class="field">
+                    <span class="label">Email администратора</span>
+                    <input class="input" type="email" name="email" value="<?= e($old['email'] ?? '') ?>" maxlength="160" required>
+                    <span class="hint">Нужен для восстановления пароля.</span>
+                </label>
+            </div>
             <div class="form-grid form-grid--2">
                 <label class="field">
                     <span class="label">Пароль</span>

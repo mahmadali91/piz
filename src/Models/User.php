@@ -20,6 +20,31 @@ final class User
         return $row ? self::prepare($row) : null;
     }
 
+    public static function findByEmail(string $email): ?array
+    {
+        $email = mb_strtolower(trim($email));
+        if ($email === '') {
+            return null;
+        }
+        $row = Database::fetch('SELECT * FROM users WHERE LOWER(email) = ? AND active = 1 LIMIT 1', [$email]);
+        return $row ? self::prepare($row) : null;
+    }
+
+    public static function emailExists(string $email, ?int $exceptId = null): bool
+    {
+        $email = mb_strtolower(trim($email));
+        if ($email === '') {
+            return false;
+        }
+        $sql = 'SELECT COUNT(*) FROM users WHERE LOWER(email) = ?';
+        $params = [$email];
+        if ($exceptId !== null) {
+            $sql .= ' AND id <> ?';
+            $params[] = $exceptId;
+        }
+        return (int) Database::fetchValue($sql, $params) > 0;
+    }
+
     public static function all(): array
     {
         $rows = Database::fetchAll('SELECT * FROM users ORDER BY active DESC, name ASC');
@@ -36,10 +61,11 @@ final class User
     public static function create(array $data): int
     {
         Database::query(
-            'INSERT INTO users (login, name, password_hash, role, permissions, active, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO users (login, name, email, password_hash, role, permissions, active, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $data['login'],
                 $data['name'],
+                !empty($data['email']) ? mb_strtolower(trim((string) $data['email'])) : null,
                 password_hash($data['password'], PASSWORD_DEFAULT),
                 $data['role'],
                 json_encode(array_values($data['permissions']), JSON_UNESCAPED_UNICODE),
@@ -52,10 +78,11 @@ final class User
 
     public static function update(int $id, array $data): void
     {
-        $sql = 'UPDATE users SET login = ?, name = ?, role = ?, permissions = ?, active = ?';
+        $sql = 'UPDATE users SET login = ?, name = ?, email = ?, role = ?, permissions = ?, active = ?';
         $params = [
             $data['login'],
             $data['name'],
+            !empty($data['email']) ? mb_strtolower(trim((string) $data['email'])) : null,
             $data['role'],
             json_encode(array_values($data['permissions']), JSON_UNESCAPED_UNICODE),
             $data['active'] ? 1 : 0,

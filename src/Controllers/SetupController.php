@@ -131,7 +131,7 @@ final class SetupController
         View::render('setup/admin', [
             'title' => 'Создание администратора',
             'seed' => $_SESSION['setup_seed'] ?? null,
-            'old' => ['name' => '', 'login' => 'admin', 'store_name' => 'КИОСК ДОНЕР'],
+            'old' => ['name' => '', 'login' => 'admin', 'email' => '', 'store_name' => 'КИОСК ДОНЕР'],
             'showLayout' => false,
         ], 'layout-bare');
     }
@@ -147,6 +147,7 @@ final class SetupController
 
         $name = trim((string) ($_POST['name'] ?? ''));
         $login = Auth::normalizeLogin((string) ($_POST['login'] ?? ''));
+        $email = mb_strtolower(trim((string) ($_POST['email'] ?? '')));
         $password = (string) ($_POST['password'] ?? '');
         $confirmation = (string) ($_POST['password_confirm'] ?? '');
         $storeName = trim((string) ($_POST['store_name'] ?? ''));
@@ -162,12 +163,15 @@ final class SetupController
         if (User::loginExists($login)) {
             $errors[] = 'Такой логин уже занят.';
         }
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Укажите корректный email администратора.';
+        }
 
         if ($errors !== []) {
             View::render('setup/admin', [
                 'title' => 'Создание администратора',
                 'seed' => $_SESSION['setup_seed'] ?? null,
-                'old' => ['name' => $name, 'login' => $login, 'store_name' => $storeName],
+                'old' => ['name' => $name, 'login' => $login, 'email' => $email, 'store_name' => $storeName],
                 'errors' => $errors,
                 'showLayout' => false,
             ], 'layout-bare');
@@ -177,6 +181,7 @@ final class SetupController
         $id = User::create([
             'login' => $login,
             'name' => $name,
+            'email' => $email,
             'password' => $password,
             'role' => 'admin',
             'permissions' => Permissions::all(),

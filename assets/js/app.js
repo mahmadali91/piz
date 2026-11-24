@@ -454,6 +454,7 @@
             form.elements.id.value = data.id || '';
             form.elements.name.value = data.name || '';
             form.elements.login.value = data.login || '';
+            if (form.elements.email) form.elements.email.value = data.email || '';
             form.elements.role.value = data.role || 'cashier';
             form.elements.active.checked = data.active !== false;
             form.elements.password.value = '';

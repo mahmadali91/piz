@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   login VARCHAR(64) NOT NULL,
   name VARCHAR(120) NOT NULL,
+  email VARCHAR(160) NULL,
   password_hash VARCHAR(255) NOT NULL,
   role VARCHAR(20) NOT NULL DEFAULT 'cashier',
   permissions TEXT NULL,
@@ -12,7 +13,22 @@ CREATE TABLE IF NOT EXISTS users (
   created_at DATETIME NOT NULL,
   last_login_at DATETIME NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_users_login (login)
+  UNIQUE KEY uq_users_login (login),
+  UNIQUE KEY uq_users_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL,
+  token_hash CHAR(64) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used_at DATETIME NULL,
+  created_at DATETIME NOT NULL,
+  ip VARCHAR(45) NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_password_resets_token (token_hash),
+  KEY idx_password_resets_user (user_id, created_at),
+  KEY idx_password_resets_expires (expires_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS products (

@@ -160,6 +160,20 @@ final class Install
                 $pdo->exec($statement);
             }
         }
+
+        // Миграция существующей таблицы users: добавляем email для восстановления пароля.
+        try {
+            $emailColumn = $pdo->query("SHOW COLUMNS FROM users LIKE 'email'")->fetch();
+            if (!$emailColumn) {
+                $pdo->exec('ALTER TABLE users ADD COLUMN email VARCHAR(160) NULL AFTER name');
+            }
+            $emailIndex = $pdo->query("SHOW INDEX FROM users WHERE Key_name = 'uq_users_email'")->fetch();
+            if (!$emailIndex) {
+                $pdo->exec('ALTER TABLE users ADD UNIQUE KEY uq_users_email (email)');
+            }
+        } catch (\Throwable $e) {
+            error_log('[PIZ] users email migration: ' . $e->getMessage());
+        }
     }
 
     public static function seedCatalog(): ?array

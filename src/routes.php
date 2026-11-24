@@ -6,6 +6,7 @@ use PIZ\Controllers\AuthController;
 use PIZ\Controllers\DashboardController;
 use PIZ\Controllers\InventoryController;
 use PIZ\Controllers\EmployeesController;
+use PIZ\Controllers\PasswordResetController;
 use PIZ\Controllers\PosController;
 use PIZ\Controllers\ProductsController;
 use PIZ\Controllers\ReportsController;
@@ -29,6 +30,12 @@ Router::post('/setup/admin', [SetupController::class, 'createAdmin']);
 Router::get('/login', [AuthController::class, 'showLogin']);
 Router::post('/login', [AuthController::class, 'login']);
 Router::post('/logout', [AuthController::class, 'logout']);
+
+// Восстановление пароля
+Router::get('/forgot-password', [PasswordResetController::class, 'showRequest']);
+Router::post('/forgot-password', [PasswordResetController::class, 'send']);
+Router::get('/reset-password', [PasswordResetController::class, 'showReset']);
+Router::post('/reset-password', [PasswordResetController::class, 'reset']);
 
 // Рабочее место
 Router::get('/', [DashboardController::class, 'index']);

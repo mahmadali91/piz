@@ -4855,3 +4855,100 @@ html.sidebar-collapsed .sidebar-user--button {
 html.sidebar-collapsed .sidebar-user__gear {
     margin-left: 0;
 }
+
+/* ---------------- Вход: восстановление и разработчик ---------------- */
+
+.auth-forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -4px;
+}
+
+.auth-forgot {
+    font-size: 12px;
+    color: var(--brand);
+    font-weight: 600;
+}
+
+.auth-forgot:hover {
+    text-decoration: underline;
+}
+
+.auth-developer {
+    width: min(392px, 100%);
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 11px;
+    border: 1px solid var(--line);
+    border-radius: 13px;
+    background: linear-gradient(135deg, #fff, #f8f9fc);
+    box-shadow: 0 8px 24px -18px rgba(20, 24, 33, .35);
+}
+
+.auth-developer__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(145deg, #ffb27a, var(--brand));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 800;
+    flex: none;
+}
+
+.auth-developer__meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    line-height: 1.25;
+}
+
+.auth-developer__meta small {
+    font-size: 9.5px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 700;
+}
+
+.auth-developer__meta strong {
+    font-size: 13px;
+    color: var(--text);
+}
+
+.auth-developer__tg {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 9px;
+    border-radius: 8px;
+    background: rgba(34, 158, 217, .09);
+    color: #1f8fc4;
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.auth-developer__tg .icon {
+    width: 14px;
+    height: 14px;
+}
+
+.auth-developer__tg:hover {
+    background: rgba(34, 158, 217, .16);
+}
+
+@media (max-width: 480px) {
+    .auth-developer {
+        width: 100%;
+    }
+
+    .auth-developer__tg {
+        font-size: 11px;
+    }
+}
