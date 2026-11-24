@@ -5157,6 +5157,15 @@ html.sidebar-collapsed .sidebar-user__gear {
 .line-chart__line--profit { stroke: #24b364; }
 .line-chart__line--expense { stroke: #e05b5b; }
 
+.line-chart__dot {
+    stroke: #fff;
+    stroke-width: 1;
+}
+
+.line-chart__dot--revenue { fill: var(--brand); }
+.line-chart__dot--profit { fill: #24b364; }
+.line-chart__dot--expense { fill: #e05b5b; }
+
 .line-chart__legend {
     display: flex;
     align-items: center;

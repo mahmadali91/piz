@@ -48,6 +48,18 @@ $points = static function (string $field) use ($series, $padL, $padT, $plotH, $m
         <polyline class="line-chart__line line-chart__line--profit" points="<?= e($points('profit')) ?>"></polyline>
         <polyline class="line-chart__line line-chart__line--revenue" points="<?= e($points('revenue')) ?>"></polyline>
 
+        <?php $dotIndex = 0; foreach ($series as $dotDate => $dotPoint): ?>
+            <?php
+            $dotX = $padL + ($dotIndex * $step);
+            foreach (['expense', 'profit', 'revenue'] as $dotField) {
+                $dotValue = max(0, (int) ($dotPoint[$dotField] ?? 0));
+                $dotY = $padT + $plotH - ($dotValue / $max * $plotH);
+                echo '<circle class="line-chart__dot line-chart__dot--' . $dotField . '" cx="' . round($dotX, 2) . '" cy="' . round($dotY, 2) . '" r="2.2"><title>' . e(date('d.m.Y', strtotime((string) $dotDate))) . ': ' . e(money($dotValue)) . '</title></circle>';
+            }
+            $dotIndex++;
+            ?>
+        <?php endforeach; ?>
+
         <?php $i = 0; foreach ($series as $date => $point): ?>
             <?php
             $x = $padL + ($i * $step);
