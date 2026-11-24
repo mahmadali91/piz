@@ -109,14 +109,15 @@
         const groupToggle = event.target.closest('[data-nav-group-toggle]');
         if (groupToggle) {
             event.preventDefault();
-            if (sidebarRoot.classList.contains('sidebar-collapsed')) {
+            const wasCollapsed = sidebarRoot.classList.contains('sidebar-collapsed');
+            if (wasCollapsed) {
                 sidebarRoot.classList.remove('sidebar-collapsed');
                 try { localStorage.setItem('piz-sidebar-collapsed', '0'); } catch (e) {}
                 syncSidebarToggle();
             }
             const panel = document.getElementById(groupToggle.getAttribute('aria-controls'));
             if (!panel) return;
-            const open = groupToggle.getAttribute('aria-expanded') !== 'true';
+            const open = wasCollapsed ? true : groupToggle.getAttribute('aria-expanded') !== 'true';
             groupToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             panel.hidden = !open;
             closeAdminMenu();
