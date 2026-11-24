@@ -1,6 +1,6 @@
 <?php
 /** @var array $user */
-$shot = static fn (string $name): string => url('/knowledge/image/' . $name);
+$shot = static fn (string $name): string => url('/knowledge/image/' . preg_replace('/\.jpg$/', '', $name));
 $sections = [
     ['dashboard', 'Дашборд и отчёты', 'Сводка дня, период, график и таблица'],
     ['pos', 'Касса', 'Продажа, оплата и чек'],
