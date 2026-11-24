@@ -103,7 +103,7 @@ final class PdfService
         $pdf->Ln(3);
     }
 
-    private static function fit(string $text, float $width, int $fontSize): string
+    private static function fit(string $text, float $width, float $fontSize): string
     {
         $max = max(8, (int) floor($width / ($fontSize * 0.19)));
         return mb_strlen($text) > $max ? mb_substr($text, 0, max(1, $max - 1)) . '…' : $text;
