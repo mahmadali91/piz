@@ -189,12 +189,13 @@
                     + '<div class="cart-item__row"><span class="cart-item__name">' + esc(p.name) + '</span>'
                     + '<button type="button" class="cart-item__remove" data-remove="' + p.id + '" aria-label="Удалить товар" title="Удалить товар">'
                     + '<svg class="icon"><use href="#i-trash"></use></svg></button></div>'
-                    + '<div class="cart-item__row"><span class="qty">'
+                    + '<div class="cart-item__row">'
+                    + '<span class="cart-item__actions"><span class="qty">'
                     + '<button type="button" data-decrease="' + p.id + '" aria-label="Меньше">−</button>'
                     + '<span>' + item.qty + '</span>'
                     + '<button type="button" data-increase="' + p.id + '" aria-label="Больше"' + (item.qty >= p.stock ? ' disabled' : '') + '>+</button>'
-                    + '</span><span class="cart-item__sum">' + money(p.price * item.qty) + '</span></div>'
-                    + '<div class="cart-item__meta">' + money(p.price) + ' × ' + item.qty + '</div>'
+                    + '</span><span class="cart-item__meta">' + money(p.price) + ' × ' + item.qty + '</span></span>'
+                    + '<span class="cart-item__sum">' + money(p.price * item.qty) + '</span></div>'
                     + '</div></div>';
             }).join('');
         }

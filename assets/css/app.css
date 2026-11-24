@@ -5430,3 +5430,26 @@ html.sidebar-collapsed .sidebar-user__gear {
         font-size: 14px;
     }
 }
+
+/* Цена за единицу — рядом с количеством */
+.cart-item__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.cart-item__actions .cart-item__meta {
+    white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+    .cart-item__actions {
+        gap: 8px;
+    }
+
+    .cart-item__actions .cart-item__meta {
+        font-size: 12px;
+    }
+}
