@@ -71,24 +71,45 @@ final class StockController
     {
         Auth::requirePermission('stock.manage');
 
-        $productId = (int) ($_POST['product_id'] ?? 0);
-        $qty = (int) ($_POST['qty'] ?? 0);
-        $unitCost = parse_money($_POST['unit_cost'] ?? '');
-        $comment = trim((string) ($_POST['comment'] ?? ''));
-        if (!Auth::can('prices.manage')) {
-            $unitCost = null;
+        $productIds = $_POST['product_id'] ?? [];
+        $qtys = $_POST['qty'] ?? [];
+        $costs = $_POST['unit_cost'] ?? [];
+        if (!is_array($productIds)) {
+            $productIds = [$productIds];
+            $qtys = [is_array($qtys) ? ($qtys[0] ?? 0) : $qtys];
+            $costs = [is_array($costs) ? ($costs[0] ?? '') : $costs];
+        }
+        if (!is_array($qtys)) {
+            $qtys = [$qtys];
+        }
+        if (!is_array($costs)) {
+            $costs = [$costs];
         }
 
+        $comment = trim((string) ($_POST['comment'] ?? ''));
+        $canPrices = Auth::can('prices.manage');
         try {
-            Product::addStock($productId, $qty, $unitCost, 'Приход товара', Auth::id(), $comment);
-            $product = Product::find($productId);
-            Audit::log('stock.in', [
-                'id' => $productId,
-                'name' => $product['name'] ?? '',
-                'qty' => $qty,
-                'cost' => $unitCost,
-            ]);
-            flash('success', 'Приход оформлен: +' . $qty . ' «' . ($product['name'] ?? '') . '».');
+        $items = [];
+        foreach ($productIds as $index => $productId) {
+            $productId = (int) $productId;
+            $qty = (int) ($qtys[$index] ?? 0);
+            if ($productId <= 0) {
+                continue;
+            }
+            if ($qty <= 0 || $qty > 100000) {
+                throw new \InvalidArgumentException('Количество должно быть от 1 до 100000.');
+            }
+            $cost = $canPrices ? parse_money($costs[$index] ?? '') : null;
+            $items[] = ['product_id' => $productId, 'qty' => $qty, 'unit_cost_kop' => $cost];
+        }
+
+            if ($items === []) {
+                throw new \InvalidArgumentException('Добавьте хотя бы один товар.');
+            }
+            Product::addStockMany($items, 'Приход товара', Auth::id(), $comment);
+            $totalQty = array_sum(array_column($items, 'qty'));
+            Audit::log('stock.in', ['items' => $items, 'comment' => $comment]);
+            flash('success', 'Приход оформлен: ' . count($items) . ' ' . plural(count($items), 'позиция', 'позиции', 'позиций') . ', +' . $totalQty . ' ед.');
         } catch (\Throwable $e) {
             flash('error', 'Не удалось оформить приход: ' . $e->getMessage());
         }
@@ -116,21 +137,40 @@ final class StockController
     {
         Auth::requirePermission('writeoff.manage');
 
-        $productId = (int) ($_POST['product_id'] ?? 0);
-        $qty = (int) ($_POST['qty'] ?? 0);
+        $productIds = $_POST['product_id'] ?? [];
+        $qtys = $_POST['qty'] ?? [];
+        if (!is_array($productIds)) {
+            $productIds = [$productIds];
+            $qtys = [is_array($qtys) ? ($qtys[0] ?? 0) : $qtys];
+        }
+        if (!is_array($qtys)) {
+            $qtys = [$qtys];
+        }
         $employee = trim((string) ($_POST['employee_name'] ?? ''));
         $reason = (string) ($_POST['reason'] ?? 'Другое');
         $comment = trim((string) ($_POST['comment'] ?? ''));
 
         try {
-            Writeoff::create($productId, $qty, $employee, $reason, $comment, Auth::id());
-            Audit::log('stock.writeoff', [
-                'product_id' => $productId,
-                'qty' => $qty,
-                'employee' => $employee,
-                'reason' => $reason,
-            ]);
-            flash('success', 'Списание оформлено как расход: ' . $qty . ' шт.');
+        $items = [];
+        foreach ($productIds as $index => $productId) {
+            $productId = (int) $productId;
+            $qty = (int) ($qtys[$index] ?? 0);
+            if ($productId <= 0) {
+                continue;
+            }
+            if ($qty <= 0 || $qty > 100000) {
+                throw new \InvalidArgumentException('Количество должно быть от 1 до 100000.');
+            }
+            $items[] = ['product_id' => $productId, 'qty' => $qty];
+        }
+
+            if ($items === []) {
+                throw new \InvalidArgumentException('Добавьте хотя бы один товар.');
+            }
+            Writeoff::createMany($items, $employee, $reason, $comment, Auth::id());
+            $totalQty = array_sum(array_column($items, 'qty'));
+            Audit::log('stock.writeoff', ['items' => $items, 'employee' => $employee, 'reason' => $reason]);
+            flash('success', 'Расход оформлен: ' . count($items) . ' ' . plural(count($items), 'позиция', 'позиции', 'позиций') . ', -' . $totalQty . ' ед.');
         } catch (\Throwable $e) {
             flash('error', 'Не удалось оформить расход: ' . $e->getMessage());
         }

@@ -4666,3 +4666,17 @@ body.bare-body.has-install-banner {
         display: none;
     }
 }
+
+/* ---------------- Приход/расход: несколько строк ---------------- */
+
+.stock-total {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.stock-row .select { min-width: 300px; }
+
+@media (max-width: 640px) {
+    .stock-row .select { min-width: 180px; }
+}

@@ -232,62 +232,101 @@ final class Product
      */
     public static function addStock(int $id, int $qty, ?int $unitCostKop, string $reason, ?int $userId, string $comment = ''): int
     {
-        if ($qty <= 0) {
-            throw new \InvalidArgumentException('Количество должно быть больше нуля.');
-        }
         $pdo = Database::pdo();
         $pdo->beginTransaction();
         try {
-            $product = Database::fetch('SELECT * FROM products WHERE id = ? FOR UPDATE', [$id]);
-            if (!$product) {
-                throw new \RuntimeException('Товар не найден.');
-            }
-
-            $oldQty = (int) $product['stock_qty'];
-            $oldCost = (int) $product['purchase_price_kop'];
-            $receiptCost = $unitCostKop !== null ? max(0, $unitCostKop) : $oldCost;
-            $after = $oldQty + $qty;
-
-            if ($oldQty > 0 && $after > 0) {
-                $newAverage = (int) round((($oldQty * $oldCost) + ($qty * $receiptCost)) / $after);
-            } else {
-                $newAverage = $receiptCost > 0 ? $receiptCost : $oldCost;
-            }
-
-            Database::query(
-                'UPDATE products SET stock_qty = ?, purchase_price_kop = ?, updated_at = ? WHERE id = ?',
-                [$after, $newAverage, now(), $id]
-            );
-
-            Database::query(
-                'INSERT INTO product_receipts (product_id, qty, unit_cost_kop, total_kop, comment, user_id, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [$id, $qty, $receiptCost, $qty * $receiptCost, $comment !== '' ? $comment : ($reason !== '' ? $reason : 'Приход товара'), $userId, now()]
-            );
-
-            Database::query(
-                'INSERT INTO stock_movements (product_id, type, qty_delta, qty_after, unit_cost_kop, reason, user_id, created_at)
-                 VALUES (?, "in", ?, ?, ?, ?, ?, ?)',
-                [$id, $qty, $after, $receiptCost, $reason !== '' ? $reason : 'Приход товара', $userId, now()]
-            );
-
-            self::recordPriceHistory(
-                $id,
-                $oldCost,
-                (int) $product['sale_price_kop'],
-                $newAverage,
-                (int) $product['sale_price_kop'],
-                $userId,
-                'receipt',
-                'Приход: ' . $qty . ' по ' . kop_to_input($receiptCost) . ' ₽'
-            );
-
+            $average = self::applyStockIn($id, $qty, $unitCostKop, $reason, $userId, $comment);
             $pdo->commit();
-            return $newAverage;
+            return $average;
         } catch (\Throwable $e) {
             $pdo->rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Несколько приходных позиций одной операцией: всё или ничего.
+     *
+     * @param array<int, array{product_id:int, qty:int, unit_cost_kop:?int}> $items
+     * @return array<int, int> новая средняя себестоимость по каждой позиции
+     */
+    public static function addStockMany(array $items, string $reason, ?int $userId, string $comment = ''): array
+    {
+        if ($items === []) {
+            throw new \InvalidArgumentException('Добавьте хотя бы один товар.');
+        }
+        $pdo = Database::pdo();
+        $pdo->beginTransaction();
+        try {
+            $averages = [];
+            foreach ($items as $item) {
+                $averages[] = self::applyStockIn(
+                    (int) ($item['product_id'] ?? 0),
+                    (int) ($item['qty'] ?? 0),
+                    array_key_exists('unit_cost_kop', $item) ? $item['unit_cost_kop'] : null,
+                    $reason,
+                    $userId,
+                    $comment
+                );
+            }
+            $pdo->commit();
+            return $averages;
+        } catch (\Throwable $e) {
+            $pdo->rollBack();
+            throw $e;
+        }
+    }
+
+    private static function applyStockIn(int $id, int $qty, ?int $unitCostKop, string $reason, ?int $userId, string $comment): int
+    {
+        if ($qty <= 0) {
+            throw new \InvalidArgumentException('Количество должно быть больше нуля.');
+        }
+        $product = Database::fetch('SELECT * FROM products WHERE id = ? FOR UPDATE', [$id]);
+        if (!$product) {
+            throw new \RuntimeException('Товар не найден.');
+        }
+
+        $oldQty = (int) $product['stock_qty'];
+        $oldCost = (int) $product['purchase_price_kop'];
+        $receiptCost = $unitCostKop !== null ? max(0, $unitCostKop) : $oldCost;
+        $after = $oldQty + $qty;
+
+        if ($oldQty > 0 && $after > 0) {
+            $newAverage = (int) round((($oldQty * $oldCost) + ($qty * $receiptCost)) / $after);
+        } else {
+            $newAverage = $receiptCost > 0 ? $receiptCost : $oldCost;
+        }
+
+        Database::query(
+            'UPDATE products SET stock_qty = ?, purchase_price_kop = ?, updated_at = ? WHERE id = ?',
+            [$after, $newAverage, now(), $id]
+        );
+
+        Database::query(
+            'INSERT INTO product_receipts (product_id, qty, unit_cost_kop, total_kop, comment, user_id, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [$id, $qty, $receiptCost, $qty * $receiptCost, $comment !== '' ? $comment : ($reason !== '' ? $reason : 'Приход товара'), $userId, now()]
+        );
+
+        Database::query(
+            'INSERT INTO stock_movements (product_id, type, qty_delta, qty_after, unit_cost_kop, reason, user_id, created_at)
+             VALUES (?, "in", ?, ?, ?, ?, ?, ?)',
+            [$id, $qty, $after, $receiptCost, $reason !== '' ? $reason : 'Приход товара', $userId, now()]
+        );
+
+        self::recordPriceHistory(
+            $id,
+            $oldCost,
+            (int) $product['sale_price_kop'],
+            $newAverage,
+            (int) $product['sale_price_kop'],
+            $userId,
+            'receipt',
+            'Приход: ' . $qty . ' по ' . kop_to_input($receiptCost) . ' ₽'
+        );
+
+        return $newAverage;
     }
 
     /**
