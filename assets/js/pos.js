@@ -270,17 +270,18 @@
     }
 
     function changeQty(id, delta) {
-        const product = findProduct(id);
+        const productId = Number(id);
+        const product = findProduct(productId);
         if (!product) return;
-        const current = cart.get(id) || 0;
+        const current = cart.get(productId) || 0;
         const next = current + delta;
         if (next <= 0) {
-            cart.delete(id);
+            cart.delete(productId);
         } else if (!allowNegative && next > product.stock) {
             showError('На складе только ' + product.stock + ' ' + product.unit + '.');
             return;
         } else {
-            cart.set(id, next);
+            cart.set(productId, next);
         }
         clearError();
         renderGrid();
