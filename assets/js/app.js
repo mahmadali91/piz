@@ -306,7 +306,7 @@
                     } catch (error) { /* ignore */ }
                 }
                 qty.value = '';
-                cost.value = '';
+                if (cost) cost.value = '';
                 updateMode();
                 openModal('stock-modal');
             });

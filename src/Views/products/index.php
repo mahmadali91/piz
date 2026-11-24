@@ -335,12 +335,14 @@ unset($query['page']);
                         <div class="form-grid">
                             <label class="field">
                                 <span class="label">Количество</span>
-                                <input class="input" type="number" name="qty" min="0" required placeholder="Например, 20">
+                                <input class="input" type="number" name="qty" min="-1000000" required placeholder="Например, 20">
                             </label>
-                            <label class="field" data-cost-row>
-                                <span class="label">Закупочная цена за единицу</span>
-                                <input class="input" type="text" name="unit_cost" inputmode="decimal" placeholder="Необязательно">
-                            </label>
+                            <?php if ($canPrices): ?>
+                                <label class="field" data-cost-row>
+                                    <span class="label">Закупочная цена за единицу</span>
+                                    <input class="input" type="text" name="unit_cost" inputmode="decimal" placeholder="Необязательно">
+                                </label>
+                            <?php endif; ?>
                         </div>
                         <label class="field">
                             <span class="label">Причина / комментарий</span>
