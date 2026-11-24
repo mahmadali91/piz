@@ -2,7 +2,6 @@
 /** @var array $stats */
 ?>
 <div class="page">
-    <?php \PIZ\View::partial('partials/stock-tabs', ['stockTab' => 'stock']); ?>
 
     <section class="summary-grid">
         <div class="stat"><span class="stat__label">Позиций</span><span class="stat__value"><?= (int) $stats['total'] ?></span></div>

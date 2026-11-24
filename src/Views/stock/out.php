@@ -3,7 +3,6 @@ $expenseTotal = array_sum(array_map(static fn ($row) => (int) $row['total_kop'],
 $expenseQty = array_sum(array_map(static fn ($row) => (int) $row['qty'], $writeoffs));
 ?>
 <div class="page">
-    <?php \PIZ\View::partial('partials/stock-tabs', ['stockTab' => 'out']); ?>
 
     <section class="summary-grid">
         <div class="stat"><span class="stat__label">Списаний в истории</span><span class="stat__value"><?= count($writeoffs) ?></span></div>

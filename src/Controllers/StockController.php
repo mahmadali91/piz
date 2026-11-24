@@ -38,8 +38,7 @@ final class StockController
 
         View::render('stock/index', [
             'title' => 'Остаток',
-            'active' => 'stock',
-            'stockTab' => 'stock',
+            'active' => 'products',
             'user' => Auth::user(),
             'products' => $products,
             'categories' => Product::categories(),
@@ -58,8 +57,7 @@ final class StockController
 
         View::render('stock/in', [
             'title' => 'Приход',
-            'active' => 'stock',
-            'stockTab' => 'in',
+            'active' => 'stock_in',
             'user' => Auth::user(),
             'products' => Product::all(),
             'receipts' => Receipt::list(100),
@@ -103,8 +101,7 @@ final class StockController
 
         View::render('stock/out', [
             'title' => 'Расход',
-            'active' => 'stock',
-            'stockTab' => 'out',
+            'active' => 'stock_out',
             'user' => Auth::user(),
             'products' => Product::all(),
             'writeoffs' => Writeoff::list(100),

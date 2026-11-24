@@ -576,3 +576,17 @@ if (!function_exists('movement_tone')) {
         ][$type] ?? 'gray';
     }
 }
+
+if (!function_exists('price_source_label')) {
+    function price_source_label(string $source): string
+    {
+        return [
+            'create' => 'Создание',
+            'manual' => 'Вручную',
+            'bulk' => 'Массово',
+            'receipt' => 'Приход',
+            'import' => 'Импорт',
+            'baseline' => 'Начальная',
+        ][$source] ?? $source;
+    }
+}

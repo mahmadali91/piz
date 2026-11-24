@@ -152,6 +152,19 @@ final class Importer
                     $params[] = (int) $existingProduct['id'];
                     Database::query('UPDATE products SET ' . implode(', ', $sets) . ' WHERE id = ?', $params);
 
+                    $newSale = ($updatePrices && $sale > 0) ? $sale : (int) $existingProduct['sale_price_kop'];
+                    $newPurchase = ($updatePrices && $purchase !== null && $purchase > 0) ? $purchase : (int) $existingProduct['purchase_price_kop'];
+                    Product::recordPriceHistory(
+                        (int) $existingProduct['id'],
+                        (int) $existingProduct['purchase_price_kop'],
+                        (int) $existingProduct['sale_price_kop'],
+                        $newPurchase,
+                        $newSale,
+                        $userId,
+                        'import',
+                        'Импорт из файла'
+                    );
+
                     if ($stock !== null && $stock !== (int) $existingProduct['stock_qty']) {
                         Database::query(
                             'INSERT INTO stock_movements (product_id, type, qty_delta, qty_after, unit_cost_kop, reason, user_id, created_at)
@@ -199,6 +212,16 @@ final class Importer
                             [$productId, $stock, $stock, $purchase ?? 0, 'Импорт из файла', $userId, now()]
                         );
                     }
+                    Product::recordPriceHistory(
+                        $productId,
+                        0,
+                        0,
+                        (int) ($purchase ?? 0),
+                        (int) $sale,
+                        $userId,
+                        'import',
+                        'Импорт из файла'
+                    );
                     $existing[$normalized] = [
                         'id' => $productId,
                         'name' => $name,

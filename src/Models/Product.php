@@ -56,6 +56,74 @@ final class Product
         return array_values(array_filter(array_map(static fn ($r) => (string) $r['category'], $rows)));
     }
 
+
+    public static function recordPriceHistory(
+        int $id,
+        int $oldPurchase,
+        int $oldSale,
+        int $newPurchase,
+        int $newSale,
+        ?int $userId,
+        string $source = 'manual',
+        string $comment = ''
+    ): void {
+        if ($oldPurchase === $newPurchase && $oldSale === $newSale) {
+            return;
+        }
+        Database::query(
+            'INSERT INTO product_price_history
+                (product_id, old_purchase_kop, new_purchase_kop, old_sale_kop, new_sale_kop, source, comment, user_id, created_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+                $id,
+                max(0, $oldPurchase),
+                max(0, $newPurchase),
+                max(0, $oldSale),
+                max(0, $newSale),
+                mb_substr($source, 0, 24),
+                $comment !== '' ? mb_substr($comment, 0, 255) : null,
+                $userId,
+                now(),
+            ]
+        );
+    }
+
+    public static function priceHistory(int $id, int $limit = 15): array
+    {
+        $limit = max(1, min(50, $limit));
+        return Database::fetchAll(
+            "SELECT h.*, u.name AS user_name
+             FROM product_price_history h
+             LEFT JOIN users u ON u.id = h.user_id
+             WHERE h.product_id = ?
+             ORDER BY h.created_at DESC, h.id DESC
+             LIMIT {$limit}",
+            [$id]
+        );
+    }
+
+    public static function formattedPriceHistory(int $id, int $limit = 15): array
+    {
+        static $cache = [];
+        $cacheKey = $id . ':' . $limit;
+        if (array_key_exists($cacheKey, $cache)) {
+            return $cache[$cacheKey];
+        }
+        $cache[$cacheKey] = array_map(static fn (array $row): array => [
+            'date' => dt_human($row['created_at']),
+            'user' => $row['user_name'] ?? 'Система',
+            'source' => price_source_label((string) $row['source']),
+            'comment' => (string) ($row['comment'] ?? ''),
+            'purchase_changed' => (int) $row['old_purchase_kop'] !== (int) $row['new_purchase_kop'],
+            'sale_changed' => (int) $row['old_sale_kop'] !== (int) $row['new_sale_kop'],
+            'old_purchase' => money((int) $row['old_purchase_kop']),
+            'new_purchase' => money((int) $row['new_purchase_kop']),
+            'old_sale' => money((int) $row['old_sale_kop']),
+            'new_sale' => money((int) $row['new_sale_kop']),
+        ], self::priceHistory($id, $limit));
+        return $cache[$cacheKey];
+    }
+
     public static function create(array $data, ?int $userId): int
     {
         $pdo = Database::pdo();
@@ -97,6 +165,17 @@ final class Product
                 );
             }
 
+            self::recordPriceHistory(
+                $id,
+                0,
+                0,
+                (int) $data['purchase_price_kop'],
+                (int) $data['sale_price_kop'],
+                $userId,
+                'create',
+                'Создание товара'
+            );
+
             $pdo->commit();
             return $id;
         } catch (\Throwable $e) {
@@ -105,8 +184,14 @@ final class Product
         }
     }
 
-    public static function update(int $id, array $data): void
-    {
+    public static function update(
+        int $id,
+        array $data,
+        ?int $userId = null,
+        string $source = 'manual',
+        string $comment = ''
+    ): void {
+        $old = Database::fetch('SELECT purchase_price_kop, sale_price_kop FROM products WHERE id = ?', [$id]);
         Database::query(
             'UPDATE products SET sku = ?, name = ?, category = ?, purchase_price_kop = ?, sale_price_kop = ?, unit = ?, low_stock = ?, photo = ?, updated_at = ? WHERE id = ?',
             [
@@ -122,6 +207,18 @@ final class Product
                 $id,
             ]
         );
+        if ($old) {
+            self::recordPriceHistory(
+                $id,
+                (int) $old['purchase_price_kop'],
+                (int) $old['sale_price_kop'],
+                (int) $data['purchase_price_kop'],
+                (int) $data['sale_price_kop'],
+                $userId,
+                $source,
+                $comment
+            );
+        }
     }
 
     public static function setActive(int $id, bool $active): void
@@ -174,6 +271,17 @@ final class Product
                 [$id, $qty, $after, $receiptCost, $reason !== '' ? $reason : 'Приход товара', $userId, now()]
             );
 
+            self::recordPriceHistory(
+                $id,
+                $oldCost,
+                (int) $product['sale_price_kop'],
+                $newAverage,
+                (int) $product['sale_price_kop'],
+                $userId,
+                'receipt',
+                'Приход: ' . $qty . ' по ' . kop_to_input($receiptCost) . ' ₽'
+            );
+
             $pdo->commit();
             return $newAverage;
         } catch (\Throwable $e) {
@@ -212,12 +320,31 @@ final class Product
         }
     }
 
-    public static function updatePrices(int $id, int $purchaseKop, int $saleKop): void
-    {
+    public static function updatePrices(
+        int $id,
+        int $purchaseKop,
+        int $saleKop,
+        ?int $userId = null,
+        string $source = 'manual',
+        string $comment = ''
+    ): void {
+        $old = Database::fetch('SELECT purchase_price_kop, sale_price_kop FROM products WHERE id = ?', [$id]);
         Database::query(
             'UPDATE products SET purchase_price_kop = ?, sale_price_kop = ?, updated_at = ? WHERE id = ?',
             [max(0, $purchaseKop), max(0, $saleKop), now(), $id]
         );
+        if ($old) {
+            self::recordPriceHistory(
+                $id,
+                (int) $old['purchase_price_kop'],
+                (int) $old['sale_price_kop'],
+                max(0, $purchaseKop),
+                max(0, $saleKop),
+                $userId,
+                $source,
+                $comment
+            );
+        }
     }
 
     public static function stats(): array

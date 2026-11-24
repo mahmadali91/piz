@@ -172,6 +172,61 @@
         const fileInput = productModal.querySelector('input[type="file"]');
         const removePhoto = productModal.querySelector('input[name="remove_photo"]');
         const existingPhoto = productModal.querySelector('[data-existing-photo]');
+        const historyWrap = productModal.querySelector('[data-price-history-wrap]');
+        const historyBox = productModal.querySelector('[data-price-history]');
+
+        function renderPriceHistory(rows) {
+            if (!historyWrap || !historyBox) return;
+            historyBox.innerHTML = '';
+            if (!rows || !rows.length) {
+                const empty = document.createElement('p');
+                empty.className = 'hint';
+                empty.textContent = 'История появится после первого изменения цены.';
+                historyBox.appendChild(empty);
+                return;
+            }
+            rows.forEach(function (row) {
+                const item = document.createElement('div');
+                item.className = 'price-history__item';
+
+                const head = document.createElement('div');
+                head.className = 'price-history__head';
+                const date = document.createElement('strong');
+                date.textContent = row.date || '';
+                const meta = document.createElement('span');
+                meta.textContent = (row.source || '') + ' · ' + (row.user || 'Система');
+                head.appendChild(date);
+                head.appendChild(meta);
+
+                const changes = document.createElement('div');
+                changes.className = 'price-history__changes';
+                if (row.purchase_changed) {
+                    const line = document.createElement('span');
+                    line.textContent = 'Себестоимость: ' + row.old_purchase + ' → ' + row.new_purchase;
+                    changes.appendChild(line);
+                }
+                if (row.sale_changed) {
+                    const line = document.createElement('span');
+                    line.textContent = 'Цена продажи: ' + row.old_sale + ' → ' + row.new_sale;
+                    changes.appendChild(line);
+                }
+                if (!row.purchase_changed && !row.sale_changed) {
+                    const line = document.createElement('span');
+                    line.textContent = 'Текущая цена: ' + row.new_sale;
+                    changes.appendChild(line);
+                }
+
+                item.appendChild(head);
+                item.appendChild(changes);
+                if (row.comment) {
+                    const comment = document.createElement('div');
+                    comment.className = 'price-history__comment';
+                    comment.textContent = row.comment;
+                    item.appendChild(comment);
+                }
+                historyBox.appendChild(item);
+            });
+        }
 
         function setPreview(url, name) {
             if (!preview) return;
@@ -224,6 +279,10 @@
             if (removePhoto) removePhoto.checked = false;
             if (existingPhoto) existingPhoto.value = data.photo || '';
             setPreview(data.photo_url || '', data.name || '');
+            if (historyWrap) {
+                historyWrap.hidden = !data.id;
+                renderPriceHistory(data.price_history || []);
+            }
             form.querySelector('[type="submit"]').textContent = data.id ? 'Сохранить изменения' : 'Добавить товар';
         }
 
@@ -263,6 +322,20 @@
                 reader.readAsDataURL(file);
             });
         }
+    }
+
+    /* ---------- Массовое изменение цен ---------- */
+    const priceToggle = document.querySelector('[data-price-mode]');
+    const pricePanel = document.querySelector('[data-price-panel]');
+    if (priceToggle && pricePanel) {
+        const syncPricePanel = function () {
+            pricePanel.hidden = !priceToggle.checked;
+        };
+        priceToggle.addEventListener('change', syncPricePanel);
+        if (new URLSearchParams(window.location.search).get('mass') === '1') {
+            priceToggle.checked = true;
+        }
+        syncPricePanel();
     }
 
     /* ---------- Stock form ---------- */

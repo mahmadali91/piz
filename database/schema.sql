@@ -109,6 +109,22 @@ CREATE TABLE IF NOT EXISTS product_receipts (
   KEY idx_receipts_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS product_price_history (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  product_id INT UNSIGNED NOT NULL,
+  old_purchase_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  new_purchase_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  old_sale_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  new_sale_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  source VARCHAR(24) NOT NULL DEFAULT 'manual',
+  comment VARCHAR(255) NULL,
+  user_id INT UNSIGNED NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_price_history_product (product_id, created_at),
+  KEY idx_price_history_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS writeoffs (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   product_id INT UNSIGNED NOT NULL,

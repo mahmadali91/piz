@@ -6,22 +6,13 @@ namespace PIZ\Controllers;
 use PIZ\Audit;
 use PIZ\Auth;
 use PIZ\Models\Product;
-use PIZ\View;
 
 final class PricesController
 {
     public function index(): void
     {
         Auth::requirePermission('prices.manage');
-
-        View::render('prices', [
-            'title' => 'Цены',
-            'active' => 'stock',
-            'stockTab' => 'prices',
-            'user' => Auth::user(),
-            'products' => Product::all(),
-            'finance' => Auth::can('finance.view'),
-        ]);
+        redirect('/products?mass=1');
     }
 
     public function save(): void
@@ -31,7 +22,7 @@ final class PricesController
         $prices = $_POST['prices'] ?? [];
         if (!is_array($prices)) {
             flash('error', 'Некорректные данные цен.');
-            redirect('/prices');
+            redirect('/products');
         }
 
         $updated = 0;
@@ -48,7 +39,7 @@ final class PricesController
                 $errors[] = '«' . $product['name'] . '»: проверьте цены.';
                 continue;
             }
-            Product::updatePrices($productId, $purchase, $sale);
+            Product::updatePrices($productId, $purchase, $sale, Auth::id(), 'manual');
             $updated++;
         }
 
@@ -57,7 +48,7 @@ final class PricesController
             flash('error', implode(' ', array_slice($errors, 0, 5)));
         }
         flash('success', 'Сохранено цен: ' . $updated . '.');
-        redirect('/prices');
+        redirect('/products');
     }
 
     public function bulk(): void
@@ -76,13 +67,13 @@ final class PricesController
         $raw = str_replace([' ', ','], ['', '.'], $raw);
         if ($raw === '' || !is_numeric($raw)) {
             flash('error', 'Укажите числовое значение для массового изменения.');
-            redirect('/prices');
+            redirect('/products');
         }
         $number = (float) $raw;
         $amountKop = $mode === 'percent' ? 0 : (int) round($number * 100);
         if ($mode !== 'percent' && $amountKop < 0) {
             flash('error', 'Сумма не может быть отрицательной.');
-            redirect('/prices');
+            redirect('/products');
         }
 
         $products = Product::all();
@@ -107,12 +98,12 @@ final class PricesController
             if ($target === 'purchase' || $target === 'both') {
                 $purchase = $apply($purchase);
             }
-            Product::updatePrices((int) $product['id'], $purchase, $sale);
+            Product::updatePrices((int) $product['id'], $purchase, $sale, Auth::id(), 'bulk', 'Массовое изменение цен');
             $updated++;
         }
 
         Audit::log('prices.bulk', ['target' => $target, 'mode' => $mode, 'value' => $number, 'count' => $updated]);
         flash('success', 'Массово обновлено товаров: ' . $updated . '.');
-        redirect('/prices');
+        redirect('/products');
     }
 }

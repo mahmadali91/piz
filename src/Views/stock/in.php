@@ -2,7 +2,6 @@
 /** @var array $receiptTotals */
 ?>
 <div class="page">
-    <?php \PIZ\View::partial('partials/stock-tabs', ['stockTab' => 'in']); ?>
 
     <section class="summary-grid">
         <div class="stat"><span class="stat__label">Приходов в истории</span><span class="stat__value"><?= count($receipts) ?></span></div>

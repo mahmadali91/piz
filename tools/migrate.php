@@ -60,6 +60,31 @@ if ($receipts === 0) {
     echo 'Создано базовых приходов: ' . count($products) . "\n";
 }
 
+$priceHistory = (int) Database::fetchValue('SELECT COUNT(*) FROM product_price_history');
+if ($priceHistory === 0) {
+    $products = Database::fetchAll('SELECT id, purchase_price_kop, sale_price_kop FROM products');
+    $pdo = Database::pdo();
+    $pdo->beginTransaction();
+    foreach ($products as $product) {
+        Database::query(
+            'INSERT INTO product_price_history
+                (product_id, old_purchase_kop, new_purchase_kop, old_sale_kop, new_sale_kop, source, comment, user_id, created_at)
+             VALUES (?, ?, ?, ?, ?, "baseline", ?, NULL, ?)',
+            [
+                (int) $product['id'],
+                (int) $product['purchase_price_kop'],
+                (int) $product['purchase_price_kop'],
+                (int) $product['sale_price_kop'],
+                (int) $product['sale_price_kop'],
+                'Начало учёта истории цен',
+                now(),
+            ]
+        );
+    }
+    $pdo->commit();
+    echo 'Создано базовых записей истории цен: ' . count($products) . "\n";
+}
+
 echo "== Готово ==\n";
 echo 'Товаров: ' . Database::fetchValue('SELECT COUNT(*) FROM products') . "\n";
 echo 'Приходов: ' . Database::fetchValue('SELECT COUNT(*) FROM product_receipts') . "\n";

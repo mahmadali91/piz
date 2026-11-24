@@ -24,9 +24,8 @@ final class ProductsController
         ];
 
         View::render('products/index', [
-            'title' => 'Товары',
-            'active' => 'stock',
-            'stockTab' => 'products',
+            'title' => 'Товары и остаток',
+            'active' => 'products',
             'user' => Auth::user(),
             'products' => Product::all($filters),
             'categories' => Product::categories(),
@@ -129,7 +128,7 @@ final class ProductsController
 
         try {
             if ($existing) {
-                Product::update($id, $data);
+                Product::update($id, $data, Auth::id(), 'manual');
                 Audit::log('product.update', ['id' => $id, 'name' => $data['name']]);
                 flash('success', 'Товар обновлён.');
             } else {

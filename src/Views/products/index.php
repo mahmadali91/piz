@@ -4,7 +4,6 @@ $query = $_GET;
 unset($query['page']);
 ?>
 <div class="page">
-    <?php \PIZ\View::partial('partials/stock-tabs', ['stockTab' => $stockTab ?? 'products']); ?>
     <section class="summary-grid">
         <div class="stat">
             <span class="stat__label">Позиций в продаже</span>
@@ -50,13 +49,58 @@ unset($query['page']);
             <div class="toolbar__right">
                 <?php if ($canManage): ?>
                     <button class="btn btn--primary btn--sm" type="button" data-product-new><?= icon('plus') ?> Добавить товар</button>
-                    <button class="btn btn--ghost btn--sm" type="button" data-stock-open='{"mode":"in"}'><?= icon('truck') ?> Приход</button>
-                    <button class="btn btn--ghost btn--sm" type="button" data-stock-open='{"mode":"set"}'><?= icon('list') ?> Инвентаризация</button>
                     <button class="btn btn--ghost btn--sm" type="button" data-modal-open="import-modal"><?= icon('upload') ?> Импорт</button>
+                <?php endif; ?>
+                <?php if ($canStock): ?>
+                    <a class="btn btn--ghost btn--sm" href="<?= e(url('/stock/in')) ?>"><?= icon('truck') ?> Приход</a>
+                    <button class="btn btn--ghost btn--sm" type="button" data-stock-open='{"mode":"set"}'><?= icon('list') ?> Инвентаризация</button>
+                    <a class="btn btn--ghost btn--sm" href="<?= e(url('/stock')) ?>"><?= icon('activity') ?> Движения склада</a>
+                <?php endif; ?>
+                <?php if ($canPrices): ?>
+                    <label class="switch" title="Показать массовое изменение цен">
+                        <input type="checkbox" data-price-mode>
+                        Массово
+                    </label>
                 <?php endif; ?>
                 <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/products/export', $query)) ?>"><?= icon('download') ?> Экспорт</a>
             </div>
         </div>
+
+        <?php if ($canPrices): ?>
+            <div class="price-mass-panel" data-price-panel hidden>
+                <form method="post" action="<?= e(url('/prices/bulk')) ?>" class="price-mass-form">
+                    <?= csrf_field() ?>
+                    <div class="price-mass-form__head">
+                        <strong><?= icon('tag') ?> Массовое изменение цен</strong>
+                        <span>Применится ко всем активным товарам</span>
+                    </div>
+                    <div class="price-mass-form__fields">
+                        <label class="field">
+                            <span class="label">Что менять</span>
+                            <select class="select" name="target">
+                                <option value="sale">Цена продажи</option>
+                                <option value="purchase">Себестоимость</option>
+                                <option value="both">И то, и другое</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span class="label">Как</span>
+                            <select class="select" name="mode">
+                                <option value="percent">На процент</option>
+                                <option value="amount">На сумму, ₽</option>
+                                <option value="set">Установить значение</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span class="label">Значение</span>
+                            <input class="input" type="text" name="value" inputmode="decimal" placeholder="Например, 10">
+                        </label>
+                        <button class="btn btn--primary" type="submit"><?= icon('refresh') ?> Применить</button>
+                    </div>
+                    <p class="hint">Процент может быть отрицательным. Себестоимость — средняя по партиям. Все изменения сохраняются в истории цен каждого товара.</p>
+                </form>
+            </div>
+        <?php endif; ?>
 
         <?php if ($products === []): ?>
             <div class="empty">
@@ -94,6 +138,7 @@ unset($query['page']);
                             'stock_qty' => (int) $product['stock_qty'],
                             'photo' => $product['photo'],
                             'photo_url' => \PIZ\Services\ImageUploader::url($product['photo'] ?? null),
+                            'price_history' => $canPrices ? \PIZ\Models\Product::formattedPriceHistory((int) $product['id']) : [],
                         ];
                         $low = (int) $product['stock_qty'] <= (int) $product['low_stock'];
                         ?>
@@ -162,6 +207,7 @@ unset($query['page']);
                         'stock_qty' => (int) $product['stock_qty'],
                         'photo' => $product['photo'],
                         'photo_url' => \PIZ\Services\ImageUploader::url($product['photo'] ?? null),
+                        'price_history' => $canPrices ? \PIZ\Models\Product::formattedPriceHistory((int) $product['id']) : [],
                     ];
                     ?>
                     <article class="product-mobile-card">
@@ -289,6 +335,17 @@ unset($query['page']);
                                 <span class="hint">Можно изменить позже через приход.</span>
                             </label>
                         </div>
+                        <?php if ($canPrices): ?>
+                            <div class="form-section price-history" data-price-history-wrap hidden>
+                                <div class="form-section__head">
+                                    <div>
+                                        <h4>История изменения цен</h4>
+                                        <p class="hint">Кто и когда менял цену товара</p>
+                                    </div>
+                                </div>
+                                <div class="price-history__list" data-price-history></div>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="modal__foot">

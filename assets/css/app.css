@@ -4428,72 +4428,107 @@ body.bare-body.has-install-banner {
     }
 }
 
-/* ---------------- Склад / смены ---------------- */
 
-.subtabs {
-    display: flex;
-    gap: 4px;
-    background: var(--surface);
+/* ---------------- Массовые цены и история цен ---------------- */
+
+.price-mass-panel {
+    margin: 4px 0 16px;
+    padding: 14px;
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 4px;
-    width: fit-content;
-    max-width: 100%;
-    overflow-x: auto;
+    background: var(--surface-2);
 }
 
-.subtab {
+.price-mass-form__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.price-mass-form__head strong {
+    font-size: 13px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 7px 13px;
-    border-radius: 8px;
-    font-size: 12.5px;
-    font-weight: 600;
+}
+
+.price-mass-form__head span {
+    font-size: 11.5px;
     color: var(--muted);
-    white-space: nowrap;
 }
 
-.subtab .icon {
-    width: 14px;
-    height: 14px;
+.price-mass-form__fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: end;
 }
 
-.subtab:hover {
+.price-mass-form .hint {
+    margin-top: 8px;
+}
+
+.price-history {
+    margin-top: 4px;
+}
+
+.price-history__list {
+    max-height: 230px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding-right: 3px;
+}
+
+.price-history__item {
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
     background: var(--surface-2);
+}
+
+.price-history__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.price-history__head strong {
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+}
+
+.price-history__head span {
+    font-size: 10.5px;
+    color: var(--muted);
+}
+
+.price-history__changes {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+    font-size: 11.5px;
     color: var(--text-2);
 }
 
-.subtab.is-active {
-    background: var(--text);
-    color: #fff;
+.price-history__comment {
+    margin-top: 3px;
+    font-size: 10.5px;
+    color: var(--muted);
 }
 
-.subtab.is-active .icon {
-    color: #fff;
-}
-
-.input--price {
-    width: 110px;
-    height: 34px;
-    margin-left: auto;
-    text-align: right;
-    font-size: 13px;
-}
-
-@media (max-width: 640px) {
-    .subtabs {
-        width: 100%;
-        flex-wrap: wrap;
-        overflow: visible;
+@media (max-width: 720px) {
+    .price-mass-form__fields {
+        grid-template-columns: 1fr;
     }
 
-    .subtab {
-        flex: 0 0 auto;
-        justify-content: center;
-    }
-
-    .input--price {
-        width: 90px;
+    .price-mass-form__head {
+        flex-direction: column;
+        gap: 2px;
     }
 }

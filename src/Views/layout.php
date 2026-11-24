@@ -59,21 +59,19 @@ $user = \PIZ\Auth::user();
                 <?php endif; ?>
 
                 <div class="nav__label">Магазин</div>
-                <?php
-                $stockUrl = '/products';
-                if (!\PIZ\Auth::can('products.view')) {
-                    if (\PIZ\Auth::can('stock.manage')) {
-                        $stockUrl = '/stock';
-                    } elseif (\PIZ\Auth::can('writeoff.manage')) {
-                        $stockUrl = '/stock/out';
-                    } elseif (\PIZ\Auth::can('prices.manage')) {
-                        $stockUrl = '/prices';
-                    }
-                }
-                ?>
-                <?php if (\PIZ\Auth::canAny(['products.view', 'stock.manage', 'writeoff.manage', 'prices.manage'])): ?>
-                    <a class="nav__item <?= active_class($active ?? '', 'stock') ?>" href="<?= e(url($stockUrl)) ?>">
-                        <?= icon('box') ?><span>Склад</span>
+                <?php if (\PIZ\Auth::canAny(['products.view', 'stock.manage'])): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'products') ?>" href="<?= e(url(\PIZ\Auth::can('products.view') ? '/products' : '/stock')) ?>">
+                        <?= icon('box') ?><span>Товары и остаток</span>
+                    </a>
+                <?php endif; ?>
+                <?php if (\PIZ\Auth::can('stock.manage')): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'stock_in') ?>" href="<?= e(url('/stock/in')) ?>">
+                        <?= icon('truck') ?><span>Приход</span>
+                    </a>
+                <?php endif; ?>
+                <?php if (\PIZ\Auth::can('writeoff.manage')): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'stock_out') ?>" href="<?= e(url('/stock/out')) ?>">
+                        <?= icon('logout') ?><span>Расход</span>
                     </a>
                 <?php endif; ?>
                 <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">
