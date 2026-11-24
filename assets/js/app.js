@@ -60,6 +60,40 @@
         }
     });
 
+    /* ---------- Sidebar (collapse on desktop) ---------- */
+    const sidebarRoot = document.documentElement;
+    const sidebarCollapse = document.querySelector('[data-sidebar-collapse]');
+
+    function syncSidebarToggle() {
+        if (!sidebarCollapse) return;
+        const collapsed = sidebarRoot.classList.contains('sidebar-collapsed');
+        sidebarCollapse.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        sidebarCollapse.setAttribute('aria-label', collapsed ? 'Развернуть меню' : 'Свернуть меню');
+        sidebarCollapse.title = collapsed ? 'Развернуть меню' : 'Свернуть меню';
+    }
+
+    document.querySelectorAll('.nav__item').forEach(function (item) {
+        const label = item.querySelector('span:not(.nav__kbd)');
+        if (!label) return;
+        const text = label.textContent.trim();
+        if (text) {
+            item.setAttribute('aria-label', text);
+            item.setAttribute('title', text);
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('[data-sidebar-collapse]')) return;
+        event.preventDefault();
+        const collapsed = sidebarRoot.classList.toggle('sidebar-collapsed');
+        try {
+            localStorage.setItem('piz-sidebar-collapsed', collapsed ? '1' : '0');
+        } catch (e) {}
+        syncSidebarToggle();
+    });
+
+    syncSidebarToggle();
+
     /* ---------- Toasts ---------- */
     function dismissToast(toast) {
         toast.style.opacity = '0';

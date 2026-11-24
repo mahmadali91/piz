@@ -4547,3 +4547,122 @@ body.bare-body.has-install-banner {
     #invoice-items .select { min-width: 170px; }
     .input--qty, .input--money, .input--inv { width: 76px; }
 }
+
+/* ---------------- Сворачиваемое боковое меню ---------------- */
+
+.brand { padding-right: 34px; }
+
+.sidebar {
+    transition: width .2s ease, padding .2s ease;
+}
+
+.main {
+    transition: margin-left .2s ease;
+}
+
+.sidebar-collapse {
+    position: absolute;
+    top: 24px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .05);
+    color: #9aa5b5;
+    cursor: pointer;
+    z-index: 2;
+    transition: background .15s ease, color .15s ease;
+}
+
+.sidebar-collapse:hover {
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+}
+
+.sidebar-collapse .icon {
+    width: 15px;
+    height: 15px;
+}
+
+.sidebar-collapse__collapsed {
+    display: none;
+}
+
+@media (min-width: 1181px) {
+    html.sidebar-collapsed .sidebar {
+        width: 76px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    html.sidebar-collapsed .main {
+        margin-left: 76px;
+    }
+
+    html.sidebar-collapsed .brand {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    html.sidebar-collapsed .brand__text {
+        display: none;
+    }
+
+    html.sidebar-collapsed .sidebar-collapse {
+        right: 24px;
+    }
+
+    html.sidebar-collapsed .sidebar-collapse__expanded {
+        display: none;
+    }
+
+    html.sidebar-collapsed .sidebar-collapse__collapsed {
+        display: grid;
+    }
+
+    html.sidebar-collapsed .nav__label {
+        height: 1px;
+        padding: 0;
+        margin: 12px 8px;
+        overflow: hidden;
+        font-size: 0;
+        color: transparent;
+        background: rgba(255, 255, 255, .07);
+    }
+
+    html.sidebar-collapsed .nav__item {
+        justify-content: center;
+        gap: 0;
+        padding: 11px 0;
+    }
+
+    html.sidebar-collapsed .nav__item > span {
+        display: none;
+    }
+
+    html.sidebar-collapsed .nav__item .icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    html.sidebar-collapsed .sidebar-user {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px 0;
+        background: transparent;
+    }
+
+    html.sidebar-collapsed .sidebar-user__meta {
+        display: none;
+    }
+}
+
+@media (max-width: 1180px) {
+    .sidebar-collapse {
+        display: none;
+    }
+}

@@ -16,6 +16,13 @@ $user = \PIZ\Auth::user();
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="ДОНЕР">
     <meta name="mobile-web-app-capable" content="yes">
+    <script>
+        try {
+            if (localStorage.getItem('piz-sidebar-collapsed') === '1') {
+                document.documentElement.classList.add('sidebar-collapsed');
+            }
+        } catch (e) {}
+    </script>
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
 </head>
 <body class="<?= e($bodyClass ?? '') ?>">
@@ -39,6 +46,10 @@ $user = \PIZ\Auth::user();
                     <span>учёт продаж</span>
                 </span>
             </a>
+            <button type="button" class="sidebar-collapse" data-sidebar-collapse aria-label="Свернуть меню" aria-expanded="true" title="Свернуть меню">
+                <span class="sidebar-collapse__expanded"><?= icon('chevron-left') ?></span>
+                <span class="sidebar-collapse__collapsed"><?= icon('chevron-right') ?></span>
+            </button>
 
             <nav class="nav">
                 <div class="nav__label">Работа</div>
