@@ -69,6 +69,7 @@ git pull --ff-only
 - `docs/USER_GUIDE.md` — продавец.
 - `docs/DEPLOY_BEGET.md`, `docs/GITHUB.md` — инфраструктура.
 - `docs/TOKEN_REPORT.md` — отчёт по токенам.
+- `tools/seed_demo.php` — демо-данные за 3 месяца и очистка `--purge`.
 - `archive/requests/ЗАПРОСЫ.md` — все запросы.
 
 ## Правила экономии
