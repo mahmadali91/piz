@@ -23,7 +23,10 @@ PWA: `manifest.webmanifest`, `sw.php` → `sw.js`, офлайн `offline.html`.
 - Приход: партии с себестоимостью + история приходов.
 - Расход: списание на сотрудника/брак, учитывается как расход.
 - Цены: массово на процент/сумму/значение.
-- Смены: открытие/закрытие, отчёт с остатком, CSV.
+- Поставщики: накладные, закупочные цены, оплаты, долг.
+- Инвентаризация: документ, расчёт/факт/расхождение, акт.
+- PDF: чек, отчёт, смена, накладная, акт инвентаризации.
+- Смены: открытие/закрытие, отчёт с остатком, CSV/PDF.
 - Роли: администратор-суперпользователь, управляющий, кассир, свои права.
 - Версия: файл `VERSION`, отображается в блоке пользователя и настройках.
 
@@ -33,6 +36,9 @@ PWA: `manifest.webmanifest`, `sw.php` → `sw.js`, офлайн `offline.html`.
 - `src/Models/`: Product, Receipt, Writeoff, Shift, Sale, User.
 - `src/Views/products/index.php` — каталог, массовые цены, история цен.
 - `src/Views/stock/in.php`, `out.php` — приход/расход.
+- `src/Views/suppliers/` — поставщики, накладные, оплаты.
+- `src/Views/inventory/` — инвентаризация и акт.
+- `src/Services/PdfService.php` — PDF всех документов.
 - `database/schema.sql`, `tools/migrate.php`.
 - `tools/generate_product_art.py` — 35 иллюстраций из `data/products.csv`.
 - `uploads/products/generated-<id>.jpg` — фото товаров (не в Git).
