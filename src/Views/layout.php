@@ -1,5 +1,6 @@
 <?php
 $user = \PIZ\Auth::user();
+$groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'reports'], true);
 ?><!doctype html>
 <html lang="ru">
 <head>
@@ -85,57 +86,65 @@ $user = \PIZ\Auth::user();
                         <?= icon('logout') ?><span>Расход</span>
                     </a>
                 <?php endif; ?>
-                <?php if (\PIZ\Auth::can('suppliers.manage')): ?>
-                    <a class="nav__item <?= active_class($active ?? '', 'suppliers') ?>" href="<?= e(url('/suppliers')) ?>">
-                        <?= icon('truck') ?><span>Поставщики</span>
-                    </a>
-                <?php endif; ?>
-                <?php if (\PIZ\Auth::can('inventory.manage')): ?>
-                    <a class="nav__item <?= active_class($active ?? '', 'inventory') ?>" href="<?= e(url('/inventory')) ?>">
-                        <?= icon('list') ?><span>Инвентаризация</span>
-                    </a>
-                <?php endif; ?>
-                <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">
-                    <?= icon('receipt') ?><span>Продажи</span>
-                </a>
 
-                <?php if (\PIZ\Auth::can('reports.view')): ?>
-                    <div class="nav__label">Аналитика</div>
-                    <a class="nav__item <?= active_class($active ?? '', 'reports') ?>" href="<?= e(url('/reports')) ?>">
-                        <?= icon('chart') ?><span>Отчёты</span>
+                <button type="button" class="nav__item nav__group-toggle <?= $groupActive ? 'is-active' : '' ?>" data-nav-group-toggle
+                        aria-expanded="<?= $groupActive ? 'true' : 'false' ?>" aria-controls="nav-more">
+                    <?= icon('grid') ?><span>Ещё</span><?= icon('chevron-right', 'icon icon--xs nav__chevron') ?>
+                </button>
+                <div class="nav__group" id="nav-more" data-nav-group-panel <?= $groupActive ? '' : 'hidden' ?>>
+                    <?php if (\PIZ\Auth::can('suppliers.manage')): ?>
+                        <a class="nav__item <?= active_class($active ?? '', 'suppliers') ?>" href="<?= e(url('/suppliers')) ?>">
+                            <?= icon('truck') ?><span>Поставщики</span>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (\PIZ\Auth::can('inventory.manage')): ?>
+                        <a class="nav__item <?= active_class($active ?? '', 'inventory') ?>" href="<?= e(url('/inventory')) ?>">
+                            <?= icon('list') ?><span>Инвентаризация</span>
+                        </a>
+                    <?php endif; ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">
+                        <?= icon('receipt') ?><span>Продажи</span>
                     </a>
-                <?php endif; ?>
-
-                <div class="nav__label">Управление</div>
-                <?php if (\PIZ\Auth::can('users.manage')): ?>
-                    <a class="nav__item <?= active_class($active ?? '', 'employees') ?>" href="<?= e(url('/employees')) ?>">
-                        <?= icon('users') ?><span>Сотрудники</span>
-                    </a>
-                <?php endif; ?>
-                <?php if (\PIZ\Auth::can('activity.view')): ?>
-                    <a class="nav__item <?= active_class($active ?? '', 'activity') ?>" href="<?= e(url('/activity')) ?>">
-                        <?= icon('activity') ?><span>Журнал</span>
-                    </a>
-                <?php endif; ?>
-                <a class="nav__item <?= active_class($active ?? '', 'settings') ?>" href="<?= e(url('/settings')) ?>">
-                    <?= icon('settings') ?><span>Настройки</span>
-                </a>
+                    <?php if (\PIZ\Auth::can('reports.view')): ?>
+                        <div class="nav__label nav__label--group">Аналитика</div>
+                        <a class="nav__item <?= active_class($active ?? '', 'reports') ?>" href="<?= e(url('/reports')) ?>">
+                            <?= icon('chart') ?><span>Отчёты</span>
+                        </a>
+                    <?php endif; ?>
+                </div>
             </nav>
 
             <div class="sidebar__foot">
-                <div class="sidebar-user">
+                <button type="button" class="sidebar-user sidebar-user--button" data-admin-menu-toggle
+                        aria-expanded="false" aria-controls="admin-menu">
                     <span class="avatar avatar--sm"><?= e(initials((string) $user['name'])) ?></span>
                     <span class="sidebar-user__meta">
                         <strong><?= e($user['name']) ?></strong>
                         <span><?= e(role_label((string) $user['role'])) ?></span>
                         <span class="sidebar-user__version" title="Версия сайта">Версия v<?= e(PIZ_VERSION) ?></span>
                     </span>
+                    <span class="sidebar-user__gear"><?= icon('settings') ?></span>
+                </button>
+                <div class="admin-menu" id="admin-menu" data-admin-menu aria-hidden="true">
+                    <div class="admin-menu__head">
+                        <span>Управление</span>
+                        <?php if (\PIZ\Auth::can('settings.manage')): ?><a class="icon-btn" href="<?= e(url('/settings')) ?>" title="Настройки"><?= icon('settings') ?></a><?php endif; ?>
+                    </div>
+                    <?php if (\PIZ\Auth::can('users.manage')): ?>
+                        <a class="admin-menu__item" href="<?= e(url('/employees')) ?>"><?= icon('users') ?><span>Сотрудники</span></a>
+                    <?php endif; ?>
+                    <?php if (\PIZ\Auth::can('activity.view')): ?>
+                        <a class="admin-menu__item" href="<?= e(url('/activity')) ?>"><?= icon('activity') ?><span>Журнал</span></a>
+                    <?php endif; ?>
+                    <a class="admin-menu__item" href="<?= e(url('/settings')) ?>"><?= icon('settings') ?><span>Настройки</span></a>
+                    <div class="admin-menu__divider"></div>
                     <form method="post" action="<?= e(url('/logout')) ?>">
                         <?= csrf_field() ?>
-                        <button type="submit" class="icon-btn icon-btn--dark" title="Выйти" aria-label="Выйти"><?= icon('logout') ?></button>
+                        <button type="submit" class="admin-menu__item admin-menu__item--danger"><?= icon('logout') ?><span>Выйти</span></button>
                     </form>
                 </div>
             </div>
+
         </aside>
         <div class="sidebar-backdrop" data-sidebar-close></div>
 

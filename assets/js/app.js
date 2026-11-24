@@ -94,6 +94,57 @@
 
     syncSidebarToggle();
 
+    /* ---------- Группа «Ещё» и меню администратора ---------- */
+    function closeAdminMenu() {
+        document.querySelectorAll('[data-admin-menu].is-open').forEach(function (menu) {
+            menu.classList.remove('is-open');
+            menu.setAttribute('aria-hidden', 'true');
+        });
+        document.querySelectorAll('[data-admin-menu-toggle]').forEach(function (button) {
+            button.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    document.addEventListener('click', function (event) {
+        const groupToggle = event.target.closest('[data-nav-group-toggle]');
+        if (groupToggle) {
+            event.preventDefault();
+            if (sidebarRoot.classList.contains('sidebar-collapsed')) {
+                sidebarRoot.classList.remove('sidebar-collapsed');
+                try { localStorage.setItem('piz-sidebar-collapsed', '0'); } catch (e) {}
+                syncSidebarToggle();
+            }
+            const panel = document.getElementById(groupToggle.getAttribute('aria-controls'));
+            if (!panel) return;
+            const open = groupToggle.getAttribute('aria-expanded') !== 'true';
+            groupToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            panel.hidden = !open;
+            closeAdminMenu();
+            return;
+        }
+
+        const adminToggle = event.target.closest('[data-admin-menu-toggle]');
+        if (adminToggle) {
+            event.preventDefault();
+            const menu = document.getElementById(adminToggle.getAttribute('aria-controls'));
+            if (!menu) return;
+            const open = !menu.classList.contains('is-open');
+            closeAdminMenu();
+            menu.classList.toggle('is-open', open);
+            menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+            adminToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            return;
+        }
+
+        if (!event.target.closest('[data-admin-menu]')) {
+            closeAdminMenu();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeAdminMenu();
+    });
+
     /* ---------- Toasts ---------- */
     function dismissToast(toast) {
         toast.style.opacity = '0';
