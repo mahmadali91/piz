@@ -40,3 +40,8 @@
 # Временные файлы проекта — только внутри PIZZA/temp
 /temp/*
 !/temp/README.md
+
+# Кеш метрик PDF-шрифтов (создаётся tFPDF на сервере)
+/src/Lib/tfpdf/font/unifont/*.dat
+/src/Lib/tfpdf/font/unifont/*-metrics.php
+/src/Lib/tfpdf/font/unifont/*-character-width*.php
