@@ -76,7 +76,7 @@ final class Shift
             $totals = self::totals($id);
             $stock = Database::fetch(
                 'SELECT COALESCE(SUM(stock_qty), 0) AS units,
-                        COALESCE(SUM(stock_qty * purchase_price_kop), 0) AS value
+                        COALESCE(SUM(CAST(stock_qty AS SIGNED) * purchase_price_kop), 0) AS value
                  FROM products WHERE active = 1'
             );
             $products = Database::fetchAll(
