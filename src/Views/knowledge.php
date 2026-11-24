@@ -2,6 +2,7 @@
 /** @var array $user */
 $shot = static fn (string $name): string => url('/knowledge/image/' . preg_replace('/\.jpg$/', '', $name));
 $sections = [
+    ['login', 'Вход и роли', 'Вход, пароль и доступы'],
     ['dashboard', 'Дашборд и отчёты', 'Сводка дня, период, график и таблица'],
     ['pos', 'Касса', 'Продажа, оплата и чек'],
     ['products', 'Товары и остатки', 'Каталог, остатки и движение'],
@@ -53,9 +54,28 @@ $sections = [
         </div>
     </section>
 
-    <section class="knowledge-section" id="dashboard">
+    <section class="knowledge-section" id="login">
         <div class="knowledge-section__text">
             <span class="knowledge-num">01</span>
+            <h3>Вход и роли</h3>
+            <p>На экране входа — логин и пароль. Если пароль забыт, нажмите «Забыли пароль?» и укажите email из карточки сотрудника.</p>
+            <ul>
+                <li>Роли: администратор, управляющий, кассир, свои права.</li>
+                <li>Администратор видит все разделы; остальным права выдаёт администратор.</li>
+                <li>После входа откроется дашборд или касса — в зависимости от прав.</li>
+                <li>Выход — в меню пользователя слева внизу.</li>
+            </ul>
+            <p class="knowledge-tip">Никому не передавайте пароль. Для нового сотрудника создайте отдельный вход в «Сотрудники».</p>
+        </div>
+        <figure class="knowledge-figure">
+            <a href="<?= e($shot('login.jpg')) ?>" target="_blank" rel="noopener"><img src="<?= e($shot('login.jpg')) ?>" alt="Экран входа" loading="lazy"></a>
+            <figcaption>Вход: логин, пароль и восстановление доступа.</figcaption>
+        </figure>
+    </section>
+
+    <section class="knowledge-section" id="dashboard">
+        <div class="knowledge-section__text">
+            <span class="knowledge-num">02</span>
             <h3>Дашборд и отчёты</h3>
             <p>Главный экран показывает выручку, прибыль, маржинальность, продажи, средний чек, расходы и скидки за выбранный период.</p>
             <ul>
@@ -74,7 +94,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="pos">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">02</span>
+            <span class="knowledge-num">03</span>
             <h3>Касса</h3>
             <p>Рабочее место продавца. Слева каталог, справа чек. Нажмите на товар, чтобы добавить его.</p>
             <ul>
@@ -93,7 +113,7 @@ $sections = [
 
     <section class="knowledge-section" id="products">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">03</span>
+            <span class="knowledge-num">04</span>
             <h3>Товары и остатки</h3>
             <p>Каталог товаров с фото, артикулом, категорией, ценой и остатком. Поиск работает по названию и артикулу.</p>
             <ul>
@@ -111,7 +131,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="stock-in">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">04</span>
+            <span class="knowledge-num">05</span>
             <h3>Приход</h3>
             <p>Оформляйте поступление товара от поставщика.</p>
             <ul>
@@ -128,7 +148,7 @@ $sections = [
 
     <section class="knowledge-section" id="stock-out">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">05</span>
+            <span class="knowledge-num">06</span>
             <h3>Расход</h3>
             <p>Списание товара на сотрудника, брак или другие расходы.</p>
             <ul>
@@ -145,7 +165,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="sales">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">06</span>
+            <span class="knowledge-num">07</span>
             <h3>Продажи</h3>
             <p>История всех чеков с фильтрами по периоду, оплате, статусу и поиску.</p>
             <ul>
@@ -162,7 +182,7 @@ $sections = [
 
     <section class="knowledge-section" id="shifts">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">07</span>
+            <span class="knowledge-num">08</span>
             <h3>Смены</h3>
             <p>Смена фиксирует кассира, открытие и закрытие, выручку и остатки.</p>
             <ul>
@@ -180,7 +200,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="suppliers">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">08</span>
+            <span class="knowledge-num">09</span>
             <h3>Поставщики и накладные</h3>
             <p>Справочник поставщиков, закупочные накладные, оплаты и долг.</p>
             <ul>
@@ -203,7 +223,7 @@ $sections = [
 
     <section class="knowledge-section" id="inventory">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">09</span>
+            <span class="knowledge-num">10</span>
             <h3>Инвентаризация</h3>
             <p>Сверка расчётного и фактического остатка.</p>
             <ul>
@@ -220,7 +240,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="prices">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">10</span>
+            <span class="knowledge-num">11</span>
             <h3>Цены</h3>
             <p>Массовое изменение цен на процент, сумму или конкретное значение.</p>
             <ul>
@@ -237,7 +257,7 @@ $sections = [
 
     <section class="knowledge-section" id="employees">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">11</span>
+            <span class="knowledge-num">12</span>
             <h3>Сотрудники и права</h3>
             <p>Пользователи, роли и точечные права доступа.</p>
             <ul>
@@ -254,7 +274,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="settings">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">12</span>
+            <span class="knowledge-num">13</span>
             <h3>Настройки</h3>
             <p>Название киоска, контакты, валюта, тексты чека и минимальный остаток.</p>
             <ul>
@@ -271,7 +291,7 @@ $sections = [
 
     <section class="knowledge-section" id="activity">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">13</span>
+            <span class="knowledge-num">14</span>
             <h3>Журнал</h3>
             <p>История действий: входы, продажи, изменения товаров, настроек и прав.</p>
             <ul>
@@ -287,7 +307,7 @@ $sections = [
 
     <section class="knowledge-section knowledge-section--reverse" id="mobile">
         <div class="knowledge-section__text">
-            <span class="knowledge-num">14</span>
+            <span class="knowledge-num">15</span>
             <h3>Телефон</h3>
             <p>Сервис работает как PWA: можно добавить на главный экран.</p>
             <ul>
