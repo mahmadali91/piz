@@ -24,7 +24,7 @@
             <h2>Забыли пароль?</h2>
             <p class="muted">Введите логин или email — отправим ссылку для сброса.</p>
             <?php if ($sent): ?>
-                <div class="alert alert--success"><?= icon('mail') ?><span>Если такой аккаунт с email существует, письмо отправлено. Проверьте «Спам».</span></div>
+                <div class="alert alert--success"><?= icon('mail') ?><span>Письмо отправлено. Проверьте почту и папку «Спам».</span></div>
             <?php endif; ?>
             <form method="post" action="<?= e(url('/forgot-password')) ?>" class="auth-form" autocomplete="on">
                 <?= csrf_field() ?>

@@ -39,17 +39,29 @@ final class PasswordResetController
         if (!$user) {
             $user = User::findByEmail($identity);
         }
-        if ($user && !empty($user['email'])) {
-            try {
-                $token = PasswordReset::issue((int) $user['id'], Auth::ip());
-                $link = absolute_url('/reset-password?token=' . urlencode($token));
-                Mailer::sendPasswordReset($user, $link);
-                Audit::log('auth.password_reset_request', ['user_id' => (int) $user['id']]);
-            } catch (\Throwable $e) {
-                error_log('[PIZ] password reset: ' . $e->getMessage());
+        if (!$user) {
+            flash('error', 'Аккаунт с таким логином или email не найден.');
+            redirect('/forgot-password');
+        }
+        if (empty($user['email'])) {
+            flash('error', 'У этого аккаунта не указан email. Попросите администратора добавить его в карточке сотрудника.');
+            redirect('/forgot-password');
+        }
+
+        try {
+            $token = PasswordReset::issue((int) $user['id'], Auth::ip());
+            $link = absolute_url('/reset-password?token=' . urlencode($token));
+            if (!Mailer::sendPasswordReset($user, $link)) {
+                throw new \RuntimeException('Почтовый сервер не принял письмо.');
             }
+            Audit::log('auth.password_reset_request', ['user_id' => (int) $user['id']]);
+        } catch (\Throwable $e) {
+            error_log('[PIZ] password reset: ' . $e->getMessage());
+            flash('error', 'Не удалось отправить письмо. Проверьте настройки почты или попробуйте позже.');
+            redirect('/forgot-password');
         }
         $_SESSION['password_reset_sent_at'] = time();
+        flash('success', 'Письмо отправлено. Проверьте почту и папку «Спам».');
         redirect('/forgot-password?sent=1');
     }
 
