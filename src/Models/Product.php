@@ -230,8 +230,8 @@ final class Product
         $row = Database::fetch(
             'SELECT COUNT(*) AS total,
                     COALESCE(SUM(stock_qty), 0) AS units,
-                    COALESCE(SUM(CAST(stock_qty AS SIGNED) * purchase_price_kop), 0) AS cost_value,
-                    COALESCE(SUM(CAST(stock_qty AS SIGNED) * sale_price_kop), 0) AS retail_value,
+                    COALESCE(SUM(CAST(stock_qty AS SIGNED) * CAST(purchase_price_kop AS SIGNED)), 0) AS cost_value,
+                    COALESCE(SUM(CAST(stock_qty AS SIGNED) * CAST(sale_price_kop AS SIGNED)), 0) AS retail_value,
                     COALESCE(SUM(CASE WHEN stock_qty <= low_stock THEN 1 ELSE 0 END), 0) AS low_count,
                     COALESCE(SUM(CASE WHEN stock_qty <= 0 THEN 1 ELSE 0 END), 0) AS out_count
              FROM products WHERE active = 1'
