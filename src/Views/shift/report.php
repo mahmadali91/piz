@@ -42,7 +42,7 @@ $paymentsTotal = array_sum(array_column($payments, 'revenue'));
                             <span class="pay-row__sum"><?= e(money((int) $row['revenue'])) ?></span>
                         </div>
                         <div class="bar"><i class="bar__fill bar__fill--<?= e($method) ?>" style="width: <?= $share ?>%"></i></div>
-                        <div class="pay-row__meta"><?= (int) $row['count'] ?> продаж · <?= $share ?>%</div>
+                        <div class="pay-row__meta"><?= (int) $row['count'] ?> <?= plural((int) $row['count'], 'продажа', 'продажи', 'продаж') ?> · <?= $share ?>%</div>
                     </div>
                 <?php endforeach; ?>
             </div>

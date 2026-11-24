@@ -4475,10 +4475,12 @@ body.bare-body.has-install-banner {
 @media (max-width: 640px) {
     .subtabs {
         width: 100%;
+        flex-wrap: wrap;
+        overflow: visible;
     }
 
     .subtab {
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         justify-content: center;
     }
 
