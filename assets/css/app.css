@@ -5453,3 +5453,118 @@ html.sidebar-collapsed .sidebar-user__gear {
         font-size: 12px;
     }
 }
+
+/* Мобильный дашборд: компактные действия и фильтры */
+.dash-action-short { display: none; }
+.report-date-trigger { display: none; }
+.report-date-form { display: flex; align-items: center; margin-left: auto; }
+.report-export-more { display: none; position: relative; }
+
+.report-export-more__menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    min-width: 170px;
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 12px 30px -12px rgba(17, 24, 39, .3);
+    z-index: 20;
+}
+
+.report-export-more__menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 7px;
+    color: var(--text-2);
+    font-size: 12px;
+}
+
+.report-export-more__menu a:hover {
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.report-export-more summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.report-export-more summary::-webkit-details-marker {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .dashboard-head__actions {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+    }
+
+    .dashboard-head__actions .btn {
+        flex: 1 1 0;
+        min-width: 0;
+        justify-content: center;
+        padding: 9px 5px;
+        font-size: 11.5px;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    .dashboard-head__actions .icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .dash-action-full { display: none; }
+    .dash-action-short { display: inline; }
+
+    .report-toolbar {
+        gap: 8px;
+    }
+
+    .report-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        max-width: 100%;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+    }
+
+    .report-chips::-webkit-scrollbar { display: none; }
+
+    .report-chips .chip {
+        flex: none;
+    }
+
+    .report-chips .chip[data-period="6m"] {
+        display: none;
+    }
+
+    .report-date-trigger {
+        display: inline-flex;
+        flex: none;
+    }
+
+    .report-date-form {
+        display: none;
+    }
+
+    .report-exports > a {
+        display: none;
+    }
+
+    .report-export-more {
+        display: block;
+        margin-left: auto;
+    }
+
+    .report-export-more summary {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+}

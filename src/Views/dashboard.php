@@ -7,13 +7,13 @@ $report = $reportData ?? [];
         <h2><?= e(greeting()) ?>, <?= e(explode(' ', (string) $user['name'])[0]) ?>!</h2>
         <div class="dashboard-head__actions">
             <?php if (\PIZ\Auth::can('pos.use')): ?>
-                <a class="btn btn--primary" href="<?= e(url('/pos')) ?>"><?= icon('cart') ?> Открыть кассу</a>
+                <a class="btn btn--primary" href="<?= e(url('/pos')) ?>"><?= icon('cart') ?><span class="dash-action-full">Открыть кассу</span><span class="dash-action-short">Касса</span></a>
             <?php endif; ?>
             <?php if (\PIZ\Auth::can('stock.manage')): ?>
-                <a class="btn btn--soft" href="<?= e(url('/stock/in')) ?>"><?= icon('truck') ?> Оформить приход</a>
+                <a class="btn btn--soft" href="<?= e(url('/stock/in')) ?>"><?= icon('truck') ?><span class="dash-action-full">Оформить приход</span><span class="dash-action-short">Приход</span></a>
             <?php endif; ?>
             <?php if (\PIZ\Auth::can('shift.manage')): ?>
-                <a class="btn btn--soft" href="<?= e(url('/shift')) ?>"><?= icon('clock') ?> <?= !empty($currentShift) ? 'Смена открыта' : 'Открыть смену' ?></a>
+                <a class="btn btn--soft" href="<?= e(url('/shift')) ?>"><?= icon('clock') ?><span class="dash-action-full"><?= !empty($currentShift) ? 'Смена открыта' : 'Открыть смену' ?></span><span class="dash-action-short">Смена</span></a>
             <?php endif; ?>
         </div>
     </header>

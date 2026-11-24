@@ -11,25 +11,47 @@ $revenueTrend = percent_change((int) $summary['revenue'], (int) $previous['reven
 $profitTrend = percent_change((int) $summary['profit'], (int) $previous['profit']);
 $countTrend = percent_change((int) $summary['count'], (int) $previous['count']);
 ?>
-    <div class="toolbar">
-        <div class="chips">
+    <div class="toolbar report-toolbar">
+        <div class="chips report-chips">
             <?php foreach ($periodChips as $key => $label): ?>
-                <a class="chip <?= $period['period'] === $key ? 'is-active' : '' ?>"
+                <a class="chip <?= $period['period'] === $key ? 'is-active' : '' ?>" data-period="<?= e($key) ?>"
                    href="<?= e(query_url('/', ['period' => $key, 'from' => null, 'to' => null])) ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
-            <form method="get" action="<?= e(url('/')) ?>" class="toolbar__right" style="gap: 6px;">
-                <input type="hidden" name="period" value="custom">
-                <input class="input" type="date" name="from" value="<?= e($period['from']) ?>" style="height: 32px; width: auto; font-size: 12px;">
-                <span class="muted">—</span>
-                <input class="input" type="date" name="to" value="<?= e($period['to']) ?>" style="height: 32px; width: auto; font-size: 12px;">
-                <button class="btn btn--ghost btn--sm" type="submit">Применить</button>
-            </form>
+            <button type="button" class="btn btn--ghost btn--sm report-date-trigger" data-modal-open="report-date-modal"><?= icon('calendar') ?> Даты</button>
         </div>
-        <div class="toolbar__right">
+        <form method="get" action="<?= e(url('/')) ?>" class="report-date-form" style="gap: 6px;">
+            <input type="hidden" name="period" value="custom">
+            <input class="input" type="date" name="from" value="<?= e($period['from']) ?>" style="height: 32px; width: auto; font-size: 12px;">
+            <span class="muted">—</span>
+            <input class="input" type="date" name="to" value="<?= e($period['to']) ?>" style="height: 32px; width: auto; font-size: 12px;">
+            <button class="btn btn--ghost btn--sm" type="submit">Применить</button>
+        </form>
+        <div class="toolbar__right report-exports">
             <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/export', ['type' => 'daily'])) ?>"><?= icon('download') ?> Дни</a>
             <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/export', ['type' => 'products'])) ?>"><?= icon('download') ?> Товары</a>
             <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/export', ['type' => 'stock'])) ?>"><?= icon('download') ?> Склад</a>
             <a class="btn btn--ghost btn--sm" href="<?= e(pdf_url('/reports/pdf', ['period' => $period['period'], 'from' => $period['from'], 'to' => $period['to']])) ?>"><?= icon('download') ?> Скачать PDF</a>
+            <details class="report-export-more">
+                <summary class="btn btn--ghost btn--sm"><?= icon('download') ?> Ещё</summary>
+                <div class="report-export-more__menu">
+                    <a href="<?= e(query_url('/reports/export', ['type' => 'daily'])) ?>"><?= icon('download') ?> Дни</a>
+                    <a href="<?= e(query_url('/reports/export', ['type' => 'products'])) ?>"><?= icon('download') ?> Товары</a>
+                    <a href="<?= e(query_url('/reports/export', ['type' => 'stock'])) ?>"><?= icon('download') ?> Склад</a>
+                    <a href="<?= e(pdf_url('/reports/pdf', ['period' => $period['period'], 'from' => $period['from'], 'to' => $period['to']])) ?>"><?= icon('download') ?> Скачать PDF</a>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div class="modal" id="report-date-modal" aria-hidden="true">
+        <div class="modal__backdrop" data-modal-close></div>
+        <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="report-date-title">
+            <div class="modal__head"><div><h3 id="report-date-title">Свой период</h3><p>Выберите даты и нажмите «Применить»</p></div><button type="button" class="icon-btn" data-modal-close aria-label="Закрыть"><?= icon('close') ?></button></div>
+            <form method="get" action="<?= e(url('/')) ?>">
+                <input type="hidden" name="period" value="custom">
+                <div class="modal__body"><div class="form-grid form-grid--2"><label class="field"><span class="label">С</span><input class="input" type="date" name="from" value="<?= e($period['from']) ?>" required></label><label class="field"><span class="label">По</span><input class="input" type="date" name="to" value="<?= e($period['to']) ?>" required></label></div></div>
+                <div class="modal__foot"><button class="btn btn--ghost" type="button" data-modal-close>Отмена</button><button class="btn btn--primary" type="submit">Применить</button></div>
+            </form>
         </div>
     </div>
 
