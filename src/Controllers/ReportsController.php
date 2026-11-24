@@ -14,44 +14,13 @@ final class ReportsController
     public function index(): void
     {
         Auth::requirePermission('reports.view');
-
-        $period = period_range();
-        $start = $period['start'];
-        $end = $period['end'];
-
-        $summary = Sale::rangeTotals($start, $end);
-        $series = Sale::dailySeries($start, $end);
-        $payments = Sale::paymentBreakdown($start, $end);
-        $topProducts = Sale::topProducts($start, $end, 20);
-        $stock = Product::stats();
-        $lowStock = Product::lowStock(20);
-        $canceled = Sale::canceledCount($start, $end);
-
-        $days = max(1, (int) round((strtotime($end) - strtotime($start)) / 86400));
-        $previousEnd = $start;
-        $previousStart = date('Y-m-d 00:00:00', strtotime($start . ' -' . $days . ' days'));
-        $previous = Sale::rangeTotals($previousStart, $previousEnd);
-
-        $margin = $summary['revenue'] > 0 ? round($summary['profit'] / $summary['revenue'] * 100, 1) : 0.0;
-        $paymentsTotal = array_sum(array_column($payments, 'revenue'));
-
-        View::render('reports', [
-            'title' => 'Отчёты',
-            'active' => 'reports',
-            'user' => Auth::user(),
-            'period' => $period,
-            'summary' => $summary,
-            'previous' => $previous,
-            'series' => $series,
-            'payments' => $payments,
-            'paymentsTotal' => $paymentsTotal,
-            'topProducts' => $topProducts,
-            'stock' => $stock,
-            'lowStock' => $lowStock,
-            'canceled' => $canceled,
-            'margin' => $margin,
-            'days' => $days,
-        ]);
+        $params = [];
+        foreach (['period', 'from', 'to'] as $key) {
+            if (isset($_GET[$key])) {
+                $params[$key] = (string) $_GET[$key];
+            }
+        }
+        redirect(query_url('/', $params));
     }
 
     public function pdf(): void

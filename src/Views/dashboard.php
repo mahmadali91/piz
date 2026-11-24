@@ -222,7 +222,7 @@
                     <h3>Топ товаров за 7 дней</h3>
                     <p>По выручке</p>
                 </div>
-                <a class="link" href="<?= e(url('/reports?period=7d')) ?>">Отчёт <?= icon('arrow-right', 'icon icon--xs') ?></a>
+                <a class="link" href="<?= e(url('/?period=7d')) ?>">Отчёт <?= icon('arrow-right', 'icon icon--xs') ?></a>
             </header>
             <?php if ($topProducts === []): ?>
                 <div class="empty empty--compact">
@@ -247,4 +247,21 @@
             <?php endif; ?>
         </section>
     </div>
+    <?php if ($canReports && $reportData !== []): ?>
+        <section class="report-merged">
+            <div class="report-merged__head">
+                <div>
+                    <span class="eyebrow">аналитика</span>
+                    <h2>Отчёты</h2>
+                    <p>Все показатели за выбранный период</p>
+                </div>
+                <span class="badge badge--gray">на этом же экране</span>
+            </div>
+            <?php (static function (array $data): void {
+                extract($data, EXTR_SKIP);
+                require PIZ_ROOT . '/src/Views/partials/reports-content.php';
+            })($reportData); ?>
+        </section>
+    <?php endif; ?>
+
 </div>

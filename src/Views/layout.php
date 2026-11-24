@@ -1,6 +1,6 @@
 <?php
 $user = \PIZ\Auth::user();
-$groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'reports'], true);
+$groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales'], true);
 ?><!doctype html>
 <html lang="ru">
 <head>
@@ -40,7 +40,7 @@ $groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'repo
 <?php if ($user): ?>
     <div class="app">
         <aside class="sidebar" id="sidebar">
-            <a class="brand" href="<?= e(url('/')) ?>">
+            <a class="brand" href="<?= e(\PIZ\Auth::can('pos.use') ? url('/pos') : url('/')) ?>">
                 <span class="brand__mark">Д</span>
                 <span class="brand__text">
                     <strong><?= e(mb_substr(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР'), 0, 22)) ?></strong>
@@ -105,12 +105,6 @@ $groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'repo
                     <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">
                         <?= icon('receipt') ?><span>Продажи</span>
                     </a>
-                    <?php if (\PIZ\Auth::can('reports.view')): ?>
-                        <div class="nav__label nav__label--group">Аналитика</div>
-                        <a class="nav__item <?= active_class($active ?? '', 'reports') ?>" href="<?= e(url('/reports')) ?>">
-                            <?= icon('chart') ?><span>Отчёты</span>
-                        </a>
-                    <?php endif; ?>
                 </div>
             </nav>
 

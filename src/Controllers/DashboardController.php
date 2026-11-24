@@ -46,6 +46,38 @@ final class DashboardController
             'avg_check' => percent_change($todayTotals['avg_check'], $yesterdayTotals['avg_check']),
         ];
 
+        $canReports = Auth::can('reports.view');
+        $reportData = [];
+        if ($canReports) {
+            $reportPeriod = period_range();
+            $reportSummary = Sale::rangeTotals($reportPeriod['start'], $reportPeriod['end']);
+            $reportSeries = Sale::dailySeries($reportPeriod['start'], $reportPeriod['end']);
+            $reportPayments = Sale::paymentBreakdown($reportPeriod['start'], $reportPeriod['end']);
+            $reportTopProducts = Sale::topProducts($reportPeriod['start'], $reportPeriod['end'], 20);
+            $reportLowStock = Product::lowStock(20);
+            $reportCanceled = Sale::canceledCount($reportPeriod['start'], $reportPeriod['end']);
+            $reportDays = max(1, (int) round((strtotime($reportPeriod['end']) - strtotime($reportPeriod['start'])) / 86400));
+            $reportPreviousEnd = $reportPeriod['start'];
+            $reportPreviousStart = date('Y-m-d 00:00:00', strtotime($reportPeriod['start'] . ' -' . $reportDays . ' days'));
+            $reportPrevious = Sale::rangeTotals($reportPreviousStart, $reportPreviousEnd);
+            $reportMargin = $reportSummary['revenue'] > 0 ? round($reportSummary['profit'] / $reportSummary['revenue'] * 100, 1) : 0.0;
+            $reportData = [
+                'period' => $reportPeriod,
+                'summary' => $reportSummary,
+                'previous' => $reportPrevious,
+                'series' => $reportSeries,
+                'payments' => $reportPayments,
+                'paymentsTotal' => array_sum(array_column($reportPayments, 'revenue')),
+                'topProducts' => $reportTopProducts,
+                'stock' => $stock,
+                'lowStock' => $reportLowStock,
+                'canceled' => $reportCanceled,
+                'margin' => $reportMargin,
+                'days' => $reportDays,
+                'finance' => Auth::can('finance.view'),
+            ];
+        }
+
         View::render('dashboard', [
             'title' => 'Дашборд',
             'active' => 'dashboard',
@@ -63,6 +95,8 @@ final class DashboardController
             'topProducts' => $topProducts,
             'canceledToday' => $canceledToday,
             'currentShift' => Shift::current(),
+            'canReports' => $canReports,
+            'reportData' => $reportData,
         ]);
     }
 }
