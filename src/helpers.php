@@ -630,7 +630,8 @@ if (!function_exists('absolute_url')) {
         if (!preg_match('/^[a-z0-9.-]+(?::\d+)?$/i', $host)) {
             $host = 'piz.itop7.ru';
         }
-        $https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+        $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || !in_array($host, ['localhost', '127.0.0.1', 'localhost:8000'], true);
         return ($https ? 'https' : 'http') . '://' . $host . url($path);
     }
 }
