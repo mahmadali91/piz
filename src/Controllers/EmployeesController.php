@@ -25,6 +25,7 @@ final class EmployeesController
             'permissionGroups' => Permissions::GROUPS,
             'rolePresets' => Permissions::ROLES,
             'currentUserId' => Auth::id(),
+            'currentUserEmail' => (string) (Auth::user()['email'] ?? ''),
         ]);
     }
 

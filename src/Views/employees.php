@@ -9,6 +9,12 @@ $roleChips = ['admin' => 'badge--red', 'manager' => 'badge--blue', 'cashier' => 
         <button class="btn btn--primary" type="button" data-employee-new><?= icon('plus') ?> Добавить сотрудника</button>
     </div>
 
+    <?php if (empty($currentUserEmail)): ?>
+        <div class="alert alert--warn">
+            <?= icon('mail') ?><span>У вашего аккаунта не указан email. Без него не работает восстановление пароля. Нажмите «Изменить» на своей карточке и добавьте email.</span>
+        </div>
+    <?php endif; ?>
+
     <div class="user-grid">
         <?php foreach ($users as $item):
             $isSelf = (int) $item['id'] === (int) $currentUserId;
