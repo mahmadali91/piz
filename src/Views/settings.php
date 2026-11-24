@@ -161,7 +161,7 @@ $tablesTotal = count($health['tables']);
                     <span class="badge <?= $tablesOk === $tablesTotal ? 'badge--green' : 'badge--amber' ?>"><?= $tablesOk ?>/<?= $tablesTotal ?> таблиц</span>
                 </header>
                 <div class="health-list">
-                    <div class="health-row"><span>Версия PIZ</span><strong><?= e(PIZ_VERSION) ?></strong></div>
+                    <div class="health-row"><span>Версия сайта</span><strong>v<?= e(PIZ_VERSION) ?></strong></div>
                     <div class="health-row"><span>PHP</span><strong><?= e($health['php']) ?></strong></div>
                     <div class="health-row"><span>MySQL / MariaDB</span><strong><?= e($health['mysql']) ?></strong></div>
                     <div class="health-row"><span>База данных</span><strong class="health-ok">подключена</strong></div>

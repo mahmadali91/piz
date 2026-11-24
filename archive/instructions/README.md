@@ -110,7 +110,7 @@ docs/                     инструкции и скриншоты
 - `ИСТОРИЯ.md` — полная переписка и решения;
 - `archive/instructions/` — копии инструкций;
 - `archive/versions/piz-full-history.bundle` — полная история Git;
-- `dist/piz-kiosk-1.0.0.zip` — текущая сборка;
+- `dist/piz-kiosk-v1.23.26.zip` — текущая сборка (локально, на сайт не выкладывается);
 - `temp/` — только временные файлы проекта.
 
 Подробная карта архива: [archive/README.md](archive/README.md).
@@ -125,6 +125,7 @@ docs/                     инструкции и скриншоты
 
 ## Статус
 
+- **Версия сайта: v1.23.26** (файл [VERSION](VERSION), описание — [VERSION.md](VERSION.md)).
 - 35 товаров, 3500 единиц, 35 фото.
 - 1 реальная продажа, 1 администратор.
 - HTTPS, HTTP → HTTPS 301, HSTS, cookie `Secure`.

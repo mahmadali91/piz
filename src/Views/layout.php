@@ -6,6 +6,7 @@ $user = \PIZ\Auth::user();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#141821">
+    <meta name="app-version" content="v<?= e(PIZ_VERSION) ?>">
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'ДОНЕР') ?> — <?= e(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР')) ?></title>
     <link rel="icon" type="image/png" sizes="32x32" href="<?= e(asset('assets/icons/favicon-32.png')) ?>">
@@ -108,6 +109,7 @@ $user = \PIZ\Auth::user();
                     <span class="sidebar-user__meta">
                         <strong><?= e($user['name']) ?></strong>
                         <span><?= e(role_label((string) $user['role'])) ?></span>
+                        <span class="sidebar-user__version" title="Версия сайта">Версия v<?= e(PIZ_VERSION) ?></span>
                     </span>
                     <form method="post" action="<?= e(url('/logout')) ?>">
                         <?= csrf_field() ?>

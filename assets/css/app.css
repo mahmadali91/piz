@@ -338,6 +338,15 @@ code {
     color: #7d8798;
 }
 
+.sidebar-user__meta .sidebar-user__version {
+    margin-top: 2px;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: var(--brand);
+    white-space: nowrap;
+}
+
 .avatar {
     width: 34px;
     height: 34px;

@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#141821">
+    <meta name="app-version" content="v<?= e(PIZ_VERSION) ?>">
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'ДОНЕР') ?> — <?= e(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР')) ?></title>
     <link rel="icon" type="image/png" sizes="32x32" href="<?= e(asset('assets/icons/favicon-32.png')) ?>">

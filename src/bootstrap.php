@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 define('PIZ_ROOT', dirname(__DIR__));
-define('PIZ_VERSION', '1.0.0');
+$versionFile = PIZ_ROOT . '/VERSION';
+define('PIZ_VERSION', is_file($versionFile) ? trim((string) file_get_contents($versionFile)) : '1.23.26');
 
 spl_autoload_register(static function (string $class): void {
     $prefix = 'PIZ\\';
