@@ -110,6 +110,10 @@ final class PasswordResetController
 
         User::setPassword((int) $reset['user_id'], $password);
         PasswordReset::consume((int) $reset['id']);
+        $updatedUser = User::find((int) $reset['user_id']);
+        if ($updatedUser && !empty($updatedUser['email'])) {
+            Mailer::sendPasswordChanged($updatedUser, $password);
+        }
         Audit::log('auth.password_reset', ['user_id' => (int) $reset['user_id']]);
         flash('success', 'Пароль изменён. Войдите с новым паролем.');
         redirect('/login?reset=1');

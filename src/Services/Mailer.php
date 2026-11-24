@@ -38,6 +38,39 @@ final class Mailer
         return self::send((string) $user['email'], $subject, $html, $text);
     }
 
+    public static function sendPasswordChanged(array $user, string $password): bool
+    {
+        $name = (string) ($user['name'] ?? 'пользователь');
+        $login = (string) ($user['login'] ?? '');
+        $store = (string) Settings::get('store_name', 'КИОСК ДОНЕР');
+        $subject = 'Пароль изменён — ' . $store;
+        $safeName = htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $safeLogin = htmlspecialchars($login, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $safePassword = htmlspecialchars($password, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $loginLink = htmlspecialchars(absolute_url('/login'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $html = '<!doctype html><html lang="ru"><body style="margin:0;background:#f4f6f9;font-family:Arial,sans-serif;color:#1f2937">'
+            . '<div style="max-width:560px;margin:0 auto;padding:28px 16px">'
+            . '<div style="background:#141821;border-radius:16px 16px 0 0;padding:22px 24px;color:#fff">'
+            . '<div style="font-size:22px;font-weight:700">' . htmlspecialchars($store, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</div>'
+            . '<div style="font-size:12px;color:#aeb7c5;margin-top:4px">учёт продаж</div></div>'
+            . '<div style="background:#fff;padding:26px 24px;border-radius:0 0 16px 16px">'
+            . '<h1 style="font-size:20px;margin:0 0 14px">Пароль изменён</h1>'
+            . '<p style="font-size:14px;line-height:1.6">Здравствуйте, <strong>' . $safeName . '</strong>!</p>'
+            . '<p style="font-size:14px;line-height:1.6">Для входа используйте:</p>'
+            . '<table style="border-collapse:collapse;margin:14px 0 18px"><tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-size:13px">Логин</td><td style="padding:6px 0;font-weight:700;font-size:15px;font-family:monospace">' . $safeLogin . '</td></tr>'
+            . '<tr><td style="padding:6px 12px 6px 0;color:#6b7280;font-size:13px">Новый пароль</td><td style="padding:6px 0;font-weight:700;font-size:15px;font-family:monospace">' . $safePassword . '</td></tr></table>'
+            . '<p style="margin:22px 0"><a href="' . $loginLink . '" style="display:inline-block;background:#f26b21;color:#fff;text-decoration:none;padding:13px 22px;border-radius:10px;font-weight:700">Войти в кабинет</a></p>'
+            . '<p style="font-size:12px;color:#6b7280;line-height:1.6">Если вы не меняли пароль, срочно сообщите администратору.</p>'
+            . '</div></div></body></html>';
+        $text = "Пароль изменён — {$store}\n\n"
+            . "Здравствуйте, {$name}!\n\n"
+            . "Логин: {$login}\n"
+            . "Новый пароль: {$password}\n\n"
+            . "Вход: " . absolute_url('/login') . "\n\n"
+            . "Если вы не меняли пароль, срочно сообщите администратору.\n";
+        return self::send((string) $user['email'], $subject, $html, $text);
+    }
+
     public static function send(string $to, string $subject, string $html, string $text): bool
     {
         if (!filter_var($to, FILTER_VALIDATE_EMAIL) || !function_exists('mail')) {

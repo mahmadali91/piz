@@ -6,6 +6,7 @@ namespace PIZ\Controllers;
 use PIZ\Audit;
 use PIZ\Auth;
 use PIZ\Models\User;
+use PIZ\Services\Mailer;
 use PIZ\Permissions;
 use PIZ\View;
 
@@ -117,6 +118,12 @@ final class EmployeesController
                     'password' => $password,
                 ]);
                 Audit::log('user.update', ['id' => (int) $existing['id'], 'login' => $login, 'role' => $role, 'active' => $active]);
+                if ($password !== '' && $email !== '') {
+                    $updated = User::find((int) $existing['id']);
+                    if ($updated) {
+                        Mailer::sendPasswordChanged($updated, $password);
+                    }
+                }
                 flash('success', 'Данные сотрудника обновлены.');
             } else {
                 $newId = User::create([
@@ -129,6 +136,12 @@ final class EmployeesController
                     'active' => $active,
                 ]);
                 Audit::log('user.create', ['id' => $newId, 'login' => $login, 'role' => $role]);
+                if ($email !== '') {
+                    $created = User::find($newId);
+                    if ($created) {
+                        Mailer::sendPasswordChanged($created, $password);
+                    }
+                }
                 flash('success', 'Сотрудник добавлен.');
             }
         } catch (\Throwable $e) {
@@ -180,6 +193,9 @@ final class EmployeesController
             redirect('/employees');
         }
         User::setPassword($id, $password);
+        if (!empty($user['email'])) {
+            Mailer::sendPasswordChanged($user, $password);
+        }
         Audit::log('user.password', ['id' => $id, 'login' => $user['login']]);
         flash('success', 'Пароль сотрудника «' . $user['name'] . '» изменён.');
         redirect('/employees');
