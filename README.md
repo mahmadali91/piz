@@ -110,7 +110,7 @@ docs/                     инструкции и скриншоты
 - `ИСТОРИЯ.md` — полная переписка и решения;
 - `archive/instructions/` — копии инструкций;
 - `archive/versions/piz-full-history.bundle` — полная история Git;
-- `dist/piz-kiosk-1.0.0.zip` — текущая сборка;
+- `dist/piz-kiosk-1.0.0.zip` — текущая сборка (локально, на сайт не выкладывается);
 - `temp/` — только временные файлы проекта.
 
 Подробная карта архива: [archive/README.md](archive/README.md).
