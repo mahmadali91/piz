@@ -506,6 +506,12 @@
     // Инициализация
     renderCategories();
     renderGrid();
+    if (el.cartTab && el.addToast) {
+        el.cartTab.addEventListener('click', function () {
+            el.addToast.hidden = true;
+        });
+    }
+
     if (el.addToastOpen) {
         el.addToastOpen.addEventListener('click', function () {
             if (el.cartTab) el.cartTab.click();
