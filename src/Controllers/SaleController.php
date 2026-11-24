@@ -6,6 +6,7 @@ namespace PIZ\Controllers;
 use PIZ\Audit;
 use PIZ\Auth;
 use PIZ\Models\Sale;
+use PIZ\Models\Writeoff;
 use PIZ\View;
 
 final class SaleController
@@ -38,6 +39,8 @@ final class SaleController
         $page = min($page, $pages);
         $sales = Sale::list($filters, $perPage, ($page - 1) * $perPage);
         $summary = Sale::summary($filters);
+        $summary['expense'] = Writeoff::totalForRange($period['start'], $period['end']);
+        $summary['profit'] -= $summary['expense'];
 
         View::render('sales/index', [
             'title' => 'Продажи',

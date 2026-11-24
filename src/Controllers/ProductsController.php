@@ -54,17 +54,18 @@ final class ProductsController
         $sku = trim((string) ($_POST['sku'] ?? ''));
         $category = trim((string) ($_POST['category'] ?? ''));
         $unit = trim((string) ($_POST['unit'] ?? ''));
-        $purchase = parse_money($_POST['purchase_price'] ?? '');
+        $purchaseRaw = $_POST['purchase_price'] ?? null;
+        $purchase = $purchaseRaw !== null && $purchaseRaw !== '' ? parse_money((string) $purchaseRaw) : null;
         $sale = parse_money($_POST['sale_price'] ?? '');
         $lowStock = (int) ($_POST['low_stock'] ?? 3);
-        $stockQty = (int) ($_POST['stock_qty'] ?? 0);
+        $stockQty = Auth::can('stock.manage') ? (int) ($_POST['stock_qty'] ?? 0) : 0;
 
         $errors = [];
         if (mb_strlen($name) < 2 || mb_strlen($name) > 160) {
             $errors[] = 'Название товара: от 2 до 160 символов.';
         }
         if ($purchase === null) {
-            $purchase = 0;
+            $purchase = $existing ? (int) $existing['purchase_price_kop'] : 0;
         }
         if (!Auth::can('prices.manage')) {
             if ($existing) {

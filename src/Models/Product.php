@@ -220,11 +220,6 @@ final class Product
         );
     }
 
-    public static function addStockCount(): int
-    {
-        return (int) Database::fetchValue('SELECT COUNT(*) FROM product_receipts');
-    }
-
     public static function stats(): array
     {
         $row = Database::fetch(

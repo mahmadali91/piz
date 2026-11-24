@@ -18,8 +18,12 @@ unset($query['page']);
         </div>
         <?php if ($finance): ?>
             <div class="stat">
-                <span class="stat__label">Прибыль</span>
+                <span class="stat__label">Прибыль (за вычетом списаний)</span>
                 <span class="stat__value stat__value--green"><?= e(money($summary['profit'])) ?></span>
+            </div>
+            <div class="stat">
+                <span class="stat__label">Расходы (списания)</span>
+                <span class="stat__value stat__value--red"><?= e(money((int) $summary['expense'])) ?></span>
             </div>
         <?php endif; ?>
         <div class="stat">
