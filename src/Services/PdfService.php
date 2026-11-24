@@ -13,10 +13,10 @@ final class PdfService
         require_once PIZ_ROOT . '/src/Lib/tfpdf/PDF.php';
         require_once PIZ_ROOT . '/src/Lib/tfpdf/TTFontFile.php';
         if (!defined('FPDF_FONTPATH')) {
-            define('FPDF_FONTPATH', PIZ_ROOT . '/src/Lib/tfpdf/font');
+            define('FPDF_FONTPATH', PIZ_ROOT . '/src/Lib/tfpdf/font/');
         }
         if (!defined('FPDF_FONT_WRITE_PATH')) {
-            define('FPDF_FONT_WRITE_PATH', PIZ_ROOT . '/src/Lib/tfpdf/font');
+            define('FPDF_FONT_WRITE_PATH', PIZ_ROOT . '/src/Lib/tfpdf/font/');
         }
         $pdf = new \tFPDF\PDF('P', 'mm', 'A4');
         $pdf->AddFont('DejaVu', '', 'DejaVuSans.ttf', true);
