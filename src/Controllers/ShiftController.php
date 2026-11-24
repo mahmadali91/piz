@@ -22,6 +22,7 @@ final class ShiftController
         $canClose = $shift
             ? (Auth::isAdmin() || (int) $shift['opened_by'] === Auth::id())
             : false;
+        $onlyUser = Auth::can('sales.view_all') ? null : Auth::id();
 
         View::render('shift/index', [
             'title' => 'Смена',
@@ -34,6 +35,8 @@ final class ShiftController
             'canClose' => $canClose,
             'stock' => Product::stats(),
             'finance' => Auth::can('finance.view'),
+            'recentShifts' => Shift::list(10, 0, $onlyUser),
+            'historyTotal' => Shift::count($onlyUser),
         ]);
     }
 

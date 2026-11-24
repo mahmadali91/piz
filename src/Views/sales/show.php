@@ -23,7 +23,6 @@ $isCanceled = ($sale['status'] ?? '') === 'canceled';
         </div>
         <div class="toolbar__right">
             <a class="btn btn--ghost btn--sm" href="<?= e(url('/sales/' . $sale['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a>
-            <button class="btn btn--ghost btn--sm" type="button" data-print-receipt><?= icon('print') ?> Печать</button>
             <?php if ($canCancel && !$isCanceled): ?>
                 <form method="post" action="<?= e(url('/sales/' . $sale['id'] . '/cancel')) ?>" data-confirm="Отменить продажу и вернуть товары на склад? Действие отразится в отчётах.">
                     <?= csrf_field() ?>
@@ -137,10 +136,10 @@ $isCanceled = ($sale['status'] ?? '') === 'canceled';
             <section class="card">
                 <header class="card__head">
                     <div>
-                        <h3>Чек для печати</h3>
-                        <p>Формат 80 мм</p>
+                        <h3>Чек</h3>
+                        <p>Скачивание в PDF</p>
                     </div>
-                    <div class="row-actions"><a class="btn btn--soft btn--sm" href="<?= e(url('/sales/' . $sale['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a><button class="btn btn--soft btn--sm" type="button" data-print-receipt><?= icon('print') ?> Печать</button></div>
+                    <div class="row-actions"><a class="btn btn--soft btn--sm" href="<?= e(url('/sales/' . $sale['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a></div>
                 </header>
                 <?php \PIZ\View::partial('partials/receipt', ['sale' => $sale]); ?>
             </section>

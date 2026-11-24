@@ -108,4 +108,36 @@ $paymentsTotal = $totals ? (int) $totals['revenue'] : 0;
             </section>
         <?php endif; ?>
     <?php endif; ?>
+
+    <section class="card">
+        <header class="card__head">
+            <div><h3>История смен</h3><p>Открытие, закрытие и итоги последних смен</p></div>
+            <a class="link" href="<?= e(url('/shifts')) ?>">Вся история (<?= (int) $historyTotal ?>) <?= icon('arrow-right', 'icon icon--xs') ?></a>
+        </header>
+        <?php if ($recentShifts === []): ?>
+            <div class="empty empty--compact"><?= icon('clock') ?><p>Смен пока нет</p></div>
+        <?php else: ?>
+            <div class="table-wrap">
+                <table class="table table--compact">
+                    <thead><tr><th>Смена</th><th>Открыта</th><th>Закрыта</th><th>Открыл</th><th class="num">Продаж</th><th class="num">Выручка</th><?php if ($finance): ?><th class="num">Прибыль</th><?php endif; ?><th class="num">Остаток</th><th>Статус</th><th></th></tr></thead>
+                    <tbody>
+                    <?php foreach ($recentShifts as $item): ?>
+                        <tr>
+                            <td><a class="number" href="<?= e(url($item['status'] === 'open' ? '/shift' : '/shifts/' . $item['id'])) ?>">№ <?= (int) $item['id'] ?></a></td>
+                            <td class="muted" style="white-space:nowrap;"><?= e(dt_human($item['opened_at'])) ?></td>
+                            <td class="muted" style="white-space:nowrap;"><?= e($item['closed_at'] ? dt_human($item['closed_at']) : '—') ?></td>
+                            <td><?= e($item['opened_by_name'] ?? '—') ?></td>
+                            <td class="num"><?= $item['status'] === 'closed' ? (int) $item['sales_count'] : '—' ?></td>
+                            <td class="num"><?= $item['status'] === 'closed' ? e(money((int) $item['revenue_kop'])) : '—' ?></td>
+                            <?php if ($finance): ?><td class="num" style="color:var(--green);font-weight:650;"><?= $item['status'] === 'closed' ? e(money((int) $item['profit_kop'])) : '—' ?></td><?php endif; ?>
+                            <td class="num"><?= $item['status'] === 'closed' ? (int) $item['stock_units'] : '—' ?></td>
+                            <td><?= $item['status'] === 'open' ? '<span class="badge badge--green">Открыта</span>' : '<span class="badge badge--gray">Закрыта</span>' ?></td>
+                            <td><div class="row-actions"><a class="icon-btn" href="<?= e(url($item['status'] === 'open' ? '/shift' : '/shifts/' . $item['id'])) ?>"><?= icon('eye') ?></a><?php if ($item['status'] === 'closed'): ?><a class="icon-btn" href="<?= e(url('/shifts/' . $item['id'] . '/pdf')) ?>" title="Скачать PDF"><?= icon('download') ?></a><?php endif; ?></div></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+    </section>
 </div>

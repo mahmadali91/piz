@@ -106,7 +106,6 @@
         <div class="modal__body" id="receipt-content"></div>
         <div class="receipt-modal__actions">
             <a class="btn btn--ghost" id="receipt-pdf" href="#"><?= icon('download') ?> Скачать PDF</a>
-            <button type="button" class="btn btn--primary" data-print-receipt><?= icon('print') ?> Печать</button>
             <a class="btn btn--ghost" id="receipt-open" href="#" target="_blank" rel="noopener">Открыть чек</a>
             <button type="button" class="btn btn--ghost" data-modal-close>Новая продажа</button>
         </div>

@@ -103,53 +103,6 @@
         }
     });
 
-    /* ---------- Print receipt ---------- */
-    document.addEventListener('click', function (event) {
-        const button = event.target.closest('[data-print-receipt]');
-        if (!button) return;
-        event.preventDefault();
-
-        const modal = button.closest('.modal');
-        const source = (modal && modal.querySelector('.receipt-print')) || document.querySelector('.receipt-print');
-        if (!source) {
-            window.print();
-            return;
-        }
-
-        let root = document.getElementById('print-root');
-        if (!root) {
-            root = document.createElement('div');
-            root.id = 'print-root';
-            root.className = 'print-root';
-            document.body.appendChild(root);
-        }
-        root.innerHTML = source.outerHTML;
-        document.body.classList.add('printing-receipt');
-
-        const cleanup = function () {
-            document.body.classList.remove('printing-receipt');
-            root.innerHTML = '';        };
-        window.addEventListener('afterprint', cleanup, { once: true });
-        window.setTimeout(function () {
-            window.print();
-        }, 40);
-        window.setTimeout(cleanup, 60000);
-    });
-
-    /* ---------- Print full page (reports) ---------- */
-    document.addEventListener('click', function (event) {
-        if (!event.target.closest('[data-print-page]')) return;
-        event.preventDefault();
-        document.body.classList.add('printing-page');
-        window.print();
-        window.setTimeout(function () {
-            document.body.classList.remove('printing-page');
-        }, 900);
-    });
-    window.addEventListener('afterprint', function () {
-        document.body.classList.remove('printing-page');
-    });
-
     /* ---------- Быстрый переход в кассу (N) ---------- */
     document.addEventListener('keydown', function (event) {
         if (event.key.toLowerCase() !== 'n' || event.metaKey || event.ctrlKey || event.altKey) return;
