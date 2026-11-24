@@ -1,5 +1,5 @@
 /* PIZ service worker: оболочка приложения и офлайн-страница. */
-const CACHE_NAME = 'piz-shell-v6';
+const CACHE_NAME = 'piz-shell-v8';
 const OFFLINE_URL = '/offline.html';
 const PRECACHE = [
     '/assets/css/app.css',
@@ -59,7 +59,7 @@ self.addEventListener('fetch', (event) => {
 
     // Статика — из кеша с фоновым обновлением.
     if (url.pathname.startsWith('/assets/')) {
-        const cacheKey = url.origin + url.pathname;
+        const cacheKey = url.origin + url.pathname + url.search;
         event.respondWith(
             caches.match(cacheKey).then((cached) => {
                 const network = fetch(request)
