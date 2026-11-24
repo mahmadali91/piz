@@ -10,7 +10,7 @@ final class KnowledgeController
 {
     public function index(): void
     {
-        Auth::requireLogin();
+        Auth::requirePermission('settings.manage');
 
         View::render('knowledge', [
             'title' => 'База знаний',
@@ -22,7 +22,7 @@ final class KnowledgeController
 
     public function image(string $name): void
     {
-        Auth::requireLogin();
+        Auth::requirePermission('settings.manage');
 
         if (preg_match('/^[a-z0-9-]+$/', $name) !== 1) {
             http_response_code(404);

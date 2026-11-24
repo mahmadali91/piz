@@ -130,7 +130,9 @@ $groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales'], true
                     <?php if (\PIZ\Auth::can('activity.view')): ?>
                         <a class="admin-menu__item" href="<?= e(url('/activity')) ?>"><?= icon('activity') ?><span>Журнал</span></a>
                     <?php endif; ?>
-                    <a class="admin-menu__item" href="<?= e(url('/knowledge')) ?>"><?= icon('book') ?><span>База знаний</span></a>
+                    <?php if (\PIZ\Auth::can('settings.manage')): ?>
+                        <a class="admin-menu__item" href="<?= e(url('/knowledge')) ?>"><?= icon('book') ?><span>База знаний</span></a>
+                    <?php endif; ?>
                     <a class="admin-menu__item" href="<?= e(url('/settings')) ?>"><?= icon('settings') ?><span>Настройки</span></a>
                     <div class="admin-menu__divider"></div>
                     <form method="post" action="<?= e(url('/logout')) ?>">
