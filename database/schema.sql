@@ -328,6 +328,7 @@ INSERT IGNORE INTO settings (skey, svalue) VALUES
   ('store_name', 'КИОСК ДОНЕР'),
   ('store_address', ''),
   ('store_phone', ''),
+  ('site_url', 'https://piz.itop7.ru'),
   ('currency', '₽'),
   ('receipt_header', ''),
   ('receipt_footer', 'Спасибо за покупку! Ждём вас снова.'),

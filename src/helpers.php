@@ -628,16 +628,11 @@ if (!function_exists('absolute_url')) {
      */
     function absolute_url(string $path = ''): string
     {
-        $configured = \PIZ\Settings::get('site_url');
+        $configured = \PIZ\Settings::get('site_url', 'https://piz.itop7.ru');
         if ($configured !== null && $configured !== '') {
             return rtrim($configured, '/') . url($path);
         }
-        $host = (string) ($_SERVER['HTTP_HOST'] ?? 'piz.itop7.ru');
-        if (!preg_match('/^[a-z0-9.-]+(?::\d+)?$/i', $host)) {
-            $host = 'piz.itop7.ru';
-        }
-        $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-            || !in_array($host, ['localhost', '127.0.0.1', 'localhost:8000'], true);
-        return ($https ? 'https' : 'http') . '://' . $host . url($path);
+        // Никогда не строим ссылку из Host: только доверенный домен.
+        return 'https://piz.itop7.ru' . url($path);
     }
 }

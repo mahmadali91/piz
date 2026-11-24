@@ -152,6 +152,7 @@ $tablesTotal = count($health['tables']);
                 <p class="muted" style="text-align: center; font-size: 11px; margin-top: 12px;">Так чек будет выглядеть на термопринтере 80 мм</p>
             </section>
 
+            <?php if ($canManage): ?>
             <section class="card">
                 <header class="card__head">
                     <div>
@@ -187,6 +188,7 @@ $tablesTotal = count($health['tables']);
                     </form>
                 </div>
             </section>
+            <?php endif; ?>
         </div>
     </div>
 </div>
