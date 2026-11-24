@@ -2016,6 +2016,10 @@ code {
 .modal__body {
     padding: 18px 22px;
     overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal__foot {
@@ -2982,8 +2986,6 @@ code {
     display: flex;
     flex-direction: column;
     gap: 14px;
-    max-height: 44vh;
-    overflow-y: auto;
     padding-right: 4px;
 }
 
