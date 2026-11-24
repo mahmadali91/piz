@@ -7,6 +7,9 @@ $periodChips = [
     '3m' => '3 месяца',
     '6m' => '6 месяцев',
 ];
+$revenueTrend = percent_change((int) $summary['revenue'], (int) $previous['revenue']);
+$profitTrend = percent_change((int) $summary['profit'], (int) $previous['profit']);
+$countTrend = percent_change((int) $summary['count'], (int) $previous['count']);
 ?>
     <div class="toolbar">
         <div class="chips">

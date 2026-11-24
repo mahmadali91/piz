@@ -662,9 +662,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-report-views]').forEach(function (container) {
         const buttons = container.querySelectorAll('[data-report-view]');
         const panels = container.querySelectorAll('[data-report-panel]');
+        let savedView = 'chart';
+        try { savedView = localStorage.getItem('piz-report-view') || 'chart'; } catch (e) {}
+        const savedButton = Array.prototype.find.call(buttons, function (button) {
+            return button.getAttribute('data-report-view') === savedView;
+        });
         buttons.forEach(function (button) {
             button.addEventListener('click', function () {
                 const view = button.getAttribute('data-report-view');
+                try { localStorage.setItem('piz-report-view', view); } catch (e) {}
                 buttons.forEach(function (other) {
                     const active = other === button;
                     other.classList.toggle('is-active', active);
@@ -675,6 +681,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
         });
+        if (savedButton) savedButton.click();
     });
 });
 
