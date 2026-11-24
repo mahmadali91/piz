@@ -3,7 +3,7 @@
     <div class="toolbar">
         <div class="toolbar__left"><a class="btn btn--ghost btn--sm" href="<?= e(url('/inventory')) ?>"><?= icon('chevron-left', 'icon icon--xs') ?> Инвентаризация</a><div><h2 style="font-size: 20px;"><?= e($session['number']) ?></h2><div class="muted" style="font-size: 12px;"><?= e($session['warehouse']) ?> · <?= e(dt_human($session['started_at'])) ?> · <?= e($session['started_by_name'] ?? '—') ?></div></div></div>
         <div class="toolbar__right">
-            <?php if ($completed): ?><a class="btn btn--primary btn--sm" href="<?= e(url('/inventory/' . $session['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать акт PDF</a><?php endif; ?>
+            <?php if ($completed): ?><a class="btn btn--primary btn--sm" href="<?= e(pdf_url('/inventory/' . $session['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать акт PDF</a><?php endif; ?>
             <span class="badge <?= $completed ? 'badge--green' : 'badge--amber' ?>"><?= $completed ? 'Завершена' : 'Черновик' ?></span>
         </div>
     </div>

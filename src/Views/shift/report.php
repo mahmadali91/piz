@@ -13,7 +13,7 @@ $paymentsTotal = array_sum(array_column($payments, 'revenue'));
         </div>
         <div class="toolbar__right">
             <a class="btn btn--primary btn--sm" href="<?= e(url('/shifts/' . $shift['id'] . '/export')) ?>"><?= icon('download') ?> Скачать CSV</a>
-            <a class="btn btn--ghost btn--sm" href="<?= e(url('/shifts/' . $shift['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a>
+            <a class="btn btn--ghost btn--sm" href="<?= e(pdf_url('/shifts/' . $shift['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a>
             <a class="btn btn--ghost btn--sm" href="<?= e(url('/shifts')) ?>">История</a>
         </div>
     </div>

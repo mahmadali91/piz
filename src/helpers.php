@@ -397,6 +397,17 @@ if (!function_exists('query_url')) {
     }
 }
 
+if (!function_exists('pdf_url')) {
+    /**
+     * Ссылка на PDF с версией, чтобы браузер не отдавал старый файл из кеша.
+     */
+    function pdf_url(string $path, array $params = []): string
+    {
+        $params['v'] = PIZ_VERSION;
+        return url($path) . '?' . http_build_query($params);
+    }
+}
+
 if (!function_exists('period_range')) {
     /**
      * Разбирает выбранный период для истории продаж и отчётов.

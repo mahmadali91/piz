@@ -132,7 +132,7 @@ $paymentsTotal = $totals ? (int) $totals['revenue'] : 0;
                             <?php if ($finance): ?><td class="num" style="color:var(--green);font-weight:650;"><?= $item['status'] === 'closed' ? e(money((int) $item['profit_kop'])) : '—' ?></td><?php endif; ?>
                             <td class="num"><?= $item['status'] === 'closed' ? (int) $item['stock_units'] : '—' ?></td>
                             <td><?= $item['status'] === 'open' ? '<span class="badge badge--green">Открыта</span>' : '<span class="badge badge--gray">Закрыта</span>' ?></td>
-                            <td><div class="row-actions"><a class="icon-btn" href="<?= e(url($item['status'] === 'open' ? '/shift' : '/shifts/' . $item['id'])) ?>"><?= icon('eye') ?></a><?php if ($item['status'] === 'closed'): ?><a class="icon-btn" href="<?= e(url('/shifts/' . $item['id'] . '/pdf')) ?>" title="Скачать PDF"><?= icon('download') ?></a><?php endif; ?></div></td>
+                            <td><div class="row-actions"><a class="icon-btn" href="<?= e(url($item['status'] === 'open' ? '/shift' : '/shifts/' . $item['id'])) ?>"><?= icon('eye') ?></a><?php if ($item['status'] === 'closed'): ?><a class="icon-btn" href="<?= e(pdf_url('/shifts/' . $item['id'] . '/pdf')) ?>" title="Скачать PDF"><?= icon('download') ?></a><?php endif; ?></div></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

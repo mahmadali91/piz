@@ -29,7 +29,7 @@ $countTrend = percent_change((int) $summary['count'], (int) $previous['count']);
             <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/export', ['type' => 'daily'])) ?>"><?= icon('download') ?> Дни</a>
             <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/export', ['type' => 'products'])) ?>"><?= icon('download') ?> Товары</a>
             <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/export', ['type' => 'stock'])) ?>"><?= icon('download') ?> Склад</a>
-            <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/reports/pdf', ['period' => $period['period'], 'from' => $period['from'], 'to' => $period['to']])) ?>"><?= icon('download') ?> Скачать PDF</a>
+            <a class="btn btn--ghost btn--sm" href="<?= e(pdf_url('/reports/pdf', ['period' => $period['period'], 'from' => $period['from'], 'to' => $period['to']])) ?>"><?= icon('download') ?> Скачать PDF</a>
         </div>
     </div>
 

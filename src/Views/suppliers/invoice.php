@@ -1,7 +1,7 @@
 <div class="page">
     <div class="toolbar">
         <div class="toolbar__left"><a class="btn btn--ghost btn--sm" href="<?= e(url('/suppliers/invoices')) ?>"><?= icon('chevron-left', 'icon icon--xs') ?> Накладные</a><div><h2 style="font-size: 20px;">Накладная № <?= e($invoice['number']) ?></h2><div class="muted" style="font-size: 12px;"><?= e($invoice['supplier_name'] ?? '—') ?> · <?= e(date('d.m.Y', strtotime((string) $invoice['invoice_date']))) ?></div></div></div>
-        <div class="toolbar__right"><a class="btn btn--primary btn--sm" href="<?= e(url('/suppliers/invoices/' . $invoice['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a><a class="btn btn--ghost btn--sm" href="<?= e(url('/suppliers/' . $invoice['supplier_id'])) ?>">Поставщик</a></div>
+        <div class="toolbar__right"><a class="btn btn--primary btn--sm" href="<?= e(pdf_url('/suppliers/invoices/' . $invoice['id'] . '/pdf')) ?>"><?= icon('download') ?> Скачать PDF</a><a class="btn btn--ghost btn--sm" href="<?= e(url('/suppliers/' . $invoice['supplier_id'])) ?>">Поставщик</a></div>
     </div>
 
     <section class="summary-grid">

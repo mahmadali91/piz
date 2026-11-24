@@ -30,7 +30,7 @@
                     <td class="num"><?= (int) $s['total_products'] ?></td>
                     <td class="num <?= (int) $s['total_diff'] !== 0 ? 'stat__value--red' : '' ?>"><?= (int) $s['total_diff'] > 0 ? '+' : '' ?><?= (int) $s['total_diff'] ?></td>
                     <td><?= $s['status'] === 'completed' ? '<span class="badge badge--green">Завершена</span>' : '<span class="badge badge--amber">Черновик</span>' ?></td>
-                    <td><div class="row-actions"><a class="icon-btn" href="<?= e(url('/inventory/' . $s['id'])) ?>"><?= icon('eye') ?></a><?php if ($s['status'] === 'completed'): ?><a class="icon-btn" href="<?= e(url('/inventory/' . $s['id'] . '/pdf')) ?>" title="Скачать акт PDF"><?= icon('download') ?></a><?php endif; ?></div></td>
+                    <td><div class="row-actions"><a class="icon-btn" href="<?= e(url('/inventory/' . $s['id'])) ?>"><?= icon('eye') ?></a><?php if ($s['status'] === 'completed'): ?><a class="icon-btn" href="<?= e(pdf_url('/inventory/' . $s['id'] . '/pdf')) ?>" title="Скачать акт PDF"><?= icon('download') ?></a><?php endif; ?></div></td>
                 </tr>
             <?php endforeach; ?></tbody>
         </table></div>

@@ -118,5 +118,6 @@
         'csrf' => csrf_token(),
         'currency' => currency(),
         'allow_negative' => (bool) ($allowNegative ?? false),
+        'pdf_version' => PIZ_VERSION,
     ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 </script>

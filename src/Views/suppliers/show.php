@@ -35,7 +35,7 @@
                         <td class="num"><?= e(money((int) $invoice['paid_kop'])) ?></td>
                         <td class="num <?= (int) $invoice['debt_kop'] > 0 ? 'stat__value--red' : '' ?>"><?= e(money((int) $invoice['debt_kop'])) ?></td>
                         <td><?= invoice_status_badge((string) $invoice['status']) ?></td>
-                        <td><div class="row-actions"><a class="icon-btn" href="<?= e(url('/suppliers/invoices/' . $invoice['id'])) ?>"><?= icon('eye') ?></a><a class="icon-btn" href="<?= e(url('/suppliers/invoices/' . $invoice['id'] . '/pdf')) ?>"><?= icon('download') ?></a></div></td>
+                        <td><div class="row-actions"><a class="icon-btn" href="<?= e(url('/suppliers/invoices/' . $invoice['id'])) ?>"><?= icon('eye') ?></a><a class="icon-btn" href="<?= e(pdf_url('/suppliers/invoices/' . $invoice['id'] . '/pdf')) ?>"><?= icon('download') ?></a></div></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

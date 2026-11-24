@@ -58,7 +58,7 @@
                             <td class="num strong"><?= e(money((int) $invoice['total_kop'])) ?></td>
                             <td class="num"><?= e(money((int) $invoice['debt_kop'])) ?></td>
                             <td><?= invoice_status_badge((string) $invoice['status']) ?></td>
-                            <td><a class="icon-btn" href="<?= e(url('/suppliers/invoices/' . $invoice['id'] . '/pdf')) ?>" title="Скачать PDF"><?= icon('download') ?></a></td>
+                            <td><a class="icon-btn" href="<?= e(pdf_url('/suppliers/invoices/' . $invoice['id'] . '/pdf')) ?>" title="Скачать PDF"><?= icon('download') ?></a></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>

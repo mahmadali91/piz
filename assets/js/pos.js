@@ -459,7 +459,7 @@
                 el.receiptContent.innerHTML = data.receipt_html || '';
             }
             if (el.receiptPdf && data.sale_url) {
-                el.receiptPdf.href = data.sale_url.replace(/\/$/, '') + '/pdf';
+                el.receiptPdf.href = data.sale_url.replace(/\/$/, '') + '/pdf?v=' + encodeURIComponent(window.PIZ.pdf_version || '');
             }
             if (window.PIZ_openModal) {
                 window.PIZ_openModal('receipt-modal');
