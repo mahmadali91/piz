@@ -50,7 +50,8 @@
         addToastName: document.getElementById('pos-add-toast-name'),
         addToastCount: document.getElementById('pos-add-toast-count'),
         addToastOpen: document.getElementById('pos-add-toast-open'),
-        cartTab: document.querySelector('[data-pos-view="cart"]')
+        cartTab: document.querySelector('[data-pos-view="cart"]'),
+        gridSize: document.getElementById('pos-grid-size')
     };
 
     const numberFormat = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
@@ -161,6 +162,19 @@
         if (el.count) {
             el.count.textContent = list.length + ' ' + plural(list.length, 'товар', 'товара', 'товаров') + ' в каталоге';
         }
+    }
+
+    function applyGridCols(cols) {
+        const value = [2, 3, 4].includes(Number(cols)) ? String(Number(cols)) : '2';
+        root.setAttribute('data-grid-cols', value);
+        if (el.gridSize) {
+            el.gridSize.querySelectorAll('[data-cols]').forEach(function (button) {
+                const active = button.getAttribute('data-cols') === value;
+                button.classList.toggle('is-active', active);
+                button.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+        }
+        try { localStorage.setItem('piz-pos-grid-cols', value); } catch (e) {}
     }
 
     function plural(n, one, few, many) {
@@ -506,6 +520,17 @@
     // Инициализация
     renderCategories();
     renderGrid();
+    let initialCols = '2';
+    try { initialCols = localStorage.getItem('piz-pos-grid-cols') || '2'; } catch (e) {}
+    applyGridCols(initialCols);
+
+    if (el.gridSize) {
+        el.gridSize.addEventListener('click', function (event) {
+            const button = event.target.closest('[data-cols]');
+            if (button) applyGridCols(button.getAttribute('data-cols'));
+        });
+    }
+
     if (el.cartTab && el.addToast) {
         el.cartTab.addEventListener('click', function () {
             el.addToast.hidden = true;

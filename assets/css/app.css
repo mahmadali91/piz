@@ -5609,3 +5609,118 @@ html.sidebar-collapsed .sidebar-user__gear {
         padding-right: 9px;
     }
 }
+
+/* Мобильная сетка товаров: 2 / 3 / 4 в ряд */
+.pos-grid-size {
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.pos-grid-size button {
+    width: 30px;
+    height: 28px;
+    border: 1px solid var(--line-strong);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--text-2);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.pos-grid-size button.is-active {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+    color: var(--brand-ink);
+}
+
+@media (max-width: 860px) {
+    .pos-grid-size {
+        display: flex;
+    }
+
+    #pos[data-grid-cols="2"] .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 9px;
+    }
+
+    #pos[data-grid-cols="3"] .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    #pos[data-grid-cols="4"] .product-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    #pos[data-grid-cols="3"] .product-card__name {
+        font-size: 11px;
+        min-height: 27px;
+    }
+
+    #pos[data-grid-cols="4"] .product-card__name {
+        font-size: 10px;
+        min-height: 24px;
+        line-height: 1.2;
+    }
+
+    #pos[data-grid-cols="3"] .product-card__price,
+    #pos[data-grid-cols="4"] .product-card__price {
+        font-size: 11px;
+    }
+
+    #pos[data-grid-cols="3"] .product-card__stock,
+    #pos[data-grid-cols="4"] .product-card__stock {
+        font-size: 9px;
+    }
+
+    #pos[data-grid-cols="4"] .product-card__media {
+        min-height: 80px;
+    }
+
+    #pos[data-grid-cols="4"] .product-card__bottom {
+        padding: 0 5px 6px;
+        gap: 2px;
+    }
+
+    #pos[data-grid-cols="4"] .product-card__body {
+        padding: 7px 6px;
+    }
+}
+
+@media (max-width: 430px) {
+    .pos__hint {
+        display: none;
+    }
+}
+
+@media (max-width: 640px) {
+    .dashboard-head h2 {
+        display: none;
+    }
+
+    .report-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .report-chips {
+        flex: 1 1 100%;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .report-exports {
+        flex: 1 1 100%;
+        justify-content: flex-end;
+        margin-left: 0;
+    }
+
+    .report-export-more {
+        margin-left: 0;
+    }
+}

@@ -1,4 +1,4 @@
-<div class="page" id="pos" data-view="catalog">
+<div class="page" id="pos" data-view="catalog" data-grid-cols="2">
     <div class="pos-mobile-tabs">
         <button type="button" class="tab is-active" data-pos-view="catalog">Каталог</button>
         <button type="button" class="tab" data-pos-view="cart">Чек · <span id="tab-cart-count">0</span></button>
@@ -20,7 +20,13 @@
 
             <div class="pos__meta">
                 <span class="pos__count" id="pos-count"></span>
-                <span class="muted" style="font-size: 11.5px;">Нажмите на товар, чтобы добавить его в чек</span>
+                <span class="muted pos__hint" style="font-size: 11.5px;">Нажмите на товар, чтобы добавить его в чек</span>
+            </div>
+            <div class="pos-grid-size" id="pos-grid-size" role="group" aria-label="Количество товаров в ряд">
+                <span>В ряд:</span>
+                <button type="button" data-cols="2" class="is-active" aria-pressed="true">2</button>
+                <button type="button" data-cols="3" aria-pressed="false">3</button>
+                <button type="button" data-cols="4" aria-pressed="false">4</button>
             </div>
 
             <div class="product-grid" id="pos-grid"></div>
