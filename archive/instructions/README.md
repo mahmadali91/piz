@@ -24,6 +24,8 @@
 ![Товары и остаток](docs/screenshots/products.png)
 ![Отчёт по смене](docs/screenshots/shift-report.png)
 
+![Иллюстрации товаров](docs/screenshots/product-art.jpg)
+
 ## Мобильная версия и установка
 
 Сервис устанавливается на телефон как PWA — без магазинов приложений.
