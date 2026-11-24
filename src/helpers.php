@@ -106,9 +106,9 @@ if (!function_exists('verify_csrf')) {
         $sent = $_POST['_token'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
         if (!is_string($sent) || $sent === '' || !hash_equals(csrf_token(), $sent)) {
             if (is_json_request()) {
-                json_response(['ok' => false, 'error' => 'Сессия истекла. Обновите страницу и попробуйте снова.'], 419);
+                json_response(['ok' => false, 'error' => 'Сессия истекла. Обновите страницу и попробуйте снова.'], 403);
             }
-            http_response_code(419);
+            http_response_code(403);
             \PIZ\View::render('errors/419', ['title' => 'Сессия истекла'], 'layout-bare');
             exit;
         }
