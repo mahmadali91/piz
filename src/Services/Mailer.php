@@ -10,9 +10,11 @@ final class Mailer
     public static function sendPasswordReset(array $user, string $link): bool
     {
         $name = (string) ($user['name'] ?? 'пользователь');
+        $login = (string) ($user['login'] ?? '');
         $store = (string) Settings::get('store_name', 'КИОСК ДОНЕР');
         $subject = 'Восстановление пароля — ' . $store;
         $safeName = htmlspecialchars($name, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        $safeLogin = htmlspecialchars($login, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $safeLink = htmlspecialchars($link, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
         $html = '<!doctype html><html lang="ru"><body style="margin:0;background:#f4f6f9;font-family:Arial,sans-serif;color:#1f2937">'
             . '<div style="max-width:560px;margin:0 auto;padding:28px 16px">'
@@ -22,6 +24,7 @@ final class Mailer
             . '<div style="background:#fff;padding:26px 24px;border-radius:0 0 16px 16px">'
             . '<h1 style="font-size:20px;margin:0 0 14px">Восстановление пароля</h1>'
             . '<p style="font-size:14px;line-height:1.6">Здравствуйте, <strong>' . $safeName . '</strong>!</p>'
+            . '<p style="font-size:14px;line-height:1.6">Ваш логин для входа: <strong style="display:inline-block;background:#f4f6f9;border:1px solid #e2e7ef;border-radius:6px;padding:2px 8px;font-family:monospace">' . $safeLogin . '</strong></p>'
             . '<p style="font-size:14px;line-height:1.6">Вы запросили новый пароль для входа. Ссылка действует <strong>60 минут</strong>.</p>'
             . '<p style="margin:22px 0"><a href="' . $safeLink . '" style="display:inline-block;background:#f26b21;color:#fff;text-decoration:none;padding:13px 22px;border-radius:10px;font-weight:700">Сбросить пароль</a></p>'
             . '<p style="font-size:12px;color:#6b7280;line-height:1.6">Если кнопка не работает, скопируйте ссылку:<br><a href="' . $safeLink . '" style="color:#c2410c;word-break:break-all">' . $safeLink . '</a></p>'
@@ -29,6 +32,7 @@ final class Mailer
             . '</div></div></body></html>';
         $text = "Восстановление пароля — {$store}\n\n"
             . "Здравствуйте, {$name}!\n\n"
+            . "Ваш логин для входа: {$login}\n\n"
             . "Ссылка для сброса пароля действует 60 минут:\n{$link}\n\n"
             . "Если вы не запрашивали восстановление, проигнорируйте письмо.\n";
         return self::send((string) $user['email'], $subject, $html, $text);
