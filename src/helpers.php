@@ -502,7 +502,7 @@ if (!function_exists('product_photo')) {
         $url = \PIZ\Services\ImageUploader::url($product['photo'] ?? null);
         $name = (string) ($product['name'] ?? '');
         if ($url !== null) {
-            return '<img class="' . e($class) . '" src="' . e($url) . '" alt="' . e($name) . '" loading="lazy" decoding="async">';
+            return '<img class="' . e($class) . '" src="' . e($url) . '" alt="' . e($name) . '" loading="eager" decoding="async">';
         }
         $hue = crc32($name) % 360;
         $letter = mb_strtoupper(mb_substr($name !== '' ? $name : '?', 0, 1));
