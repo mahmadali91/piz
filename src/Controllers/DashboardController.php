@@ -6,6 +6,7 @@ namespace PIZ\Controllers;
 use PIZ\Auth;
 use PIZ\Models\Product;
 use PIZ\Models\Sale;
+use PIZ\Models\Shift;
 use PIZ\View;
 
 final class DashboardController
@@ -61,6 +62,7 @@ final class DashboardController
             'recent' => $recent,
             'topProducts' => $topProducts,
             'canceledToday' => $canceledToday,
+            'currentShift' => Shift::current(),
         ]);
     }
 }

@@ -55,6 +55,7 @@ final class SettingsController
         $receiptHeader = trim((string) ($_POST['receipt_header'] ?? ''));
         $receiptFooter = trim((string) ($_POST['receipt_footer'] ?? ''));
         $lowStock = (int) ($_POST['low_stock_default'] ?? 3);
+        $allowNegative = isset($_POST['allow_negative_stock']) ? '1' : '0';
 
         $errors = [];
         if ($storeName === '') {
@@ -81,6 +82,7 @@ final class SettingsController
         Settings::set('receipt_header', mb_substr($receiptHeader, 0, 500));
         Settings::set('receipt_footer', mb_substr($receiptFooter, 0, 500));
         Settings::set('low_stock_default', (string) min(100000, $lowStock));
+        Settings::set('allow_negative_stock', $allowNegative);
 
         Audit::log('settings.update', ['store_name' => $storeName]);
         flash('success', 'Настройки сохранены.');

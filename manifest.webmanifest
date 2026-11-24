@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "PIZ — учёт продаж в киоске",
-  "short_name": "PIZ",
+  "name": "КИОСК ДОНЕР — учёт продаж",
+  "short_name": "ДОНЕР",
   "description": "Продажи, остатки, прибыль и сотрудники киоска в одном приложении.",
   "lang": "ru",
   "dir": "ltr",
@@ -43,8 +43,8 @@
       "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Товары",
-      "short_name": "Товары",
+      "name": "Склад",
+      "short_name": "Склад",
       "description": "Остатки и приход",
       "url": "/products",
       "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]

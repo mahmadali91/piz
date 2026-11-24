@@ -2,9 +2,9 @@
 <div class="setup-wrap">
     <div class="setup-card">
         <div class="setup-brand">
-            <span class="brand__mark">P</span>
+            <span class="brand__mark">Д</span>
             <div>
-                <strong>PIZ</strong>
+                <strong>ДОНЕР</strong>
                 <span>первый запуск</span>
             </div>
         </div>

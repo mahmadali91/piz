@@ -9,8 +9,11 @@ use PIZ\Controllers\PosController;
 use PIZ\Controllers\ProductsController;
 use PIZ\Controllers\ReportsController;
 use PIZ\Controllers\SaleController;
+use PIZ\Controllers\PricesController;
 use PIZ\Controllers\SettingsController;
 use PIZ\Controllers\SetupController;
+use PIZ\Controllers\ShiftController;
+use PIZ\Controllers\StockController;
 use PIZ\Database;
 use PIZ\Router;
 
@@ -39,6 +42,25 @@ Router::post('/products/stock', [ProductsController::class, 'stock']);
 Router::post('/products/import', [ProductsController::class, 'import']);
 Router::get('/products/export', [ProductsController::class, 'export']);
 Router::get('/products/template', [ProductsController::class, 'template']);
+
+// Склад: приход, расход, остаток, цены
+Router::get('/stock', [StockController::class, 'index']);
+Router::get('/stock/in', [StockController::class, 'in']);
+Router::post('/stock/in', [StockController::class, 'inStore']);
+Router::get('/stock/out', [StockController::class, 'out']);
+Router::post('/stock/out', [StockController::class, 'outStore']);
+Router::post('/stock/adjust', [StockController::class, 'adjust']);
+Router::get('/prices', [PricesController::class, 'index']);
+Router::post('/prices/save', [PricesController::class, 'save']);
+Router::post('/prices/bulk', [PricesController::class, 'bulk']);
+
+// Смены
+Router::get('/shift', [ShiftController::class, 'index']);
+Router::post('/shift/open', [ShiftController::class, 'open']);
+Router::post('/shift/close', [ShiftController::class, 'close']);
+Router::get('/shifts', [ShiftController::class, 'history']);
+Router::get('/shifts/{id}', [ShiftController::class, 'report']);
+Router::get('/shifts/{id}/export', [ShiftController::class, 'export']);
 
 // Продажи
 Router::get('/sales', [SaleController::class, 'index']);

@@ -37,6 +37,7 @@ final class PosController
             'products' => $products,
             'payload' => $payload,
             'categories' => Product::categories(),
+            'allowNegative' => \PIZ\Settings::get('allow_negative_stock', '1') === '1',
             'pageScript' => 'assets/js/pos.js',
         ]);
     }

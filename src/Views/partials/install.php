@@ -1,7 +1,7 @@
 <div class="install-banner" id="install-banner" hidden>
-    <span class="install-banner__mark">P</span>
+    <span class="install-banner__mark">Д</span>
     <div class="install-banner__copy">
-        <strong>Установить PIZ</strong>
+        <strong>Установить ДОНЕР</strong>
         <span data-install-hint>Ярлык на главном экране</span>
     </div>
     <button class="btn btn--primary btn--sm install-banner__btn" type="button" data-install-app>Установить</button>
@@ -16,7 +16,7 @@
         <div class="modal__head">
             <div>
                 <h3 id="install-help-title">Установка на телефон</h3>
-                <p>PIZ будет открываться как обычное приложение</p>
+                <p>ДОНЕР будет открываться как обычное приложение</p>
             </div>
             <button type="button" class="icon-btn" data-modal-close aria-label="Закрыть"><?= icon('close') ?></button>
         </div>
@@ -39,7 +39,7 @@
             </div>
             <div class="install-hint-box">
                 <?= icon('sparkles') ?>
-                <span>После установки PIZ откроется без адресной строки — как отдельное приложение. Значок появится на главном экране.</span>
+                <span>После установки ДОНЕР откроется без адресной строки — как отдельное приложение. Значок появится на главном экране.</span>
             </div>
         </div>
         <div class="modal__foot">

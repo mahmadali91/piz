@@ -2,7 +2,7 @@
 <div class="page">
     <section class="welcome">
         <div class="welcome__text">
-            <span class="eyebrow"><?= e(date('d.m.Y')) ?> · <?= e(\PIZ\Settings::get('store_name', 'Киоск PIZ')) ?></span>
+            <span class="eyebrow"><?= e(date('d.m.Y')) ?> · <?= e(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР')) ?></span>
             <h2><?= e(greeting()) ?>, <?= e(explode(' ', (string) $user['name'])[0]) ?>!</h2>
             <p>
                 <?php if ($today['count'] > 0): ?>
@@ -20,7 +20,10 @@
                 <a class="btn btn--primary" href="<?= e(url('/pos')) ?>"><?= icon('cart') ?> Открыть кассу</a>
             <?php endif; ?>
             <?php if (\PIZ\Auth::can('stock.manage')): ?>
-                <a class="btn btn--soft" href="<?= e(url('/products')) ?>#stock"><?= icon('truck') ?> Оформить приход</a>
+                <a class="btn btn--soft" href="<?= e(url('/stock/in')) ?>"><?= icon('truck') ?> Оформить приход</a>
+            <?php endif; ?>
+            <?php if (\PIZ\Auth::can('shift.manage')): ?>
+                <a class="btn btn--soft" href="<?= e(url('/shift')) ?>"><?= icon('clock') ?> <?= !empty($currentShift) ? 'Смена открыта' : 'Открыть смену' ?></a>
             <?php endif; ?>
         </div>
     </section>
@@ -44,7 +47,7 @@
                 <div class="kpi__value"><?= e(money($today['profit'])) ?></div>
                 <div class="kpi__label">
                     Прибыль сегодня
-                    <span><?= $today['revenue'] > 0 ? 'маржа ' . round($today['profit'] / $today['revenue'] * 100) . '%' : 'к вчера' ?></span>
+                    <span>за вычетом списаний</span>
                 </div>
             </article>
         <?php else: ?>
@@ -90,6 +93,10 @@
             <strong><?= (int) $stock['low_count'] ?></strong>
         </div>
         <?php if ($finance): ?>
+            <div class="mini-stat <?= $today['expense'] > 0 ? 'mini-stat--warn' : '' ?>">
+                <span class="mini-stat__label"><?= icon('logout') ?> Списания сегодня</span>
+                <strong><?= e(money((int) $today['expense'])) ?></strong>
+            </div>
             <div class="mini-stat">
                 <span class="mini-stat__label"><?= icon('wallet') ?> Остаток по закупке</span>
                 <strong><?= e(money($stock['cost_value'])) ?></strong>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PIZ\Models;
 
 use PIZ\Database;
+use PIZ\Settings;
 
 final class Sale
 {
@@ -63,6 +64,8 @@ final class Sale
         }
 
         $discount = max(0, (int) ($opts['discount_kop'] ?? 0));
+        $allowNegative = Settings::get('allow_negative_stock', '1') === '1';
+        $shift = Shift::ensureOpen($userId);
 
         $pdo = Database::pdo();
         $pdo->beginTransaction();
@@ -89,7 +92,7 @@ final class Sale
                     throw new \RuntimeException('Товар «' . $product['name'] . '» снят с продажи.');
                 }
                 $stock = (int) $product['stock_qty'];
-                if ($stock < $qty) {
+                if (!$allowNegative && $stock < $qty) {
                     throw new \RuntimeException(
                         '«' . $product['name'] . '»: в наличии ' . $stock . ', а в чеке ' . $qty . '. Уменьшите количество.'
                     );
@@ -124,8 +127,8 @@ final class Sale
 
             $tempNumber = 'T' . bin2hex(random_bytes(8));
             Database::query(
-                'INSERT INTO sales (number, user_id, total_kop, cost_kop, discount_kop, payment_method, received_kop, change_kop, customer, comment, status, client_token, created_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "completed", ?, ?)',
+                'INSERT INTO sales (number, user_id, total_kop, cost_kop, discount_kop, payment_method, received_kop, change_kop, customer, comment, status, shift_id, client_token, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "completed", ?, ?, ?)',
                 [
                     $tempNumber,
                     $userId,
@@ -137,6 +140,7 @@ final class Sale
                     $change,
                     $customer !== '' ? $customer : null,
                     $comment !== '' ? $comment : null,
+                    (int) $shift['id'],
                     $token !== '' ? $token : null,
                     now(),
                 ]
@@ -367,12 +371,19 @@ final class Sale
         );
         $count = (int) ($row['cnt'] ?? 0);
         $revenue = (int) ($row['revenue'] ?? 0);
+        $cost = (int) ($row['cost'] ?? 0);
+        $expense = (int) Database::fetchValue(
+            'SELECT COALESCE(SUM(total_kop), 0) FROM writeoffs WHERE created_at >= ? AND created_at < ?',
+            [$start, $endExclusive]
+        );
         return [
             'count' => $count,
             'revenue' => $revenue,
-            'cost' => (int) ($row['cost'] ?? 0),
+            'cost' => $cost,
             'discount' => (int) ($row['discount'] ?? 0),
-            'profit' => $revenue - (int) ($row['cost'] ?? 0),
+            'expense' => $expense,
+            'gross_profit' => $revenue - $cost,
+            'profit' => $revenue - $cost - $expense,
             'avg_check' => $count > 0 ? (int) round($revenue / $count) : 0,
         ];
     }
@@ -399,12 +410,25 @@ final class Sale
             [$start, $endExclusive]
         );
 
+        $expenseRows = Database::fetchAll(
+            "SELECT {$groupExpression} AS d, COALESCE(SUM(total_kop), 0) AS expense
+             FROM writeoffs
+             WHERE created_at >= ? AND created_at < ?
+             GROUP BY {$groupExpression}",
+            [$start, $endExclusive]
+        );
+        $expenses = [];
+        foreach ($expenseRows as $row) {
+            $expenses[(string) $row['d']] = (int) $row['expense'];
+        }
+
         $map = [];
         foreach ($rows as $row) {
             $map[(string) $row['d']] = [
                 'count' => (int) $row['cnt'],
                 'revenue' => (int) $row['revenue'],
-                'profit' => (int) $row['revenue'] - (int) $row['cost'],
+                'profit' => (int) $row['revenue'] - (int) $row['cost'] - ($expenses[(string) $row['d']] ?? 0),
+                'expense' => $expenses[(string) $row['d']] ?? 0,
             ];
         }
 
@@ -414,7 +438,7 @@ final class Sale
             $cursor = strtotime(date('Y-m-01', strtotime($start)));
             while ($cursor < $end) {
                 $date = date('Y-m-01', $cursor);
-                $series[$date] = $map[$date] ?? ['count' => 0, 'revenue' => 0, 'profit' => 0];
+                $series[$date] = $map[$date] ?? ['count' => 0, 'revenue' => 0, 'profit' => -($expenses[$date] ?? 0), 'expense' => $expenses[$date] ?? 0];
                 $cursor = strtotime('+1 month', $cursor);
             }
             return $series;
@@ -423,7 +447,7 @@ final class Sale
         $cursor = strtotime($start);
         while ($cursor < $end) {
             $date = date('Y-m-d', $cursor);
-            $series[$date] = $map[$date] ?? ['count' => 0, 'revenue' => 0, 'profit' => 0];
+            $series[$date] = $map[$date] ?? ['count' => 0, 'revenue' => 0, 'profit' => -($expenses[$date] ?? 0), 'expense' => $expenses[$date] ?? 0];
             $cursor = strtotime('+1 day', $cursor);
         }
         return $series;

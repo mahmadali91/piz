@@ -1,5 +1,5 @@
 <?php /** @var array $sale */
-$storeName = \PIZ\Settings::get('store_name', 'Киоск PIZ');
+$storeName = \PIZ\Settings::get('store_name', 'КИОСК ДОНЕР');
 $address = \PIZ\Settings::get('store_address', '');
 $phone = \PIZ\Settings::get('store_phone', '');
 $header = \PIZ\Settings::get('receipt_header', '');
@@ -12,7 +12,7 @@ $canceled = ($sale['status'] ?? 'completed') === 'canceled';
 ?>
 <div class="receipt-print">
     <div class="receipt__head">
-        <div class="receipt__logo">P</div>
+        <div class="receipt__logo">Д</div>
         <div class="receipt__store"><?= e($storeName) ?></div>
         <?php if ($address !== ''): ?><div class="receipt__muted"><?= e($address) ?></div><?php endif; ?>
         <?php if ($phone !== ''): ?><div class="receipt__muted"><?= e($phone) ?></div><?php endif; ?>
@@ -72,5 +72,5 @@ $canceled = ($sale['status'] ?? 'completed') === 'canceled';
 
     <div class="receipt__divider"></div>
     <div class="receipt__thanks"><?= e($footer !== '' ? $footer : 'Спасибо за покупку!') ?></div>
-    <div class="receipt__brand">PIZ · <?= e(date('Y')) ?></div>
+    <div class="receipt__brand">ДОНЕР · <?= e(date('Y')) ?></div>
 </div>

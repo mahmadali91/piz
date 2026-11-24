@@ -20,7 +20,7 @@ $tablesTotal = count($health['tables']);
                         <div class="stack">
                             <label class="field">
                                 <span class="label">Название киоска</span>
-                                <input class="input" type="text" name="store_name" maxlength="80" value="<?= e($settings['store_name'] ?? 'Киоск PIZ') ?>" required>
+                                <input class="input" type="text" name="store_name" maxlength="80" value="<?= e($settings['store_name'] ?? 'КИОСК ДОНЕР') ?>" required>
                             </label>
                             <div class="form-grid">
                                 <label class="field">
@@ -39,6 +39,14 @@ $tablesTotal = count($health['tables']);
                                     <span class="label">Минимальный остаток по умолчанию</span>
                                     <input class="input" type="number" name="low_stock_default" min="0" max="100000" value="<?= e($settings['low_stock_default'] ?? '3') ?>">
                                 </label>
+                            </div>
+
+                            <div class="form-section">
+                                <label class="switch">
+                                    <input type="checkbox" name="allow_negative_stock" value="1" <?= ($settings['allow_negative_stock'] ?? '1') === '1' ? 'checked' : '' ?>>
+                                    Разрешить отрицательные остатки
+                                </label>
+                                <p class="hint" style="margin-top: 6px;">Если включено, продажа и списание могут увести остаток в минус. Если выключено — система не даст продать больше, чем есть.</p>
                             </div>
 
                             <div class="form-section">
@@ -119,8 +127,8 @@ $tablesTotal = count($health['tables']);
             <section class="receipt-preview">
                 <div class="receipt-preview__paper">
                     <div style="text-align: center;">
-                        <div class="receipt__logo" style="margin: 0 auto 5px;">P</div>
-                        <div class="receipt__store" data-preview-name><?= e($settings['store_name'] ?? 'Киоск PIZ') ?></div>
+                        <div class="receipt__logo" style="margin: 0 auto 5px;">Д</div>
+                        <div class="receipt__store" data-preview-name><?= e($settings['store_name'] ?? 'КИОСК ДОНЕР') ?></div>
                         <div class="receipt__muted" data-preview-address><?= e($settings['store_address'] ?? '') ?></div>
                         <div class="receipt__muted" data-preview-phone><?= e($settings['store_phone'] ?? '') ?></div>
                     </div>

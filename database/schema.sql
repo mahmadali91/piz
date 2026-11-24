@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS sales (
   customer VARCHAR(120) NULL,
   comment VARCHAR(255) NULL,
   status VARCHAR(16) NOT NULL DEFAULT 'completed',
+  shift_id INT UNSIGNED NULL,
   client_token VARCHAR(64) NULL,
   created_at DATETIME NOT NULL,
   canceled_at DATETIME NULL,
@@ -59,7 +60,8 @@ CREATE TABLE IF NOT EXISTS sales (
   KEY idx_sales_created (created_at),
   KEY idx_sales_status (status),
   KEY idx_sales_payment (payment_method),
-  KEY idx_sales_user (user_id)
+  KEY idx_sales_user (user_id),
+  KEY idx_sales_shift (shift_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS sale_items (
@@ -92,6 +94,74 @@ CREATE TABLE IF NOT EXISTS stock_movements (
   KEY idx_moves_sale (sale_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+CREATE TABLE IF NOT EXISTS product_receipts (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  product_id INT UNSIGNED NOT NULL,
+  qty INT NOT NULL,
+  unit_cost_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  total_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  comment VARCHAR(255) NULL,
+  user_id INT UNSIGNED NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_receipts_product (product_id, created_at),
+  KEY idx_receipts_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS writeoffs (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  product_id INT UNSIGNED NOT NULL,
+  qty INT NOT NULL,
+  unit_cost_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  total_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  employee_name VARCHAR(120) NULL,
+  reason VARCHAR(80) NOT NULL DEFAULT 'Расход',
+  comment VARCHAR(255) NULL,
+  user_id INT UNSIGNED NULL,
+  shift_id INT UNSIGNED NULL,
+  created_at DATETIME NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_writeoffs_created (created_at),
+  KEY idx_writeoffs_product (product_id),
+  KEY idx_writeoffs_shift (shift_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS shifts (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  opened_by INT UNSIGNED NOT NULL,
+  opened_at DATETIME NOT NULL,
+  closed_by INT UNSIGNED NULL,
+  closed_at DATETIME NULL,
+  status VARCHAR(16) NOT NULL DEFAULT 'open',
+  note VARCHAR(255) NULL,
+  sales_count INT UNSIGNED NOT NULL DEFAULT 0,
+  revenue_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  cost_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  expense_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  profit_kop INT NOT NULL DEFAULT 0,
+  stock_units INT NOT NULL DEFAULT 0,
+  stock_value_kop INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_shifts_status (status),
+  KEY idx_shifts_opened (opened_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS shift_stock (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  shift_id INT UNSIGNED NOT NULL,
+  product_id INT UNSIGNED NOT NULL,
+  name VARCHAR(160) NOT NULL,
+  sku VARCHAR(32) NULL,
+  qty INT NOT NULL DEFAULT 0,
+  unit_cost_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  sale_price_kop INT UNSIGNED NOT NULL DEFAULT 0,
+  stock_value_kop INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (id),
+  KEY idx_shift_stock_shift (shift_id),
+  KEY idx_shift_stock_product (product_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS settings (
   skey VARCHAR(64) NOT NULL,
   svalue TEXT NULL,
@@ -121,11 +191,12 @@ CREATE TABLE IF NOT EXISTS login_attempts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT IGNORE INTO settings (skey, svalue) VALUES
-  ('store_name', 'Киоск PIZ'),
+  ('store_name', 'КИОСК ДОНЕР'),
   ('store_address', ''),
   ('store_phone', ''),
   ('currency', '₽'),
   ('receipt_header', ''),
   ('receipt_footer', 'Спасибо за покупку! Ждём вас снова.'),
   ('low_stock_default', '3'),
+  ('allow_negative_stock', '1'),
   ('timezone', 'Europe/Moscow');

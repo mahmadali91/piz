@@ -84,4 +84,18 @@ final class Database
             return false;
         }
     }
+
+    public static function columnExists(string $table, string $column): bool
+    {
+        try {
+            $row = self::fetch(
+                'SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.COLUMNS
+                 WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+                [$table, $column]
+            );
+            return $row !== null && (int) $row['cnt'] > 0;
+        } catch (\Throwable) {
+            return false;
+        }
+    }
 }

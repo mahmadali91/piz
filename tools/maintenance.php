@@ -211,8 +211,8 @@ function generatePhotos(bool $force): void
 
         // PIZ
         $ink = imagecolorallocate($image, 40, 45, 55);
-        imagettftext($image, 22, 0, 32, 52, $ink, $font, 'PIZ');
-        imagettftext($image, 15, 0, 32, 78, $ink, $font, 'киоск');
+        imagettftext($image, 22, 0, 32, 52, $ink, $font, 'ДОНЕР');
+        imagettftext($image, 15, 0, 32, 78, $ink, $font, 'КИОСК');
 
         // SKU в правом верхнем углу
         $sku = trim((string) ($product['sku'] ?? ''));

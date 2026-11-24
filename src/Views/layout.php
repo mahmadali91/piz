@@ -7,13 +7,13 @@ $user = \PIZ\Auth::user();
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#141821">
     <meta name="robots" content="noindex, nofollow">
-    <title><?= e($title ?? 'PIZ') ?> — <?= e(\PIZ\Settings::get('store_name', 'Киоск PIZ')) ?></title>
+    <title><?= e($title ?? 'ДОНЕР') ?> — <?= e(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР')) ?></title>
     <link rel="icon" type="image/png" sizes="32x32" href="<?= e(asset('assets/icons/favicon-32.png')) ?>">
     <link rel="apple-touch-icon" href="<?= e(asset('assets/icons/apple-touch-icon.png')) ?>">
     <link rel="manifest" href="<?= e(url('manifest.webmanifest')) ?>">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="PIZ">
+    <meta name="apple-mobile-web-app-title" content="ДОНЕР">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
 </head>
@@ -32,9 +32,9 @@ $user = \PIZ\Auth::user();
     <div class="app">
         <aside class="sidebar" id="sidebar">
             <a class="brand" href="<?= e(url('/')) ?>">
-                <span class="brand__mark">P</span>
+                <span class="brand__mark">Д</span>
                 <span class="brand__text">
-                    <strong><?= e(mb_substr(\PIZ\Settings::get('store_name', 'Киоск PIZ'), 0, 22)) ?></strong>
+                    <strong><?= e(mb_substr(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР'), 0, 22)) ?></strong>
                     <span>учёт продаж</span>
                 </span>
             </a>
@@ -51,11 +51,28 @@ $user = \PIZ\Auth::user();
                         <?= icon('cart') ?><span>Касса</span><span class="nav__kbd">N</span>
                     </a>
                 <?php endif; ?>
+                <?php if (\PIZ\Auth::can('shift.manage')): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'shift') ?>" href="<?= e(url('/shift')) ?>">
+                        <?= icon('clock') ?><span>Смена</span>
+                    </a>
+                <?php endif; ?>
 
                 <div class="nav__label">Магазин</div>
-                <?php if (\PIZ\Auth::can('products.view')): ?>
-                    <a class="nav__item <?= active_class($active ?? '', 'products') ?>" href="<?= e(url('/products')) ?>">
-                        <?= icon('box') ?><span>Товары</span>
+                <?php
+                $stockUrl = '/products';
+                if (!\PIZ\Auth::can('products.view')) {
+                    if (\PIZ\Auth::can('stock.manage')) {
+                        $stockUrl = '/stock';
+                    } elseif (\PIZ\Auth::can('writeoff.manage')) {
+                        $stockUrl = '/stock/out';
+                    } elseif (\PIZ\Auth::can('prices.manage')) {
+                        $stockUrl = '/prices';
+                    }
+                }
+                ?>
+                <?php if (\PIZ\Auth::canAny(['products.view', 'stock.manage', 'writeoff.manage', 'prices.manage'])): ?>
+                    <a class="nav__item <?= active_class($active ?? '', 'stock') ?>" href="<?= e(url($stockUrl)) ?>">
+                        <?= icon('box') ?><span>Склад</span>
                     </a>
                 <?php endif; ?>
                 <a class="nav__item <?= active_class($active ?? '', 'sales') ?>" href="<?= e(url('/sales')) ?>">

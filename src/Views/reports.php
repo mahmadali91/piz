@@ -58,6 +58,10 @@ $countTrend = percent_change((int) $summary['count'], (int) $previous['count']);
             <span class="stat__value"><?= e(money($summary['avg_check'])) ?></span>
         </div>
         <div class="stat">
+            <span class="stat__label">Расходы (списания)</span>
+            <span class="stat__value stat__value--red"><?= e(money((int) $summary['expense'])) ?></span>
+        </div>
+        <div class="stat">
             <span class="stat__label">Скидки</span>
             <span class="stat__value"><?= e(money($summary['discount'])) ?></span>
         </div>

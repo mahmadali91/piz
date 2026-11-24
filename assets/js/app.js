@@ -210,7 +210,11 @@
             form.elements.category.value = data.category || '';
             form.elements.unit.value = data.unit || 'шт';
             if (form.elements.purchase_price) form.elements.purchase_price.value = data.purchase_price || '';
-            form.elements.sale_price.value = data.sale_price || '';
+            if (form.elements.sale_price) form.elements.sale_price.value = data.sale_price || '';
+            if (!form.elements.sale_price) {
+                const saleInput = form.querySelector('[name="sale_price"]');
+                if (saleInput) saleInput.value = data.sale_price || '';
+            }
             form.elements.low_stock.value = data.low_stock != null ? data.low_stock : 3;
             if (form.elements.stock_qty) {
                 form.elements.stock_qty.value = data.stock_qty != null ? data.stock_qty : 0;
@@ -400,7 +404,7 @@
             const target = document.querySelector(map[field]);
             if (!input || !target) return;
             const update = function () {
-                target.textContent = input.value || (field === 'store_name' ? 'Киоск PIZ' : '');
+                target.textContent = input.value || (field === 'store_name' ? 'КИОСК ДОНЕР' : '');
             };
             input.addEventListener('input', update);
             update();

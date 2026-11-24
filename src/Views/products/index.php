@@ -4,6 +4,7 @@ $query = $_GET;
 unset($query['page']);
 ?>
 <div class="page">
+    <?php \PIZ\View::partial('partials/stock-tabs', ['stockTab' => $stockTab ?? 'products']); ?>
     <section class="summary-grid">
         <div class="stat">
             <span class="stat__label">Позиций в продаже</span>
@@ -262,10 +263,17 @@ unset($query['page']);
                                     <input class="input" type="text" name="purchase_price" inputmode="decimal" placeholder="0">
                                 </label>
                             <?php endif; ?>
-                            <label class="field">
-                                <span class="label">Цена продажи *</span>
-                                <input class="input" type="text" name="sale_price" inputmode="decimal" required placeholder="0">
-                            </label>
+                            <?php if ($canPrices): ?>
+                                <label class="field">
+                                    <span class="label">Цена продажи *</span>
+                                    <input class="input" type="text" name="sale_price" inputmode="decimal" required placeholder="0">
+                                </label>
+                            <?php else: ?>
+                                <div class="field">
+                                    <span class="label">Цена продажи</span>
+                                    <div class="import-help">Цену назначает администратор с правом «Изменение цен».</div>
+                                </div>
+                            <?php endif; ?>
                             <label class="field">
                                 <span class="label">Единица</span>
                                 <input class="input" type="text" name="unit" maxlength="16" value="шт">

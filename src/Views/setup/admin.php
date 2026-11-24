@@ -2,9 +2,9 @@
 <div class="setup-wrap">
     <div class="setup-card">
         <div class="setup-brand">
-            <span class="brand__mark">P</span>
+            <span class="brand__mark">Д</span>
             <div>
-                <strong>PIZ</strong>
+                <strong>ДОНЕР</strong>
                 <span>первый запуск</span>
             </div>
         </div>
@@ -38,7 +38,7 @@
                 </label>
                 <label class="field">
                     <span class="label">Название киоска</span>
-                    <input class="input" type="text" name="store_name" value="<?= e($old['store_name'] ?? 'Киоск PIZ') ?>" maxlength="80">
+                    <input class="input" type="text" name="store_name" value="<?= e($old['store_name'] ?? 'КИОСК ДОНЕР') ?>" maxlength="80">
                 </label>
             </div>
             <label class="field">

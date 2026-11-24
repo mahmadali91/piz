@@ -10,6 +10,7 @@
         return Object.assign({}, product);
     });
 
+    const allowNegative = !!config.allow_negative;
     const cart = new Map();
     let payment = 'cash';
     let discountRub = 0;
@@ -134,16 +135,17 @@
             const available = product.stock - inCart;
             const out = product.stock <= 0;
             const low = !out && product.stock <= (product.low || 3);
+            const disabled = !allowNegative && available <= 0;
             const badge = out
-                ? '<span class="product-card__badge product-card__badge--out">нет</span>'
+                ? '<span class="product-card__badge product-card__badge--out">' + (allowNegative ? (product.stock < 0 ? 'минус' : '0') : 'нет') + '</span>'
                 : (low ? '<span class="product-card__badge product-card__badge--low">мало</span>' : '');
-            return '<button type="button" class="product-card" data-add="' + product.id + '"' + (available <= 0 ? ' disabled' : '') + '>'
+            return '<button type="button" class="product-card" data-add="' + product.id + '"' + (disabled ? ' disabled' : '') + '>'
                 + '<span class="product-card__media">' + photoMarkup(product, 'thumb-ph') + badge + '</span>'
                 + '<span class="product-card__body">'
                 + '<span class="product-card__name">' + esc(product.name) + '</span>'
                 + '<span class="product-card__bottom">'
                 + '<span class="product-card__price">' + money(product.price) + '</span>'
-                + '<span class="product-card__stock">' + (out ? 'нет в наличии' : product.stock + ' ' + esc(product.unit || 'шт')) + '</span>'
+                + '<span class="product-card__stock">' + (product.stock + ' ' + esc(product.unit || 'шт')) + '</span>'
                 + '</span></span></button>';
         }).join('');
 
@@ -232,7 +234,7 @@
         const product = findProduct(id);
         if (!product) return;
         const current = cart.get(product.id) || 0;
-        if (current >= product.stock) {
+        if (!allowNegative && current >= product.stock) {
             showError('«' + product.name + '»: больше нет в наличии.');
             return;
         }
@@ -249,7 +251,7 @@
         const next = current + delta;
         if (next <= 0) {
             cart.delete(id);
-        } else if (next > product.stock) {
+        } else if (!allowNegative && next > product.stock) {
             showError('На складе только ' + product.stock + ' ' + product.unit + '.');
             return;
         } else {

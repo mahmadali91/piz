@@ -4,9 +4,9 @@
         <div class="auth-visual__orb auth-visual__orb--1"></div>
         <div class="auth-visual__orb auth-visual__orb--2"></div>
         <div class="auth-brand">
-            <span class="brand__mark brand__mark--lg">P</span>
+            <span class="brand__mark brand__mark--lg">Д</span>
             <div class="auth-brand__meta">
-                <strong>PIZ</strong>
+                <strong>ДОНЕР</strong>
                 <span>учёт продаж в киоске</span>
             </div>
         </div>
@@ -23,7 +23,7 @@
         </div>
 
         <div class="auth-visual__foot">
-            <span>© <?= date('Y') ?> PIZ</span>
+            <span>© <?= date('Y') ?> ДОНЕР</span>
             <span class="dot"></span>
             <span>Сделано для ежедневной работы</span>
         </div>
@@ -32,7 +32,7 @@
     <section class="auth-form-side">
         <div class="auth-card">
             <div class="auth-card__logo">
-                <span class="brand__mark">P</span>
+                <span class="brand__mark">Д</span>
             </div>
             <h2>Вход в кабинет</h2>
             <p class="muted">Введите логин и пароль, чтобы продолжить работу.</p>
@@ -67,6 +67,6 @@
 
             <p class="auth-help">Нет доступа? Обратитесь к администратору киоска — он создаст аккаунт и выдаст права.</p>
         </div>
-        <p class="auth-legal">PIZ v<?= e(PIZ_VERSION) ?> · <?= e(date('Y')) ?></p>
+        <p class="auth-legal">ДОНЕР v<?= e(PIZ_VERSION) ?> · <?= e(date('Y')) ?></p>
     </section>
 </div>

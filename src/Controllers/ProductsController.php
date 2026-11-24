@@ -25,7 +25,8 @@ final class ProductsController
 
         View::render('products/index', [
             'title' => 'Товары',
-            'active' => 'products',
+            'active' => 'stock',
+            'stockTab' => 'products',
             'user' => Auth::user(),
             'products' => Product::all($filters),
             'categories' => Product::categories(),
@@ -34,6 +35,7 @@ final class ProductsController
             'finance' => Auth::can('finance.view'),
             'canManage' => Auth::can('products.manage'),
             'canStock' => Auth::can('stock.manage'),
+            'canPrices' => Auth::can('prices.manage'),
         ]);
     }
 
@@ -64,8 +66,13 @@ final class ProductsController
         if ($purchase === null) {
             $purchase = 0;
         }
-        if (!Auth::can('finance.view')) {
-            $purchase = $existing ? (int) $existing['purchase_price_kop'] : 0;
+        if (!Auth::can('prices.manage')) {
+            if ($existing) {
+                $purchase = (int) $existing['purchase_price_kop'];
+                $sale = (int) $existing['sale_price_kop'];
+            } else {
+                $errors[] = 'Нет права устанавливать цены на товар.';
+            }
         }
         if ($purchase < 0) {
             $errors[] = 'Закупочная цена не может быть отрицательной.';
@@ -173,6 +180,9 @@ final class ProductsController
         }
 
         try {
+            if (!Auth::can('prices.manage')) {
+                $unitCost = null;
+            }
             if ($mode === 'in') {
                 if ($qty <= 0) {
                     throw new \InvalidArgumentException('Количество прихода должно быть больше нуля.');
@@ -181,8 +191,9 @@ final class ProductsController
                 Audit::log('stock.in', ['id' => $id, 'name' => $product['name'], 'qty' => $qty, 'reason' => $reason]);
                 flash('success', 'Приход оформлен: +' . $qty . ' ' . $product['unit'] . ' «' . $product['name'] . '».');
             } else {
-                if ($qty < 0) {
-                    throw new \InvalidArgumentException('Остаток не может быть отрицательным.');
+                $allowNegative = \PIZ\Settings::get('allow_negative_stock', '1') === '1';
+                if ($qty < 0 && !$allowNegative) {
+                    throw new \InvalidArgumentException('Отрицательные остатки запрещены в настройках.');
                 }
                 Product::setStock($id, $qty, $reason, Auth::id());
                 Audit::log('stock.adjust', ['id' => $id, 'name' => $product['name'], 'qty' => $qty, 'reason' => $reason]);

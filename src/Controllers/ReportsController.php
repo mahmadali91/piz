@@ -75,7 +75,7 @@ final class ReportsController
                     (int) $row['qty'],
                     kop_to_input((int) $row['revenue']),
                     kop_to_input((int) $row['revenue'] - (int) $row['cost']),
-                ], ';');
+                ], ';', '"', '');
             }
         } elseif ($type === 'payments') {
             fputcsv($out, ['Способ оплаты', 'Продаж', 'Выручка'], ';', '"', '');
@@ -97,17 +97,24 @@ final class ReportsController
                 ], ';');
             }
         } else {
-            fputcsv($out, ['Дата', 'Продаж', 'Выручка', 'Прибыль'], ';', '"', '');
+            fputcsv($out, ['Дата', 'Продаж', 'Выручка', 'Расходы', 'Прибыль'], ';', '"', '');
             foreach (Sale::dailySeries($start, $end) as $date => $row) {
-                fputcsv($out, [date('d.m.Y', strtotime($date)), $row['count'], kop_to_input($row['revenue']), kop_to_input($row['profit'])], ';', '"', '');
+                fputcsv($out, [
+                    date('d.m.Y', strtotime($date)),
+                    $row['count'],
+                    kop_to_input($row['revenue']),
+                    kop_to_input($row['expense'] ?? 0),
+                    kop_to_input($row['profit']),
+                ], ';', '"', '');
             }
             $summary = Sale::rangeTotals($start, $end);
             fputcsv($out, [
                 'ИТОГО',
                 $summary['count'],
                 kop_to_input($summary['revenue']),
+                kop_to_input((int) $summary['expense']),
                 kop_to_input($summary['profit']),
-            ], ';');
+            ], ';', '"', '');
         }
 
         fclose($out);

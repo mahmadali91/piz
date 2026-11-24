@@ -548,3 +548,31 @@ if (!function_exists('period_label')) {
         return date('d.m.Y', strtotime($from)) . ' — ' . date('d.m.Y', strtotime($to));
     }
 }
+
+if (!function_exists('movement_label')) {
+    function movement_label(string $type): string
+    {
+        return [
+            'in' => 'Приход',
+            'sale' => 'Продажа',
+            'cancel' => 'Возврат',
+            'adjust' => 'Инвентаризация',
+            'initial' => 'Начальный остаток',
+            'writeoff' => 'Списание',
+        ][$type] ?? $type;
+    }
+}
+
+if (!function_exists('movement_tone')) {
+    function movement_tone(string $type): string
+    {
+        return [
+            'in' => 'green',
+            'sale' => 'blue',
+            'cancel' => 'amber',
+            'adjust' => 'gray',
+            'initial' => 'gray',
+            'writeoff' => 'red',
+        ][$type] ?? 'gray';
+    }
+}

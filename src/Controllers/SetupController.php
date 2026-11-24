@@ -131,7 +131,7 @@ final class SetupController
         View::render('setup/admin', [
             'title' => 'Создание администратора',
             'seed' => $_SESSION['setup_seed'] ?? null,
-            'old' => ['name' => '', 'login' => 'admin', 'store_name' => 'Киоск PIZ'],
+            'old' => ['name' => '', 'login' => 'admin', 'store_name' => 'КИОСК ДОНЕР'],
             'showLayout' => false,
         ], 'layout-bare');
     }

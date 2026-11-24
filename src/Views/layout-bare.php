@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#141821">
     <meta name="robots" content="noindex, nofollow">
-    <title><?= e($title ?? 'PIZ') ?> — <?= e(\PIZ\Settings::get('store_name', 'Киоск PIZ')) ?></title>
+    <title><?= e($title ?? 'ДОНЕР') ?> — <?= e(\PIZ\Settings::get('store_name', 'КИОСК ДОНЕР')) ?></title>
     <link rel="icon" type="image/png" sizes="32x32" href="<?= e(asset('assets/icons/favicon-32.png')) ?>">
     <link rel="apple-touch-icon" href="<?= e(asset('assets/icons/apple-touch-icon.png')) ?>">
     <link rel="manifest" href="<?= e(url('manifest.webmanifest')) ?>">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="PIZ">
+    <meta name="apple-mobile-web-app-title" content="ДОНЕР">
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="stylesheet" href="<?= e(asset('assets/css/app.css')) ?>">
 </head>

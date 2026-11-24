@@ -90,6 +90,11 @@ final class Product
                      VALUES (?, "initial", ?, ?, ?, ?, ?, ?)',
                     [$id, $data['stock_qty'], $data['stock_qty'], $data['purchase_price_kop'], 'Начальный остаток', $userId, now()]
                 );
+                Database::query(
+                    'INSERT INTO product_receipts (product_id, qty, unit_cost_kop, total_kop, comment, user_id, created_at)
+                     VALUES (?, ?, ?, ?, ?, ?, ?)',
+                    [$id, $data['stock_qty'], $data['purchase_price_kop'], $data['stock_qty'] * $data['purchase_price_kop'], 'Начальный остаток', $userId, now()]
+                );
             }
 
             $pdo->commit();
@@ -125,9 +130,10 @@ final class Product
     }
 
     /**
-     * Приход товара: увеличивает остаток, при необходимости обновляет закупочную цену.
+     * Приход товара: увеличивает остаток, сохраняет партию с её себестоимостью
+     * и пересчитывает средневзвешенную закупочную цену товара.
      */
-    public static function addStock(int $id, int $qty, ?int $unitCostKop, string $reason, ?int $userId): void
+    public static function addStock(int $id, int $qty, ?int $unitCostKop, string $reason, ?int $userId, string $comment = ''): int
     {
         if ($qty <= 0) {
             throw new \InvalidArgumentException('Количество должно быть больше нуля.');
@@ -139,17 +145,37 @@ final class Product
             if (!$product) {
                 throw new \RuntimeException('Товар не найден.');
             }
-            $after = (int) $product['stock_qty'] + $qty;
-            Database::query('UPDATE products SET stock_qty = ?, updated_at = ? WHERE id = ?', [$after, now(), $id]);
-            if ($unitCostKop !== null && $unitCostKop > 0) {
-                Database::query('UPDATE products SET purchase_price_kop = ? WHERE id = ?', [$unitCostKop, $id]);
+
+            $oldQty = (int) $product['stock_qty'];
+            $oldCost = (int) $product['purchase_price_kop'];
+            $receiptCost = $unitCostKop !== null ? max(0, $unitCostKop) : $oldCost;
+            $after = $oldQty + $qty;
+
+            if ($oldQty > 0 && $after > 0) {
+                $newAverage = (int) round((($oldQty * $oldCost) + ($qty * $receiptCost)) / $after);
+            } else {
+                $newAverage = $receiptCost > 0 ? $receiptCost : $oldCost;
             }
+
+            Database::query(
+                'UPDATE products SET stock_qty = ?, purchase_price_kop = ?, updated_at = ? WHERE id = ?',
+                [$after, $newAverage, now(), $id]
+            );
+
+            Database::query(
+                'INSERT INTO product_receipts (product_id, qty, unit_cost_kop, total_kop, comment, user_id, created_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)',
+                [$id, $qty, $receiptCost, $qty * $receiptCost, $comment !== '' ? $comment : ($reason !== '' ? $reason : 'Приход товара'), $userId, now()]
+            );
+
             Database::query(
                 'INSERT INTO stock_movements (product_id, type, qty_delta, qty_after, unit_cost_kop, reason, user_id, created_at)
                  VALUES (?, "in", ?, ?, ?, ?, ?, ?)',
-                [$id, $qty, $after, $unitCostKop ?? (int) $product['purchase_price_kop'], $reason !== '' ? $reason : 'Приход товара', $userId, now()]
+                [$id, $qty, $after, $receiptCost, $reason !== '' ? $reason : 'Приход товара', $userId, now()]
             );
+
             $pdo->commit();
+            return $newAverage;
         } catch (\Throwable $e) {
             $pdo->rollBack();
             throw $e;
@@ -161,9 +187,6 @@ final class Product
      */
     public static function setStock(int $id, int $newQty, string $reason, ?int $userId): void
     {
-        if ($newQty < 0) {
-            throw new \InvalidArgumentException('Остаток не может быть отрицательным.');
-        }
         $pdo = Database::pdo();
         $pdo->beginTransaction();
         try {
@@ -187,6 +210,19 @@ final class Product
             $pdo->rollBack();
             throw $e;
         }
+    }
+
+    public static function updatePrices(int $id, int $purchaseKop, int $saleKop): void
+    {
+        Database::query(
+            'UPDATE products SET purchase_price_kop = ?, sale_price_kop = ?, updated_at = ? WHERE id = ?',
+            [max(0, $purchaseKop), max(0, $saleKop), now(), $id]
+        );
+    }
+
+    public static function addStockCount(): int
+    {
+        return (int) Database::fetchValue('SELECT COUNT(*) FROM product_receipts');
     }
 
     public static function stats(): array
