@@ -83,7 +83,7 @@ $groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'repo
                 <?php endif; ?>
                 <?php if (\PIZ\Auth::can('writeoff.manage')): ?>
                     <a class="nav__item <?= active_class($active ?? '', 'stock_out') ?>" href="<?= e(url('/stock/out')) ?>">
-                        <?= icon('box-minus') ?><span>Расход</span>
+                        <?= icon('circle-minus') ?><span>Расход</span>
                     </a>
                 <?php endif; ?>
 
@@ -94,7 +94,7 @@ $groupActive = in_array($active ?? '', ['suppliers', 'inventory', 'sales', 'repo
                 <div class="nav__group" id="nav-more" data-nav-group-panel <?= $groupActive ? '' : 'hidden' ?>>
                     <?php if (\PIZ\Auth::can('suppliers.manage')): ?>
                         <a class="nav__item <?= active_class($active ?? '', 'suppliers') ?>" href="<?= e(url('/suppliers')) ?>">
-                            <?= icon('building') ?><span>Поставщики</span>
+                            <?= icon('factory') ?><span>Поставщики</span>
                         </a>
                     <?php endif; ?>
                     <?php if (\PIZ\Auth::can('inventory.manage')): ?>
