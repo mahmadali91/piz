@@ -5598,3 +5598,19 @@ html.sidebar-collapsed .sidebar-user__gear {
         margin-left: 0;
     }
 }
+
+@media (max-width: 640px) {
+    .report-chips {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .report-date-trigger__text {
+        display: none;
+    }
+
+    .report-date-trigger {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+}

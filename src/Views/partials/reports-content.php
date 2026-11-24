@@ -17,7 +17,7 @@ $countTrend = percent_change((int) $summary['count'], (int) $previous['count']);
                 <a class="chip <?= $period['period'] === $key ? 'is-active' : '' ?>" data-period="<?= e($key) ?>"
                    href="<?= e(query_url('/', ['period' => $key, 'from' => null, 'to' => null])) ?>"><?= e($label) ?></a>
             <?php endforeach; ?>
-            <button type="button" class="btn btn--ghost btn--sm report-date-trigger" data-modal-open="report-date-modal"><?= icon('calendar') ?> Даты</button>
+            <button type="button" class="btn btn--ghost btn--sm report-date-trigger" data-modal-open="report-date-modal"><?= icon('calendar') ?><span class="report-date-trigger__text">Даты</span></button>
         </div>
         <form method="get" action="<?= e(url('/')) ?>" class="report-date-form" style="gap: 6px;">
             <input type="hidden" name="period" value="custom">
