@@ -656,3 +656,24 @@
     window.PIZ_openModal = openModal;
     window.PIZ_closeModal = closeModal;
 })();
+
+/* ---------- Динамика: график / таблица / список ---------- */
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-report-views]').forEach(function (container) {
+        const buttons = container.querySelectorAll('[data-report-view]');
+        const panels = container.querySelectorAll('[data-report-panel]');
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const view = button.getAttribute('data-report-view');
+                buttons.forEach(function (other) {
+                    const active = other === button;
+                    other.classList.toggle('is-active', active);
+                    other.setAttribute('aria-selected', active ? 'true' : 'false');
+                });
+                panels.forEach(function (panel) {
+                    panel.hidden = panel.getAttribute('data-report-panel') !== view;
+                });
+            });
+        });
+    });
+});

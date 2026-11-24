@@ -70,18 +70,55 @@ $periodChips = [
         <?php endif; ?>
     </section>
 
-    <section class="card">
+    <section class="card" data-report-views>
         <header class="card__head">
             <div>
                 <h3>Динамика по дням</h3>
                 <p><?= e(period_label($period['from'], $period['to'])) ?> · <?= (int) $days ?> <?= plural((int) $days, 'день', 'дня', 'дней') ?></p>
             </div>
-            <div class="legend">
-                <span class="legend__item"><i class="legend__dot legend__dot--orange"></i>Выручка</span>
-                <span class="legend__item"><i class="legend__dot legend__dot--green"></i>Прибыль</span>
+            <div class="report-view-tools">
+                <div class="report-view-switch" role="tablist" aria-label="Вид динамики">
+                    <button type="button" class="is-active" data-report-view="chart" role="tab" aria-selected="true">График</button>
+                    <button type="button" data-report-view="table" role="tab" aria-selected="false">Таблица</button>
+                    <button type="button" data-report-view="list" role="tab" aria-selected="false">Список</button>
+                </div>
+                <div class="legend">
+                    <span class="legend__item"><i class="legend__dot legend__dot--orange"></i>Выручка</span>
+                    <span class="legend__item"><i class="legend__dot legend__dot--green"></i>Прибыль</span>
+                </div>
             </div>
         </header>
-        <?php \PIZ\View::partial('partials/bar-chart', ['series' => $series, 'height' => 290, 'showProfit' => true]); ?>
+        <div data-report-panel="chart">
+            <?php \PIZ\View::partial('partials/bar-chart', ['series' => $series, 'height' => 150, 'showProfit' => true]); ?>
+        </div>
+        <div data-report-panel="table" hidden>
+            <div class="table-wrap">
+                <table class="table table--compact">
+                    <thead><tr><th>Дата</th><th class="num">Продаж</th><th class="num">Выручка</th><th class="num">Расходы</th><th class="num">Прибыль</th></tr></thead>
+                    <tbody>
+                    <?php foreach ($series as $date => $row): ?>
+                        <tr>
+                            <td><?= e(date('d.m.Y', strtotime((string) $date))) ?></td>
+                            <td class="num"><?= (int) $row['count'] ?></td>
+                            <td class="num strong"><?= e(money((int) $row['revenue'])) ?></td>
+                            <td class="num" style="color: var(--red);"><?= e(money((int) ($row['expense'] ?? 0))) ?></td>
+                            <td class="num" style="color: var(--green); font-weight: 650;"><?= e(money((int) $row['profit'])) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div data-report-panel="list" hidden>
+            <div class="report-list">
+                <?php foreach ($series as $date => $row): ?>
+                    <div class="report-list__row">
+                        <div><strong><?= e(date('d.m.Y', strtotime((string) $date))) ?></strong><span><?= (int) $row['count'] ?> продаж</span></div>
+                        <div class="report-list__values"><span>Выручка <strong><?= e(money((int) $row['revenue'])) ?></strong></span><span>Прибыль <strong style="color:var(--green);"><?= e(money((int) $row['profit'])) ?></strong></span></div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
     </section>
 
     <div class="dash-grid">
