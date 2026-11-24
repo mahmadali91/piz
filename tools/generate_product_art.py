@@ -7,7 +7,7 @@
 """
 from __future__ import annotations
 
-import json
+import csv
 import math
 import os
 from pathlib import Path
@@ -440,9 +440,12 @@ class Art:
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    manifest = json.loads((ROOT / "products.json").read_text(encoding="utf-8"))
-    for item in manifest:
-        pid = int(item["id"])
+    with (ROOT / "data" / "products.csv").open(encoding="utf-8-sig", newline="") as handle:
+        rows = list(csv.reader(handle, delimiter=";"))
+    for pid, row in enumerate(rows[1:], start=1):
+        if len(row) < 3 or not row[0].strip():
+            continue
+        name = row[0].strip()
         kind, label, palette, accent = PRODUCTS.get(pid, FALLBACK)
         art = Art(palette, accent)
         art.kind = kind
@@ -454,10 +457,10 @@ def main() -> None:
             "noodles": "ЛАПША", "spray": "ХИМИЯ", "soap": "ХИМИЯ", "pump": "КОСМЕТИКА",
             "cup": "ПОСУДА", "cheese": "СЫР", "khachapuri": "ВЫПЕЧКА", "grill": "ГРИЛЬ",
         }.get(kind, "ТОВАР")
-        image = art.render(str(item.get("sku") or ""), category)
+        image = art.render(f"P{pid:04d}", category)
         path = OUT / f"generated-{pid}.jpg"
         image.save(path, "JPEG", quality=92, optimize=True, progressive=True)
-        print(path.name, item["name"])
+        print(path.name, name)
 
 
 if __name__ == "__main__":
