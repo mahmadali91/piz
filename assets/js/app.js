@@ -729,3 +729,61 @@ document.addEventListener('DOMContentLoaded', function () {
         chart.addEventListener('pointercancel', hide);
     });
 });
+
+/* ---------- Товары: массовое изменение остатков ---------- */
+document.addEventListener('DOMContentLoaded', function () {
+    const page = document.querySelector('[data-stock-edit]');
+    if (!page) return;
+    const toggle = page.querySelector('[data-stock-edit-toggle]');
+    const actions = page.querySelector('[data-stock-edit-actions]');
+    const save = page.querySelector('[data-stock-edit-save]');
+    const cancel = page.querySelector('[data-stock-edit-cancel]');
+    const inputs = Array.from(page.querySelectorAll('[data-stock-input]'));
+    const pills = Array.from(page.querySelectorAll('[data-stock-pill]'));
+    if (!toggle || !inputs.length) return;
+
+    function setMode(on) {
+        page.classList.toggle('is-stock-editing', on);
+        inputs.forEach(function (input) { input.hidden = !on; });
+        pills.forEach(function (pill) { pill.hidden = on; });
+        toggle.hidden = on;
+        if (actions) actions.hidden = !on;
+        if (on) {
+            const first = inputs.find(function (input) { return !input.closest('[hidden]'); });
+            if (first) first.focus();
+        }
+    }
+
+    toggle.addEventListener('click', function () { setMode(true); });
+    if (cancel) cancel.addEventListener('click', function () { setMode(false); });
+    if (save) save.addEventListener('click', function () {
+        const form = document.getElementById('stock-bulk-form');
+        if (!form) return;
+        form.querySelectorAll('[data-generated-stock]').forEach(function (node) { node.remove(); });
+        inputs.forEach(function (input) {
+            const hidden = document.createElement('input');
+            hidden.type = 'hidden';
+            hidden.name = 'stock[' + input.getAttribute('data-stock-input') + ']';
+            hidden.value = input.value === '' ? '0' : input.value;
+            hidden.setAttribute('data-generated-stock', '');
+            form.appendChild(hidden);
+        });
+        form.submit();
+    });
+    pills.forEach(function (pill) {
+        function activate() {
+            setMode(true);
+            const input = page.querySelector('[data-stock-input="' + pill.getAttribute('data-stock-pill') + '"]');
+            if (input) input.focus();
+        }
+        pill.addEventListener('click', activate);
+        pill.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); activate(); }
+        });
+    });
+    inputs.forEach(function (input) {
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') { event.preventDefault(); if (save) save.click(); }
+        });
+    });
+});

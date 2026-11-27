@@ -49,6 +49,7 @@ Router::get('/products', [ProductsController::class, 'index']);
 Router::post('/products/save', [ProductsController::class, 'save']);
 Router::post('/products/toggle', [ProductsController::class, 'toggle']);
 Router::post('/products/stock', [ProductsController::class, 'stock']);
+Router::post('/products/stock-bulk', [ProductsController::class, 'stockBulk']);
 Router::post('/products/import', [ProductsController::class, 'import']);
 Router::get('/products/export', [ProductsController::class, 'export']);
 Router::get('/products/template', [ProductsController::class, 'template']);

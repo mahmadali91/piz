@@ -144,6 +144,49 @@ final class ProductsController
         redirect('/products');
     }
 
+    public function stockBulk(): void
+    {
+        Auth::requirePermission('stock.manage');
+
+        $stock = $_POST['stock'] ?? [];
+        if (!is_array($stock) || $stock === []) {
+            flash('error', 'Нет данных для изменения остатков.');
+            redirect('/products');
+        }
+
+        $items = [];
+        foreach ($stock as $id => $qty) {
+            $productId = (int) $id;
+            $newQty = filter_var($qty, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 100000000]]);
+            if ($productId <= 0 || $newQty === false || !Product::find($productId)) {
+                continue;
+            }
+            $items[$productId] = (int) $newQty;
+        }
+        if ($items === []) {
+            flash('error', 'Не удалось прочитать новые остатки.');
+            redirect('/products');
+        }
+
+        $changed = 0;
+        try {
+            foreach ($items as $productId => $newQty) {
+                $product = Product::find($productId);
+                if ($product && (int) $product['stock_qty'] !== $newQty) {
+                    Product::setStock($productId, $newQty, 'Массовое изменение остатков', Auth::id());
+                    $changed++;
+                }
+            }
+        } catch (\Throwable $e) {
+            flash('error', 'Не удалось сохранить остатки: ' . $e->getMessage());
+            redirect('/products');
+        }
+
+        Audit::log('stock.bulk_update', ['changed' => $changed]);
+        flash('success', $changed > 0 ? 'Остатки сохранены: изменено ' . $changed . ' поз.' : 'Остатки не изменились.');
+        redirect('/products');
+    }
+
     public function toggle(): void
     {
         Auth::requirePermission('products.manage');

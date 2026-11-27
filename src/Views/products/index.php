@@ -3,7 +3,10 @@
 $query = $_GET;
 unset($query['page']);
 ?>
-<div class="page">
+<div class="page" data-stock-edit>
+    <form id="stock-bulk-form" method="post" action="<?= e(url('/products/stock-bulk')) ?>" hidden>
+        <?= csrf_field() ?>
+    </form>
     <section class="summary-grid">
         <div class="stat">
             <span class="stat__label">Позиций в продаже</span>
@@ -63,6 +66,13 @@ unset($query['page']);
                     </label>
                 <?php endif; ?>
                 <a class="btn btn--ghost btn--sm" href="<?= e(query_url('/products/export', $query)) ?>"><?= icon('download') ?> Экспорт</a>
+                <?php if ($canStock): ?>
+                    <button class="btn btn--ghost btn--sm" type="button" data-stock-edit-toggle><?= icon('edit') ?> Изменить остатки</button>
+                    <span class="stock-edit-actions" data-stock-edit-actions hidden>
+                        <button class="btn btn--primary btn--sm" type="button" data-stock-edit-save><?= icon('check') ?> Сохранить остатки</button>
+                        <button class="btn btn--ghost btn--sm" type="button" data-stock-edit-cancel>Отмена</button>
+                    </span>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -163,9 +173,10 @@ unset($query['page']);
                             <?php if ($finance): ?><td class="num muted"><?= e(money((int) $product['purchase_price_kop'])) ?></td><?php endif; ?>
                             <td class="num strong"><?= e(money((int) $product['sale_price_kop'])) ?></td>
                             <td class="num">
-                                <span class="stock-pill <?= (int) $product['stock_qty'] <= 0 ? 'stock-pill--out' : ($low ? 'stock-pill--low' : '') ?>">
+                                <span class="stock-pill <?= (int) $product['stock_qty'] <= 0 ? 'stock-pill--out' : ($low ? 'stock-pill--low' : '') ?>" data-stock-pill="<?= (int) $product['id'] ?>" role="button" tabindex="0" title="Изменить остаток">
                                     <?= (int) $product['stock_qty'] ?> <?= e($product['unit']) ?>
                                 </span>
+                                <input class="input stock-edit-input" type="number" inputmode="numeric" min="0" step="1" value="<?= (int) $product['stock_qty'] ?>" data-stock-input="<?= (int) $product['id'] ?>" aria-label="Остаток товара <?= e($product['name']) ?>" hidden>
                             </td>
                             <td>
                                 <div class="row-actions">
@@ -215,9 +226,10 @@ unset($query['page']);
                         <div class="product-mobile-card__body">
                             <div class="product-mobile-card__top">
                                 <strong><?= e($product['name']) ?></strong>
-                                <span class="stock-pill <?= (int) $product['stock_qty'] <= 0 ? 'stock-pill--out' : ($low ? 'stock-pill--low' : '') ?>">
+                                <span class="stock-pill <?= (int) $product['stock_qty'] <= 0 ? 'stock-pill--out' : ($low ? 'stock-pill--low' : '') ?>" data-stock-pill="<?= (int) $product['id'] ?>" role="button" tabindex="0" title="Изменить остаток">
                                     <?= (int) $product['stock_qty'] ?> <?= e($product['unit']) ?>
                                 </span>
+                                <input class="input stock-edit-input" type="number" inputmode="numeric" min="0" step="1" value="<?= (int) $product['stock_qty'] ?>" data-stock-input="<?= (int) $product['id'] ?>" aria-label="Остаток товара <?= e($product['name']) ?>" hidden>
                             </div>
                             <div class="product-mobile-card__meta">
                                 <?= e($product['sku'] ?: '—') ?> · <?= e($product['category']) ?>

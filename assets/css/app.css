@@ -5800,3 +5800,43 @@ html.sidebar-collapsed .sidebar-user__gear {
         grid-template-columns: 1fr;
     }
 }
+
+/* Редактирование остатков в каталоге */
+.stock-pill[role="button"] {
+    cursor: pointer;
+}
+
+.stock-pill[role="button"]:hover {
+    border-color: var(--brand);
+    color: var(--brand-ink);
+}
+
+.stock-edit-input {
+    width: 92px;
+    height: 32px;
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.stock-edit-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.stock-edit-actions[hidden] {
+    display: none;
+}
+
+@media (max-width: 860px) {
+    .stock-edit-input {
+        width: 78px;
+        height: 32px;
+    }
+
+    .stock-edit-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+}
